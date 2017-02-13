@@ -1,0 +1,28 @@
+
+===========================================
+Number of active cells: 256
+Number of degrees of freedom: 289
+
+Time step 10 at t=1
+     4 CG iterations.
+Time step 20 at t=2
+     4 CG iterations.
+Time step 30 at t=3
+     3 CG iterations.
+Time step 40 at t=4
+     3 CG iterations.
+Time step 50 at t=5
+     2 CG iterations.
+Time step 60 at t=6
+     1 CG iterations.
+Time step 70 at t=7
+     1 CG iterations.
+Time step 80 at t=8
+     1 CG iterations.
+Time step 90 at t=9
+     1 CG iterations.
+Time step 100 at t=10
+     1 CG iterations.
+Time step 110 at t=11
+     1 CG iterations.
+Reached steady state at t = 11.3
