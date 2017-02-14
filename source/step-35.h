@@ -70,6 +70,7 @@
 #include <cmath>
 #include <iostream>
 
+
 // Finally this is as in all previous programs:
 namespace Step35
 {
@@ -335,13 +336,6 @@ namespace Step35
     double Velocity<dim>::value (const Point<dim> &p,
                                  const unsigned int) const
     {
-      if (this->comp == 0)
-        {
-          const double Um = 1.5;
-          const double H  = 4.1;
-          return 4.*Um*p(1)*(H - p(1))/(H*H);
-        }
-      else
         return 0.;
     }
 
@@ -372,7 +366,7 @@ namespace Step35
     double Pressure<dim>::value (const Point<dim> &p,
                                  const unsigned int) const
     {
-      return 25.-p(0);
+      return 0.;
     }
 
     template <int dim>
@@ -693,15 +687,7 @@ namespace Step35
   NavierStokesProjection<dim>::
   create_triangulation_and_dofs (const unsigned int n_refines)
   {
-    GridIn<dim> grid_in;
-    grid_in.attach_triangulation (triangulation);
-
-    {
-      std::string filename = "nsbench2.inp";
-      std::ifstream file (filename.c_str());
-      Assert (file, ExcFileNotOpen (filename.c_str()));
-      grid_in.read_ucd (file);
-    }
+    GridGenerator::hyper_rectangle(triangulation, Point<dim>(0., 0.), Point<dim>(1., 1.));
 
     std::cout << "Number of refines = " << n_refines
               << std::endl;
@@ -1033,35 +1019,14 @@ namespace Step35
           {
             switch (*boundaries)
               {
-              case 1:
+              case 0:
                 VectorTools::
                 interpolate_boundary_values (dof_handler_velocity,
                                              *boundaries,
                                              ZeroFunction<dim>(),
                                              boundary_values);
                 break;
-              case 2:
-                VectorTools::
-                interpolate_boundary_values (dof_handler_velocity,
-                                             *boundaries,
-                                             vel_exact,
-                                             boundary_values);
-                break;
-              case 3:
-                if (d != 0)
-                  VectorTools::
-                  interpolate_boundary_values (dof_handler_velocity,
-                                               *boundaries,
-                                               ZeroFunction<dim>(),
-                                               boundary_values);
-                break;
-              case 4:
-                VectorTools::
-                interpolate_boundary_values (dof_handler_velocity,
-                                             *boundaries,
-                                             ZeroFunction<dim>(),
-                                             boundary_values);
-                break;
+
               default:
                 Assert (false, ExcNotImplemented());
               }
