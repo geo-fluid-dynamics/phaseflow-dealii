@@ -1,4 +1,5 @@
 #include "peclet.h"
+#include "step-35.h"
 
 int main(int argc, char* argv[])
 {
@@ -60,5 +61,52 @@ int main(int argc, char* argv[])
               << std::endl;
         return 1;
     }
+    
+    
+    // Run Navier-Stokes
+    try
+    {
+        using namespace dealii;
+        using namespace Step35;
+
+        RunTimeParameters::Data_Storage data;
+        data.read_data ("step-35.prm");
+
+        deallog.depth_console (data.verbose ? 2 : 0);
+
+        NavierStokesProjection<2> test (data);
+        test.run (data.verbose, data.output_interval);
+    }
+    catch (std::exception &exc)
+    {
+      std::cerr << std::endl << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      std::cerr << "Exception on processing: " << std::endl
+                << exc.what() << std::endl
+                << "Aborting!" << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      return 1;
+    }
+    catch (...)
+    {
+      std::cerr << std::endl << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      std::cerr << "Unknown exception!" << std::endl
+                << "Aborting!" << std::endl
+                << "----------------------------------------------------"
+                << std::endl;
+      return 1;
+    }
+    
+    std::cout << "----------------------------------------------------"
+            << std::endl
+            << "Apparently everything went fine!"
+            << std::endl
+            << "Don't forget to brush your teeth :-)"
+            << std::endl << std::endl;
+
     return 0;
-}
+    }
