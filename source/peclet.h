@@ -67,6 +67,8 @@
 
 #include "peclet_parameters.h"
 
+#include "bouyancy.h"
+
 namespace Peclet
 {
   using namespace dealii;
@@ -94,19 +96,23 @@ namespace Peclet
     SolverStatus solve_time_step(bool quiet = false);
     void write_solution();
     
+    unsigned int scalar_degree;
+    unsigned int pde_system_size;
+
     Triangulation<dim>   triangulation;
-    FE_Q<dim>            fe;
+    FESystem<dim>        fe;
     DoFHandler<dim>      dof_handler;
 
     ConstraintMatrix     constraints;
 
     SparsityPattern      sparsity_pattern;
-    SparseMatrix<double> mass_matrix;
-    SparseMatrix<double> convection_diffusion_matrix;
+
     SparseMatrix<double> system_matrix;
 
     Vector<double>       solution;
     Vector<double>       old_solution;
+    Vector<double>       newton_solution;
+
     Vector<double>       system_rhs;
 
     double               time;
@@ -138,73 +144,18 @@ namespace Peclet
   };
   
   template<int dim>
-  Peclet<dim>::Peclet()
+  Peclet<dim>::Peclet(const unsigned int _scalar_degree)
     :
-    fe(1),
+    scalar_degree(_scalar_degree),
+    pde_system_size(dim + 2),
+    fe(FE_Q<dim>(scalar_degree + 1), dim, // velocity
+       FE_Q<dim>(scalar_degree), 2) // pressure and temperature
     dof_handler(this->triangulation)
   {}
   
   #include "peclet_grid.h"
-  
-  template<int dim>
-  void Peclet<dim>::setup_system(bool quiet)
-  {
-    dof_handler.distribute_dofs(fe);
 
-    if (!quiet)
-    {
-        std::cout << std::endl
-              << "==========================================="
-              << std::endl
-              << "Number of active cells: " << triangulation.n_active_cells()
-              << std::endl
-              << "Number of degrees of freedom: " << dof_handler.n_dofs()
-              << std::endl
-              << std::endl;    
-    }
-
-    constraints.clear();
-    
-    DoFTools::make_hanging_node_constraints(
-        dof_handler,
-        constraints);
-        
-    constraints.close();
-
-    DynamicSparsityPattern dsp(dof_handler.n_dofs());
-    
-    DoFTools::make_sparsity_pattern(
-        this->dof_handler,
-        dsp,
-        this->constraints,
-        /*keep_constrained_dofs = */ true);
-        
-    this->sparsity_pattern.copy_from(dsp);
-
-    this->mass_matrix.reinit(this->sparsity_pattern);
-    
-    this->convection_diffusion_matrix.reinit(this->sparsity_pattern);
-    
-    this->system_matrix.reinit(this->sparsity_pattern);
-
-    MatrixCreator::create_mass_matrix(this->dof_handler,
-                                      QGauss<dim>(fe.degree+1),
-                                      this->mass_matrix);
-                          
-    MyMatrixCreator::create_convection_diffusion_matrix<dim>(
-        this->dof_handler,
-        QGauss<dim>(fe.degree+1),
-        this->convection_diffusion_matrix,
-        this->diffusivity_function, 
-        this->velocity_function);
-
-    this->solution.reinit(dof_handler.n_dofs());
-    
-    this->old_solution.reinit(dof_handler.n_dofs());
-    
-    this->system_rhs.reinit(dof_handler.n_dofs());
-    
-  }
+  #include "peclet_system.h"
 
   template<int dim>
   SolverStatus Peclet<dim>::solve_time_step(bool quiet)
