@@ -8,5 +8,4 @@ This is written in C++ and based on the deal.II finite element method library.
 
 Author: Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de>
 
-# Continuous integration status:
-[![Build Status](https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master)](https://travis-ci.org/alexanderzimmerman/nsb-pcm)
+[![Build Status](https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master)](https://travis-ci.org/alexanderzimmerman/nsb-pcm) <- Continuous integration status (Click the button to go to Travis-CI)
