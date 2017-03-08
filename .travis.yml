@@ -8,7 +8,6 @@ notifications:
 
 before_install:
 - docker pull zimmerman/nsb-pcm
-- docker run
 
 script:
 - docker run -P -v "cd nsb-pcm; git pull; cd build; cmake ..; make -j2"
