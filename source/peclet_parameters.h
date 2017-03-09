@@ -27,6 +27,10 @@
 
         This also makes it simple to insantiate a PDE Model in a user program 
         and then change it's parameters directly without having to use any intermediate text files.
+
+        Every parameter name appears three times in this file. Once for the data structure,
+        once for declaring to the ParameterHandler class, and once for parsing the input file.
+
         
     @todo Allow for multiple parsed boundary functions.
         This might not be possible.
@@ -93,7 +97,6 @@ namespace Peclet
             double end_time;
             double step_size;
             double global_refinement_levels;
-            double semi_implicit_theta;
             bool stop_when_steady;
         };
         
@@ -331,15 +334,7 @@ namespace Peclet
                     Patterns::Integer(0),
                     "If step_size is set to zero, then compute "
                     "step_size = end_time/(2^global_refinement_levels)");
-                    
-                prm.declare_entry("semi_implicit_theta", "0.5",
-                    Patterns::Double(0., 1.),
-                    "This is the theta parameter for the theta-family of "
-                    "semi-implicit time integration schemes."
-                    " Choose any value between zero and one."
-                    " 0 = fully explicit; 0.5 = 'Crank-Nicholson'"
-                    " ; 1 = fully implicit");
-                    
+
                 prm.declare_entry("stop_when_steady", "false",
                     Patterns::Bool(),
                     "If true, then stop when solver reports zero iterations"
@@ -576,7 +571,6 @@ namespace Peclet
                 params.time.step_size = prm.get_double("step_size");
                 params.time.global_refinement_levels = 
                     prm.get_integer("global_refinement_levels");
-                params.time.semi_implicit_theta = prm.get_double("semi_implicit_theta");
                 params.time.stop_when_steady = prm.get_bool("stop_when_steady");
             }    
             prm.leave_subsection();

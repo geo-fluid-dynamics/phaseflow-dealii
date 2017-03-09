@@ -17,10 +17,30 @@ namespace Output
         Vector<double> &solution
         )
     {
+        /*! Organize the vector-valued solution so that visualization software can understand it*/
+        std::vector<std::string> solution_names(dim, "velocity");
+        solution_names.push_back("pressure");
+        solution_names.push_back("temperature");
+
+        std::vector<DataComponentInterpretation::DataComponentInterpretation>
+            data_component_interpretation(dim, DataComponentInterpretation::component_is_part_of_vector);
+        
+        data_component_interpretation.push_back(DataComponentInterpretation::component_is_scalar);
+        data_component_interpretation.push_back(DataComponentInterpretation::component_is_scalar);
+
         DataOut<dim> data_out;
+        
         data_out.attach_dof_handler(dof_handler);
-        data_out.add_data_vector(solution, "U");
-        data_out.build_patches();
+        
+        data_out.add_data_vector(
+            solution,
+            solution_names,
+            DataOut<dim>::type_dof_data,
+            data_component_interpretation);
+        
+        data_out.build_patches ();
+
+        /*! Write the solution data. */
         std::ofstream output(filename.c_str());
         data_out.write_vtk(output);
     }    

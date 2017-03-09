@@ -62,12 +62,9 @@
 #include "my_grid_generator.h"
 #include "fe_field_tools.h"
 #include "output.h"
-#include "my_matrix_creator.h"
 #include "my_vector_tools.h"
 
 #include "peclet_parameters.h"
-
-#include "bouyancy.h"
 
 namespace Peclet
 {
@@ -93,19 +90,20 @@ namespace Peclet
     void create_coarse_grid();
     void adaptive_refine();
     void setup_system(bool quiet = false);
+    void step_time(bool quiet = false);
+    void assemble_system();
     SolverStatus solve_time_step(bool quiet = false);
     void write_solution();
-    
-    unsigned int scalar_degree;
-    unsigned int pde_system_size;
 
-    Triangulation<dim>   triangulation;
-    FESystem<dim>        fe;
-    DoFHandler<dim>      dof_handler;
+    const unsigned int scalar_degree = 1; /*! @todo: Expose scalar_degree to ParameterHandler */
 
-    ConstraintMatrix     constraints;
+    Triangulation<dim> triangulation;
+    FESystem<dim> fe;
+    DoFHandler<dim> dof_handler;
 
-    SparsityPattern      sparsity_pattern;
+    ConstraintMatrix constraints;
+
+    SparsityPattern sparsity_pattern;
 
     SparseMatrix<double> system_matrix;
 
@@ -118,7 +116,10 @@ namespace Peclet
     double               time;
     double               time_step_size;
     unsigned int         time_step_counter;
-    
+    bool final_time_step;
+    bool output_this_step;
+    SolverStatus solver_status;
+
     Point<dim> spherical_manifold_center;
     
     std::vector<unsigned int> manifold_ids;
@@ -144,12 +145,10 @@ namespace Peclet
   };
   
   template<int dim>
-  Peclet<dim>::Peclet(const unsigned int _scalar_degree)
+  Peclet<dim>::Peclet()
     :
-    scalar_degree(_scalar_degree),
-    pde_system_size(dim + 2),
-    fe(FE_Q<dim>(scalar_degree + 1), dim, // velocity
-       FE_Q<dim>(scalar_degree), 2) // pressure and temperature
+    fe(FE_Q<dim>(this->scalar_deg + 1), dim, // velocity
+       FE_Q<dim>(this->scalar_degree, 2)), // pressure and temperature
     dof_handler(this->triangulation)
   {}
   
@@ -157,60 +156,7 @@ namespace Peclet
 
   #include "peclet_system.h"
 
-  template<int dim>
-  SolverStatus Peclet<dim>::solve_time_step(bool quiet)
-  {
-    double tolerance = this->params.solver.tolerance;
-    if (this->params.solver.normalize_tolerance)
-    {
-        tolerance *= this->system_rhs.l2_norm();
-    }
-    SolverControl solver_control(
-        this->params.solver.max_iterations,
-        tolerance);
-       
-    SolverCG<> solver_cg(solver_control);
-    SolverBicgstab<> solver_bicgstab(solver_control);
-
-    PreconditionSSOR<> preconditioner;
-    
-    preconditioner.initialize(this->system_matrix, 1.0);
-
-    std::string solver_name;
-    
-    if (this->params.solver.method == "CG")
-    {
-        solver_name = "CG";
-        solver_cg.solve(
-            this->system_matrix,
-            this->solution,
-            this->system_rhs,
-            preconditioner);    
-    }
-    else if (this->params.solver.method == "BiCGStab")
-    {
-        solver_name = "BiCGStab";
-        solver_bicgstab.solve(
-            this->system_matrix,
-            this->solution,
-            this->system_rhs,
-            preconditioner);
-    }
-
-    this->constraints.distribute(this->solution);
-
-    if (!quiet)
-    {
-        std::cout << "     " << solver_control.last_step()
-              << " " << solver_name << " iterations." << std::endl;
-    }
-    
-    SolverStatus status;
-    status.last_step = solver_control.last_step();
-    
-    return status;
-    
-  }
+  #include "peclet_step_time.h"
   
   #include "peclet_1D_solution_table.h"
   
@@ -247,7 +193,7 @@ namespace Peclet
         this->solution,
         *this->exact_solution_function,
         difference_per_cell,
-        QGauss<dim>(3),
+        QGauss<dim>(dim + 1),
         VectorTools::L2_norm);
         
     double L2_norm_error = difference_per_cell.l2_norm();
@@ -257,7 +203,7 @@ namespace Peclet
         this->solution,
         *this->exact_solution_function,
         difference_per_cell,
-        QGauss<dim>(3),
+        QGauss<dim>(dim + 1),
         VectorTools::L1_norm);
         
     double L1_norm_error = difference_per_cell.l1_norm();
@@ -405,28 +351,6 @@ namespace Peclet
             constant_functions.push_back(ConstantFunction<dim>(value));
         }
     }
-        
-    // Organize boundary functions to simplify application during the time loop
-    
-    unsigned int constant_function_index = 0;
-    
-    for (unsigned int boundary = 0; boundary < boundary_count; boundary++)        
-    {
-        std::string boundary_type = this->params.boundary_conditions.implementation_types[boundary];
-        std::string function_name = this->params.boundary_conditions.function_names[boundary];
-
-        if (function_name == "constant")
-        {
-            assert(constant_function_index < constant_functions.size());
-            this->boundary_functions.push_back(&constant_functions[constant_function_index]);
-            constant_function_index++;
-        }
-        else if (function_name == "parsed")
-        {
-            this->boundary_functions.push_back(&parsed_boundary_function);
-        }
-        
-    }
     
     // Attach manifolds
     
@@ -483,19 +407,19 @@ start_time_iteration:
     double Delta_t = this->time_step_size;
     
     this->write_solution();
-    bool final_time_step = false;
-    bool output_this_step = true;
+
+    this->final_time_step = false;
+    this->output_this_step = true;
+
     double epsilon = 1e-14;
-    
-    SolverStatus solver_status;
     
     do
     {
         ++this->time_step_counter;
-        time = Delta_t*time_step_counter; // Incrementing the time directly would accumulate errors
+        this->time = Delta_t*time_step_counter; // Incrementing the time directly would accumulate errors
         
         // Set some flags that will control output for this step.
-        final_time_step = this->time > this->params.time.end_time - epsilon;
+        this->final_time_step = this->time > this->params.time.end_time - epsilon;
         
         bool at_interval = false;
         
@@ -505,7 +429,7 @@ start_time_iteration:
         }
         else if (this->params.output.time_step_interval != 0)
         {
-            if ((time_step_counter % this->params.output.time_step_interval) == 0)
+            if ((this->time_step_counter % this->params.output.time_step_interval) == 0)
             {
                 at_interval = true;
             }
@@ -517,135 +441,20 @@ start_time_iteration:
         
         if (at_interval)
         {
-            output_this_step = true;
+            this->output_this_step = true;
         }
         else
         {
-            output_this_step = false;
+            this->output_this_step = false;
         }
         
-        // Run the time step
-        if (output_this_step)
-        {
-            std::cout << "Time step " << this->time_step_counter 
-                << " at t=" << this->time << std::endl;    
-        }
+        /*!
+         Run the time step
+         */
 
-        // Add mass and convection-diffusion matrix terms to RHS
-        this->mass_matrix.vmult(this->system_rhs, this->old_solution);
-
-        this->convection_diffusion_matrix.vmult(tmp, this->old_solution);
+        this->step_time();
         
-        this->system_rhs.add(-(1. - theta) * Delta_t, tmp);
-        
-        // Add source terms to RHS
-        source_function->set_time(this->time);
-        VectorTools::create_right_hand_side(this->dof_handler,
-                                            QGauss<dim>(fe.degree+1),
-                                            *source_function,
-                                            tmp);
-        forcing_terms = tmp;
-        forcing_terms *= Delta_t * theta;
-        
-        source_function->set_time(this->time - Delta_t);
-        VectorTools::create_right_hand_side(this->dof_handler,
-                                            QGauss<dim>(fe.degree+1),
-                                            *source_function,
-                                            tmp);
-        forcing_terms.add(Delta_t * (1 - theta), tmp);
-        
-        this->system_rhs += forcing_terms;
-        
-        // Add natural boundary conditions to RHS
-        for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
-        {
-            if ((this->params.boundary_conditions.implementation_types[boundary] != "natural"))
-            {
-                continue;
-            }
-            
-            std::set<types::boundary_id> dealii_boundary_id = {boundary}; // @todo: This throws a warning
-            
-            boundary_functions[boundary]->set_time(this->time);
-            
-            MyVectorTools::my_create_boundary_right_hand_side(
-                this->dof_handler,
-                QGauss<dim-1>(fe.degree+1),
-                *boundary_functions[boundary],
-                tmp,
-                dealii_boundary_id);
-            forcing_terms = tmp;
-            forcing_terms *= Delta_t * theta;
-                
-            boundary_functions[boundary]->set_time(this->time - Delta_t);
-            MyVectorTools::my_create_boundary_right_hand_side(
-                this->dof_handler,
-                QGauss<dim-1>(fe.degree+1),
-                *boundary_functions[boundary],
-                tmp,
-                dealii_boundary_id);
-             
-            forcing_terms.add(Delta_t * (1. - theta), tmp);
-            
-            this->system_rhs += forcing_terms;
-
-        }
-        
-        // Make the system matrix and apply constraints
-        system_matrix.copy_from(mass_matrix);
-        
-        system_matrix.add(theta * Delta_t, convection_diffusion_matrix);
-
-        constraints.condense (system_matrix, system_rhs);
-
-        {
-            // Apply strong boundary conditions
-            std::map<types::global_dof_index, double> boundary_values;
-            for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
-            {
-                if (this->params.boundary_conditions.implementation_types[boundary] != "strong") 
-                {
-                    continue;
-                }
-                
-                boundary_functions[boundary]->set_time(time);
-                
-                VectorTools::interpolate_boundary_values
-                    (
-                    this->dof_handler,
-                    boundary,
-                    *boundary_functions[boundary],
-                    boundary_values
-                    );
-            }
-            MatrixTools::apply_boundary_values(
-                boundary_values,
-                this->system_matrix,
-                this->solution,
-                this->system_rhs);
-        }
-
-        solver_status = this->solve_time_step(!output_this_step);
-        
-        if ((this->params.time.stop_when_steady) & (solver_status.last_step == 0))
-        {
-            std::cout << "Reached steady state at t = " << this->time << std::endl;
-            final_time_step = true;
-            output_this_step = true;
-        }
-            
-        if (output_this_step)
-        {
-            this->write_solution();
-            
-            if (this->params.verification.enabled)
-            {
-                this->append_verification_table();
-            }
-            
-        }
-        
-        if ((time_step_counter == 1) &&
+        if ((this->time_step_counter == 1) &&
             (pre_refinement_step < this->params.refinement.adaptive.initial_cycles))
         {
             this->adaptive_refine();
@@ -657,9 +466,9 @@ start_time_iteration:
 
             goto start_time_iteration;
         }
-        else if ((time_step_counter > 0) 
+        else if ((this->time_step_counter > 0) 
                  && (params.refinement.adaptive.interval > 0)  // % 0 (mod 0) is undefined
-                 && (time_step_counter % params.refinement.adaptive.interval == 0))
+                 && (this->time_step_counter % params.refinement.adaptive.interval == 0))
         {
             for (unsigned int cycle = 0;
                  cycle < params.refinement.adaptive.cycles_at_interval; cycle++)
@@ -672,7 +481,7 @@ start_time_iteration:
         
         this->old_solution = this->solution;
         
-    } while (!final_time_step);
+    } while (!this->final_time_step);
     
     // Save data for FEFieldFunction so that it can be loaded for initialization
     FEFieldTools::save_field_parts(triangulation, dof_handler, solution);
