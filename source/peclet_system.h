@@ -212,18 +212,10 @@ void Peclet<dim>::assemble_system(bool quiet)
         cell = this->dof_handler.begin_active(),
         endc = this->dof_handler.end();
 
-    
-     /*!
-      Initialize local variables to match notation in Danaila 2014
-      */
-    
-    Tensor<1, dim> u_w, v, gradtheta_k, gradtheta_w, gradphi;
-    double p_w, theta_w, q, phi, divu_w, divu_k, divv;
-    const double deltat = this->time_step_size;
-
     /*!
       Assemble element-wise
      */
+    const double deltat = this->time_step_size;
 
     for (; cell != endc; ++cell)
     {
@@ -272,33 +264,35 @@ void Peclet<dim>::assemble_system(bool quiet)
 
         for (unsigned int quad = 0; quad < n_quad_points; ++quad)
         {
+            /*!
+            Initialize local variables to match notation in Danaila 2014
+            */
+            const Tensor<1, dim>  u_n = old_velocity_values[q];
+            const double p_n = old_pressure_values[q];
+            const double theta_n = old_temperature_values[q];
+            const Tensor<1, dim> gradtheta_n = old_temperature_gradients[q];
 
-            u_n = old_velocity_values[q];
-            p_n = old_pressure_values[q];
-            theta_n = old_temperature_values[q];
-            gradtheta_n = old_temperature_gradients[q];
-
-            u_k = newton_velocity_values[q];
-            p_k = newton_pressure_values[q];
-            theta_k = newton_temperature_values[q];
-            gradtheta_k = newton_temperature_gradients[q];
-            divu_k = newton_velocity_divergences[q];
+            const Tensor<1, dim> u_k = newton_velocity_values[q];
+            const double p_k = newton_pressure_values[q];
+            const double theta_k = newton_temperature_values[q];
+            const double gradtheta_k = newton_temperature_gradients[q];
+            const double divu_k = newton_velocity_divergences[q];
 
             for (unsigned int i = 0; i < dofs_per_cell; ++i)
             {
-                u_w = fe_values[velocities].value(i, quad);
-                p_w = fe_values[pressure].value(i, quad);
-                theta_w = fe_values[temperature].value(i, quad);
-                gradtheta_w = fe_values[temperature].gradient(i, quad);
-                divu_w = fe_values[velocity].divergence(i, quad);
+                const Tensor<1, dim> u_w = fe_values[velocities].value(i, quad);
+                const double p_w = fe_values[pressure].value(i, quad);
+                const double theta_w = fe_values[temperature].value(i, quad);
+                const Tensor<1, dim> gradtheta_w = fe_values[temperature].gradient(i, quad);
+                const double divu_w = fe_values[velocity].divergence(i, quad);
 
                 for (unsigned int j = 0; j< dofs_per_cell; ++j)
                 {
-                    q = fe_values[velocities].value(j, quad);
-                    v = fe_values[pressure].value(j, quad);
-                    phi = fe_values[temperature].value(j, quad);
-                    gradphi = fe_values[temperature].gradient(j, quad);
-                    divv = fe_values[velocity].divergence(j, quad);
+                    const Tensor<1, dim> q = fe_values[velocities].value(j, quad);
+                    const double v = fe_values[pressure].value(j, quad);
+                    const double phi = fe_values[temperature].value(j, quad);
+                    const Tensor<1, dim> gradphi = fe_values[temperature].gradient(j, quad);
+                    const double divv = fe_values[velocity].divergence(j, quad);
 
                     local_matrix(i,j) += // Mass
                         b(gradu_w, q) - gamma(p_w, q);
@@ -334,6 +328,8 @@ void Peclet<dim>::assemble_system(bool quiet)
                     (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k
                     + this->K/this->Pr*gradtheta_k*gradphi;
 
+                /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
+
         }
             
         // Export local contributions to the global system
@@ -354,6 +350,93 @@ void Peclet<dim>::assemble_system(bool quiet)
             this->system_rhs(local_dof_indices[i]) += local_rhs(i);
         }
 
+    }
+
+}
+
+/*!
+ @brief Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes).
+ 
+ @author Alexander Zimmerman 2016
+*/
+template<int dim>
+void Peclet<dim>::apply_boundary_values_and_constraints()
+{
+
+    /*! Organize boundary functions to simplify application during the time loop */
+    
+    unsigned int constant_function_index = 0;
+    
+    for (unsigned int boundary = 0; boundary < boundary_count; boundary++)        
+    {
+        std::string boundary_type = this->params.boundary_conditions.implementation_types[boundary];
+        std::string function_name = this->params.boundary_conditions.function_names[boundary];
+
+        if (function_name == "constant")
+        {
+            assert(constant_function_index < constant_functions.size());
+            this->boundary_functions.push_back(&constant_functions[constant_function_index]);
+            constant_function_index++;
+        }
+        else if (function_name == "parsed")
+        {
+            this->boundary_functions.push_back(&parsed_boundary_function);
+        }
+        
+    }
+
+    {
+        /*!
+        @todo Apply natural boundary conditions
+        */    
+
+        /*! Homogeneous Neumann boundary conditions on the adiabatic walls are implied */
+    }
+    
+    {
+        /*!
+         Apply strong boundary conditions
+
+         @todo How do we apply separate boundary conditions to each variable?
+        */
+
+        std::map<types::global_dof_index, double> boundary_values;
+
+        for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
+        {
+            if (this->params.boundary_conditions.implementation_types[boundary] != "strong") 
+            {
+                continue;
+            }
+            
+            boundary_functions[boundary]->set_time(this->time);
+            
+            /*! Apply homogeneous Dirichlet boundary conditions for all components of the velocity. */
+            const FEValuesExtractors::Vector velocities(0);
+            
+            VectorTools::interpolate_boundary_values (
+                this->dof_handler,
+                boundary,
+                *boundary_functions[boundary],
+                boundary_values,
+                this->fe.component_mask(velocities));
+
+            /*! Apply nonhomogeneous Dirichlet boundary conditions for temperature on the hot and cold walls */
+            const FEValuesExtractors::Scalar temperature(dim);
+
+            VectorTools::interpolate_boundary_values (
+                this->dof_handler,
+                boundary,
+                *boundary_functions[boundary],
+                boundary_values,
+                this->fe.component_mask(temperature));
+        }
+
+        MatrixTools::apply_boundary_values(
+            boundary_values,
+            this->system_matrix,
+            this->solution,
+            this->system_rhs);
     }
 
 }

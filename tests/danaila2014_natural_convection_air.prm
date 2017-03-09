@@ -1,0 +1,57 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+    set dim = 2
+end
+
+subsection geometry
+    set grid_name = hyper_rectangle
+    set sizes = 0., 0., 1., 1.
+end
+
+subsection parsed_diffusivity_function
+    set Function expression = 1.
+end
+
+subsection parsed_source_function
+    set Function expression = 0.
+end
+
+subsection initial_values
+    
+    set function_name = parsed
+    
+    subsection parsed_function
+        set Function expression = 0., 0., 0., 0., 0.
+    end
+    
+end
+
+subsection boundary_conditions
+    set implementation_types = strong, strong, natural, natural
+    set function_names = constant, constant, constant, constant
+    set function_double_arguments = 0.5, -0.5, 0., 0.
+end
+
+subsection refinement
+    set boundaries_to_refine = 0
+    set initial_boundary_cycles = 0
+    set initial_global_cycles = 5
+end
+
+subsection time
+    set end_time = 0.1
+    set step_size = 0.1
+    set stop_when_steady = true
+end
+
+subsection solver
+    set max_iterations = 1000
+    set normalize_tolerance = false
+    set tolerance           = 1e-6
+end
+
+subsection output
+    set write_solution_vtk = true
+    set time_step_interval = 1
+end
