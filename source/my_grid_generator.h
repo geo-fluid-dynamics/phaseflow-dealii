@@ -326,6 +326,7 @@ namespace MyGridGenerator
     template<int dim>
     void create_coarse_grid(
         Triangulation<dim> &triangulation,
+        unsigned int &boundary_count,
         std::vector<unsigned int> &manifold_ids,
         std::vector<std::string> &manifold_descriptors,
         const std::string grid_name,
@@ -338,6 +339,8 @@ namespace MyGridGenerator
                 sizes[0],
                 sizes[1],
                 true);
+
+            boundary_count = pow(2, dim);
         }
         else if (grid_name == "hyper_rectangle")
         {
@@ -346,6 +349,8 @@ namespace MyGridGenerator
                 {sizes[0], sizes[1]},
                 {sizes[2], sizes[3]},
                 true);
+
+            boundary_count = pow(2, dim);
         }
         else if (grid_name == "hyper_shell")
         {
@@ -364,6 +369,8 @@ namespace MyGridGenerator
             MyGridGenerator::set_all_manifold_ids(triangulation, 0);
             manifold_ids.push_back(0);
             manifold_descriptors.push_back("spherical");
+
+            boundary_count = 2;
         }
         else if (grid_name == "hemisphere_cylinder_shell") 
         {
@@ -376,6 +383,8 @@ namespace MyGridGenerator
             manifold_descriptors.push_back("spherical");
             manifold_ids.push_back(1);
             manifold_descriptors.push_back("cylindrical");
+
+            boundary_count = 10;
         }
         else if (grid_name == "cylinder")
         {
@@ -388,6 +397,8 @@ namespace MyGridGenerator
                     {-sizes[0], 0.},
                     {sizes[0], -sizes[1]},
                     true);
+
+                boundary_count = 4;
             }
             else if (dim == 3)
             {
@@ -398,6 +409,8 @@ namespace MyGridGenerator
                 Tensor<1,dim> shift_vector;
                 shift_vector[1] = -sizes[1]/2.;
                 GridTools::shift(shift_vector, triangulation);
+
+                boundary_count = 6;
             }
             
             manifold_ids.push_back(0);
@@ -405,6 +418,9 @@ namespace MyGridGenerator
         }
         else if (grid_name == "cylinder_with_split_boundaries")
         {
+
+            assert(dim > 1);
+
             MyGridGenerator::cylinder_with_split_boundaries
                 (
                 triangulation,
@@ -412,18 +428,24 @@ namespace MyGridGenerator
                 );
             manifold_ids.push_back(0);
             manifold_descriptors.push_back("cylindrical");
+
+            boundary_count = 4*(dim - 1);
         }
         else if (grid_name == "hyper_cube_with_cylindrical_hole") 
         {
             assert(dim==2);
+
             GridGenerator::hyper_cube_with_cylindrical_hole
                (
                 triangulation,
                 sizes[0], sizes[1]
                 );
+                
             GridTools::copy_boundary_to_manifold_id(triangulation);
             manifold_ids.push_back(1);
-            manifold_descriptors.push_back("spherical");  
+            manifold_descriptors.push_back("spherical");
+
+            boundary_count = 5;
         }
         else
         {
