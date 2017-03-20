@@ -80,10 +80,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">nsb-pcm Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p>The development of this code has just begun, starting from a copy of the author's convection-diffusion code at <a href="https://github.com/alexanderzimmerman/peclet">https://github.com/alexanderzimmerman/peclet</a></p>
+<p>nsb-pcm (Navier-Stokes-Boussinesq with phase-change material) will solve the incompressible NSB equations coupled with an enthalpy-based energy equation allowing for melting and solidification of the phase-change material medium.</p>
+<p>This is written in C++ and based on the deal.II finite element method library.</p>
+<p>Author: Alexander G. Zimmerman <a href="#" onclick="location.href='mai'+'lto:'+'zim'+'me'+'rma'+'n@'+'aic'+'es'+'.rw'+'th'+'-aa'+'ch'+'en.'+'de'; return false;">zimme<span style="display: none;">.nosp@m.</span>rman<span style="display: none;">.nosp@m.</span>@aice<span style="display: none;">.nosp@m.</span>s.rw<span style="display: none;">.nosp@m.</span>th-aa<span style="display: none;">.nosp@m.</span>chen<span style="display: none;">.nosp@m.</span>.de</a></p>
+<p>Doxygen generated HTML documentation: <a href="https://alexanderzimmerman.github.io/nsb-pcm/">https://alexanderzimmerman.github.io/nsb-pcm/</a></p>
+<p><a href="https://travis-ci.org/alexanderzimmerman/nsb-pcm">![Build Status](https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master)</a> &lt;- Continuous integration status (Click the button to go to Travis-CI)</p>
+<h1>Run pre-built version on docker image</h1>
+<p>Pull the image from <a href="https://hub.docker.com/r/zimmerman/nsb-pcm/">https://hub.docker.com/r/zimmerman/nsb-pcm/</a></p>
+<p>```shell docker pull zimmerman/nsb-pcm ```</p>
+<h1>Build</h1>
+<p>This is currently being tested with the following builds of deal.II:</p>
+<ul>
+<li>deal.II v8.4.2 built by candi (<a href="https://github.com/koecher/candi">https://github.com/koecher/candi</a>) on Ubuntu 14.04</li>
+<li>deal.II v8.4.2 from docker image dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release (as shown in nsb-pcm/tests/Dockerfile)</li>
+</ul>
+<p>To build:</p>
+<p>```shell git clone <a href="#" onclick="location.href='mai'+'lto:'+'git'+'@g'+'ith'+'ub'+'.co'+'m'; return false;">git@g<span style="display: none;">.nosp@m.</span>ithu<span style="display: none;">.nosp@m.</span>b.com</a>:alexanderzimmerman/nsb-pcm.git</p>
+<p>mkdir build</p>
+<p>cd build</p>
+<p>cmake ../nsb-pcm</p>
+<p>make test ``` </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 6 2017 16:28:06 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 20 2017 08:20:20 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
