@@ -55,5 +55,9 @@ doxygen
 
 cd doc/html
 
+git add *
+
+git commit -m "Refreshed HTML doc"
+
 git push origin gh-pages
 ```
