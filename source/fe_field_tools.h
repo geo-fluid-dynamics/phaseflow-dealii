@@ -50,12 +50,53 @@ namespace FEFieldTools
             archive << field_tria;
         }
     }
+
     template<int dim>
     void load_field_parts(
         Triangulation<dim> &field_tria,
         DoFHandler<dim> &field_dof_handler,
         Vector<double> &field_solution,
         FE_Q<dim> &fe)
+    {
+        {
+            std::string file_path = "field_triangulation";
+            std::ifstream file_stream(file_path, std::ios::binary);
+            if (!file_stream.good())
+            {
+                throw std::runtime_error("Error while opening the file: " + file_path);
+            }
+            boost::archive::binary_iarchive archive(file_stream);
+            archive >> field_tria;
+        }
+        field_dof_handler.distribute_dofs(fe);
+        {
+            std::string file_path = "field_dof_handler";
+            std::ifstream file_stream(file_path, std::ios::binary);
+            if (!file_stream.good())
+            {
+                throw std::runtime_error("Error while opening the file: " + file_path);
+            }
+            boost::archive::binary_iarchive archive(file_stream);
+            archive >> field_dof_handler;
+        }
+        {
+            std::string file_path = "field_solution";
+            std::ifstream file_stream(file_path, std::ios::binary);
+            if (!file_stream.good())
+            {
+                throw std::runtime_error("Error while opening the file: " + file_path);
+            }
+            boost::archive::binary_iarchive archive(file_stream);
+            archive >> field_solution;
+        }
+    }
+
+    template<int dim>
+    void load_field_parts(
+        Triangulation<dim> &field_tria,
+        DoFHandler<dim> &field_dof_handler,
+        Vector<double> &field_solution,
+        FESystem<dim,dim> &fe)
     {
         {
             std::string file_path = "field_triangulation";

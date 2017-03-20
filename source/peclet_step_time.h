@@ -8,7 +8,7 @@
 @author Alexander G. Zimmerman 2016 <zimmerman@aices.rwth-aachen.de>
 */
 template<int dim>
-SolverStatus Peclet<dim>::solve_time_step(bool quiet)
+SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 {
     double tolerance = this->params.solver.tolerance;
     if (this->params.solver.normalize_tolerance)
@@ -32,13 +32,13 @@ SolverStatus Peclet<dim>::solve_time_step(bool quiet)
         solver_name = "GMRES";
         solver_gmres.solve(
             this->system_matrix,
-            this->solution,
+            this->newton_solution,
             this->system_rhs,
             preconditioner);    
     }
     else
     {
-        Assert(false, NotImplemented());
+        Assert(false, ExcNotImplemented());
     }
 
     this->constraints.distribute(this->solution);
@@ -69,7 +69,7 @@ SolverStatus Peclet<dim>::solve_time_step(bool quiet)
 template<int dim>
 void Peclet<dim>::step_time(bool quiet)
 {
-    if (output_this_step)
+    if (!quiet & output_this_step)
     {
         std::cout << "Time step " << this->time_step_counter 
             << " at t=" << this->time << std::endl;    
@@ -78,19 +78,31 @@ void Peclet<dim>::step_time(bool quiet)
     bool converged = false;
     double residual = 1.e32; // Initialize to an arbitrarily large number
 
-    for (unsigned int i = 0; i < max_newton_iterations; ++i)
+    unsigned int i;
+
+    this->old_solution = this->solution;
+
+    Vector<double> diff(this->solution.size());
+
+    for (i = 0; i < MAX_NEWTON_ITERATIONS; ++i)
     {
         this->assemble_system();
 
-        this->apply_boundary_conditions_and_constraints();
+        this->apply_boundary_values_and_constraints();
+
+        this->old_newton_solution = this->newton_solution;
 
         this->solve_linear_system();
 
-        residual = (this->solution - this->old_solution).l2_norm();
+        diff = this->newton_solution;
+        diff -= this->old_newton_solution;
 
-        if (residual < tolerance)
+        residual = diff.l2_norm();
+
+        if (residual < NEWTON_TOLERANCE)
         {
             converged = true;
+            this->solution = this->newton_solution;
             break;
         }
 
@@ -98,19 +110,28 @@ void Peclet<dim>::step_time(bool quiet)
 
     assert(converged);
 
-    std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
-
-    this->solver_status = this->solve_time_step(!output_this_step);
+    if (!quiet)
+    {
+        std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
+    }
     
     bool steady = false;
-    if (solver_status.last_step == 0)
+    diff = this->solution;
+    diff -= this->old_solution;
+    const double l2_norm_diff = diff.l2_norm();
+    if ((l2_norm_diff < NEWTON_TOLERANCE) & 
+        (l2_norm_diff < this->params.solver.tolerance))
     {
         steady = true;
     }
 
     if (this->params.time.stop_when_steady & steady)
     {
-        std::cout << "Reached steady state at t = " << this->time << std::endl;
+        if (!quiet)
+        {
+            std::cout << "Reached steady state at t = " << this->time << std::endl;
+        }
+        
         this->final_time_step = true;
         this->output_this_step = true;
     }
