@@ -88,35 +88,43 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p><a href="https://travis-ci.org/alexanderzimmerman/nsb-pcm">![Build Status](https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master)</a> &lt;- Continuous integration status (Click the button to go to Travis-CI)</p>
 <h1>For users:</h1>
 <h2>Run pre-built version on docker image</h2>
-<p>Pull the image from <a href="https://hub.docker.com/r/zimmerman/nsb-pcm/">https://hub.docker.com/r/zimmerman/nsb-pcm/</a></p>
-<p>```shell docker pull zimmerman/nsb-pcm ```</p>
-<h1>For developers:</h1>
-<h2>Build</h2>
+<p>Pull the image from <a href="https://hub.docker.com/r/zimmerman/nsb-pcm/">https://hub.docker.com/r/zimmerman/nsb-pcm/</a> </p>
+<pre class="fragment">docker pull zimmerman/nsb-pcm
+</pre><h1>For developers:</h1>
+<h2>Versions</h2>
 <p>This is currently being tested with the following builds of deal.II:</p>
 <ul>
 <li>deal.II v8.4.2 built by candi (<a href="https://github.com/koecher/candi">https://github.com/koecher/candi</a>) on Ubuntu 14.04</li>
 <li>deal.II v8.4.2 from docker image dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release (as shown in nsb-pcm/tests/Dockerfile)</li>
 </ul>
-<p>To build:</p>
-<p>```shell git clone <a href="#" onclick="location.href='mai'+'lto:'+'git'+'@g'+'ith'+'ub'+'.co'+'m'; return false;">git@g<span style="display: none;">.nosp@m.</span>ithu<span style="display: none;">.nosp@m.</span>b.com</a>:alexanderzimmerman/nsb-pcm.git</p>
-<p>mkdir build</p>
-<p>cd build</p>
-<p>cmake ../nsb-pcm</p>
-<p>make test ``` </p>
-<h2>Documentation</h2>
+<h2>Build</h2>
+<pre class="fragment">git clone git@github.com:alexanderzimmerman/nsb-pcm.git
+
+mkdir build
+
+cd build
+
+cmake ../nsb-pcm
+
+make test
+</pre><h2>Documentation</h2>
 <p>The Doxygen generated HTML docs are hosted in the standard GitHub fashion on the gh-pages branch.</p>
 <p>For initial set up with your local clone, follow the procedure found in <a href="https://github.com/m-a-d-n-e-s-s/madness/issues/104">https://github.com/m-a-d-n-e-s-s/madness/issues/104</a></p>
-<p>Then whenever commiting to the master branch, update the gh-pages branch as follows:</p>
-<p>```shell git push origin master</p>
-<p>doxygen</p>
-<p>cd doc/html</p>
-<p>git add *</p>
-<p>git commit -m "Refreshed HTML doc"</p>
-<p>git push origin gh-pages ``` </p>
-</div></div><!-- contents -->
+<p>Then whenever commiting to the master branch, update the gh-pages branch as follows: </p>
+<pre class="fragment">git push origin master
+
+doxygen
+
+cd doc/html
+
+git add *
+
+git commit -m "Refreshed HTML doc"
+
+git push origin gh-pages</pre> </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:33:42 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Mar 20 2017 08:39:52 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
