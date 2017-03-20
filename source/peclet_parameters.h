@@ -8,6 +8,8 @@
 
 #include <deal.II/base/parameter_handler.h>
 
+#include "my_parameter_handler.h"
+
 /*
     
     @brief Encapsulates parameter handling and paramter input file handling.
@@ -59,15 +61,12 @@ namespace Peclet
 
         struct BoundaryConditions
         {
-            std::vector<std::string> implementation_types;
-            std::vector<std::string> function_names;
-            std::list<double> function_double_arguments;
+            std::vector<std::vector<std::string>> strong_masks;
         };
         
         struct InitialValues
         {
             std::string function_name;
-            std::list<double> function_double_arguments; 
         };
         
         struct Geometry
@@ -123,8 +122,6 @@ namespace Peclet
         struct Verification
         {
             bool enabled;
-            std::string exact_solution_function_name;
-            std::vector<double> exact_solution_function_double_arguments;
         };
         
         struct StructuredParameters
@@ -147,20 +144,6 @@ namespace Peclet
             prm.enter_subsection("meta");
             {
                 prm.declare_entry("dim", std::to_string(dim), Patterns::Integer(1, 3));
-            }
-            prm.leave_subsection();
-            
-            
-            prm.enter_subsection("parsed_velocity_function");
-            {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim);    
-            }
-            prm.leave_subsection();
-
-            
-            prm.enter_subsection("parsed_diffusivity_function");
-            {
-                Functions::ParsedFunction<dim>::declare_parameters(prm);    
             }
             prm.leave_subsection();
 
@@ -219,14 +202,11 @@ namespace Peclet
             }
             prm.leave_subsection ();
             
-            
+
             prm.enter_subsection ("initial_values");
             {
                 prm.declare_entry("function_name", "parsed",
-                    Patterns::List(Patterns::Selection("parsed | constant | interpolate_old_field")));
-                    
-                prm.declare_entry("function_double_arguments", "",
-                    Patterns::List(Patterns::Double())); 
+                    Patterns::List(Patterns::Selection("parsed | interpolate_old_field")));
                     
                 prm.enter_subsection("parsed_function");
                 {
@@ -240,29 +220,10 @@ namespace Peclet
             
             prm.enter_subsection ("boundary_conditions");
             {
-                // Each of these lists needs a value for every boundary, in order
-                prm.declare_entry("implementation_types", "natural, strong",
-                    Patterns::List(Patterns::Selection("natural | strong")),
-                    "Type of boundary conditions to apply to each boundary");  
-                    
-                prm.declare_entry("function_names", "parsed, parsed",
-                    Patterns::List(Patterns::Selection("parsed | constant")),
-                    "Names of functions to apply to each boundary");
-                    
-                prm.declare_entry("function_double_arguments", "",
-                    Patterns::List(Patterns::Double()),
-                    "This list of doubles will be popped from front to back as needed."
-                    "\nThis puts some work on the user to greatly ease development."
-                    "\nHere are some tips:"
-                    "\n\t- The function values will only be popped during initialization."
-                    "\n\t- Boundaries will be handled in order of their ID's."
-                    "\n\t- If a function needs a Point as an argument, then it will pop doubles to make the point in order."); 
-                    
-                prm.enter_subsection("parsed_function");
-                {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
-                }
-                prm.leave_subsection();
+                prm.declare_entry("strong_mask", "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
+                    Patterns::List(Patterns::List(
+                        Patterns::Integer(0,1), dim + 2, dim + 2, ';'),
+                        0, Patterns::List::max_int_value, ','));
 
             }
             prm.leave_subsection ();
@@ -395,24 +356,8 @@ namespace Peclet
             }
             prm.leave_subsection();
 
-        }
+        }   
 
-
-        template<typename ItemType>
-        std::vector<ItemType> get_vector(ParameterHandler &prm, std::string parameter_name)
-        {
-            std::vector<std::string> strings = Utilities::split_string_list(prm.get(parameter_name));
-            std::vector<ItemType> items;
-            for (auto &string : strings) 
-            {
-                std::stringstream parser(string);
-                ItemType item;
-                parser >> item;
-                items.push_back(item);
-            }
-            return items;
-        }    
-        
         
         Meta read_meta_parameters(const std::string parameter_file="")
         {
@@ -438,9 +383,8 @@ namespace Peclet
         template <int dim>
         StructuredParameters read(
                 const std::string parameter_file,
-                Functions::ParsedFunction<dim> &parsed_source_function,
-                Functions::ParsedFunction<dim> &parsed_boundary_function,
-                Functions::ParsedFunction<dim> &parsed_exact_solution_function,
+                Functions::ParsedFunction<dim> &source_function,
+                Functions::ParsedFunction<dim> &exact_solution_function,
                 Functions::ParsedFunction<dim> &parsed_initial_values_function)
         {
 
@@ -462,16 +406,16 @@ namespace Peclet
             prm.enter_subsection("geometry");
             {
                 params.geometry.grid_name = prm.get("grid_name");
-                params.geometry.sizes = Parameters::get_vector<double>(prm, "sizes");
+                params.geometry.sizes = MyParameterHandler::get_vector<double>(prm, "sizes");
                 params.geometry.transformations = 
-                    Parameters::get_vector<double>(prm, "transformations");    
+                    MyParameterHandler::get_vector<double>(prm, "transformations");    
             }
             prm.leave_subsection();
 
             
-            prm.enter_subsection("parsed_source_function");
+            prm.enter_subsection("source_function");
             {
-                parsed_source_function.parse_parameters(prm);
+                source_function.parse_parameters(prm);
             }
             prm.leave_subsection();
                 
@@ -491,30 +435,6 @@ namespace Peclet
             }
             prm.leave_subsection();
             
-            prm.enter_subsection("boundary_conditions");
-            {
-                params.boundary_conditions.implementation_types = 
-                    Parameters::get_vector<std::string>(prm, "implementation_types");
-                params.boundary_conditions.function_names = 
-                    Parameters::get_vector<std::string>(prm, "function_names");
-                
-                std::vector<double> vector = 
-                    Parameters::get_vector<double>(prm, "function_double_arguments");
-                
-                for (auto v : vector)
-                {
-                    params.boundary_conditions.function_double_arguments.push_back(v);
-                }
-
-                prm.enter_subsection("parsed_function");
-                {
-                    parsed_boundary_function.parse_parameters(prm);
-                }
-                prm.leave_subsection();
-                
-            }    
-            prm.leave_subsection();
-            
             prm.enter_subsection("initial_values");
             {               
                 params.initial_values.function_name = prm.get("function_name"); 
@@ -527,6 +447,32 @@ namespace Peclet
               
             }    
             prm.leave_subsection();
+
+
+            prm.enter_subsection ("boundary_conditions");
+            {
+
+                std::string strong_mask_string = prm.get("strong_mask");
+
+                std::vector<std::string> boundary_strings(Utilities::split_string_list(strong_mask_string, ','));
+
+                for (unsigned int b = 0; b < boundary_strings.size(); ++b)
+                {
+
+                    std::vector<std::string> strings(Utilities::split_string_list(boundary_strings[b], ';'));
+
+                    for (auto &string : strings) 
+                    {
+                        std::stringstream parser(string);
+                        std::vector<unsigned int> mask;
+                        parser >> mask;
+                        params.boundary_conditions.strong_mask.push_back(mask);
+                    }
+
+                }
+
+            }
+            prm.leave_subsection ();
             
             
             prm.enter_subsection("refinement");
@@ -535,7 +481,7 @@ namespace Peclet
                 params.refinement.initial_global_cycles = prm.get_integer("initial_global_cycles");
                 params.refinement.initial_boundary_cycles = prm.get_integer("initial_boundary_cycles");
                 params.refinement.boundaries_to_refine = 
-                    Parameters::get_vector<unsigned int>(prm, "boundaries_to_refine");
+                    MyParameterHandler::get_vector<unsigned int>(prm, "boundaries_to_refine");
                 
                 prm.enter_subsection("adaptive");
                 {
@@ -583,6 +529,65 @@ namespace Peclet
             prm.leave_subsection();
             
             return params;
+        }
+
+
+        /*!
+        @brief Read input parameters for parsed boundary functions.
+
+        @detail 
+            
+            This is separate from the reading of other parameters, because the number of boundary functions is not known until after generating the coarse grid.
+
+        @author Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de> 2017
+
+        */
+        template <int dim>
+        void read_parsed_boundary_function_inputs(
+                const std::string parameter_file,
+                std:::vector<Functions::ParsedFunction<dim>> &boundary_functions)
+        {
+            
+            ParameterHandler prm;
+
+            prm.enter_subsection("boundary_conditions");
+
+            for (unsigned int b = 0; b < boundary_count; ++b)
+            {
+                prm.enter_subsection("parsed_function_"+int_to_string(boundary));
+                {
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+                }
+                prm.leave_subsection();
+            }
+
+            prm.leave_subsection();
+                
+
+            if (parameter_file != "")
+            {
+                prm.read_input(parameter_file);    
+            }
+            
+            // Print a log file of all the ParameterHandler parameters
+            std::ofstream parameter_log_file("used_boundary_parameters.prm");
+            assert(parameter_log_file.good());
+            prm.print_parameters(parameter_log_file, ParameterHandler::Text);
+            
+            prm.enter_subsection("boundary_conditions");
+            {
+
+                for (unsigned int b = 0; b < boundary_count; ++b)
+                {
+                    prm.enter_subsection("parsed_function_"+int_to_string(boundary));
+                    {
+                        parsed_boundary_functions[i].parse_parameters(prm);
+                    }
+                    prm.leave_subsection();
+                }
+            }    
+            prm.leave_subsection();
+
         }
 
         

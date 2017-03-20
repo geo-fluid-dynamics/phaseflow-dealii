@@ -390,6 +390,10 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
 
         for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
         {
+
+
+            
+
             if (this->params.boundary_conditions.implementation_types[boundary] != "strong") 
             {
                 continue;

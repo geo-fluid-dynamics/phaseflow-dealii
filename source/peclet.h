@@ -143,6 +143,8 @@ namespace Peclet
 
     Point<dim> spherical_manifold_center;
     
+    unsigned int boundary_count;
+
     std::vector<unsigned int> manifold_ids;
     std::vector<std::string> manifold_descriptors;
     
@@ -272,17 +274,17 @@ namespace Peclet
     then is to instantitate all of the functions that might be needed, and then to point to the ones
     actually being used.
     */
-    Functions::ParsedFunction<dim> parsed_velocity_function(dim),
-        parsed_source_function(dim + 2),
-        parsed_boundary_function(dim + 2),
+    Functions::ParsedFunction<dim>
+        source_function(dim + 2),
         parsed_initial_values_function(dim + 2),
-        parsed_exact_solution_function(dim + 2); 
+        exact_solution_function(dim + 2);
+
+    std::vector<Functions::ParsedFunction<dim>> boundary_functions(boundary_count);
     
     this->params = Parameters::read<dim>(
         parameter_file,
-        parsed_source_function,
-        parsed_boundary_function,
-        parsed_exact_solution_function,
+        source_function,
+        exact_solution_function,
         parsed_initial_values_function);
     
     this->create_coarse_grid();
@@ -330,46 +332,14 @@ namespace Peclet
     }
     
     // Boundary condition functions
-    
-    unsigned int boundary_count = this->params.boundary_conditions.implementation_types.size();
-    
-    assert(params.boundary_conditions.function_names.size() == boundary_count);
 
-    std::vector<ConstantFunction<dim>> constant_functions;
-    
-    for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
+    this->params = Parameters::read_boundary_inputs<dim>(
+        parameter_file,
+        parsed_boundary_functions);
+
+    for (boundary = 0; boundary < boundary_count; ++boundary)
     {
-        std::string boundary_type = this->params.boundary_conditions.implementation_types[boundary];
-        std::string function_name = this->params.boundary_conditions.function_names[boundary];
-        
-        if (function_name == "constant")
-        {
-            double value = this->params.boundary_conditions.function_double_arguments.front();
-            this->params.boundary_conditions.function_double_arguments.pop_front();
-            constant_functions.push_back(ConstantFunction<dim>(value));
-        }
-    }
-
-    /*! Organize boundary functions to simplify application during the time loop */
-    
-    unsigned int constant_function_index = 0;
-    
-    for (unsigned int boundary = 0; boundary < boundary_count; boundary++)        
-    {
-        std::string boundary_type = this->params.boundary_conditions.implementation_types[boundary];
-        std::string function_name = this->params.boundary_conditions.function_names[boundary];
-
-        if (function_name == "constant")
-        {
-            assert(constant_function_index < constant_functions.size());
-            this->boundary_functions.push_back(&constant_functions[constant_function_index]);
-            constant_function_index++;
-        }
-        else if (function_name == "parsed")
-        {
-            this->boundary_functions.push_back(&parsed_boundary_function);
-        }
-        
+        this->boundary_functions.push_back(&parsed_boundary_functions[boundary]);
     }
 
     // Attach manifolds
