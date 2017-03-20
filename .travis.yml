@@ -5,6 +5,7 @@ services:
 
 notifications:
   email: false
+  slack: aices-pcm-cfd:ShncJAFCJzx48zt8hrXpRwGw
 
 before_install:
 - docker pull zimmerman/nsb-pcm
