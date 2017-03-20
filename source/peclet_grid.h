@@ -51,17 +51,7 @@ void Peclet<dim>::adaptive_refine()
     SolutionTransfer<dim> solution_trans(this->dof_handler);
     Vector<double> previous_solution;
     previous_solution = this->solution;
-    Refinement::adaptive_refine_mesh(
-        this->triangulation,
-        this->dof_handler,
-        this->solution,
-        solution_trans,
-        this->fe,
-        this->params.refinement.initial_global_cycles + params.refinement.initial_boundary_cycles,
-        this->params.refinement.adaptive.max_level,
-        this->params.refinement.adaptive.max_cells,
-        this->params.refinement.adaptive.refine_fraction,
-        this->params.refinement.adaptive.coarsen_fraction);
+    Refinement::adaptive_refine_mesh<dim>();
     this->setup_system();
     solution_trans.interpolate(previous_solution, this->solution);
     this->constraints.distribute(this->solution);

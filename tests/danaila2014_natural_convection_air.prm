@@ -9,12 +9,8 @@ subsection geometry
     set sizes = 0., 0., 1., 1.
 end
 
-subsection parsed_diffusivity_function
-    set Function expression = 1.
-end
-
 subsection parsed_source_function
-    set Function expression = 0.
+    set Function expression = 0.; 0.; 0.; 0.
 end
 
 subsection initial_values
@@ -22,7 +18,7 @@ subsection initial_values
     set function_name = parsed
     
     subsection parsed_function
-        set Function expression = 0., 0., 0., 0., 0.
+        set Function expression = 0.; 0.; 0.; 0.
     end
     
 end
