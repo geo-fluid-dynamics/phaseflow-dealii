@@ -32,6 +32,7 @@
 #include <deal.II/lac/sparse_matrix.h>
 #include <deal.II/lac/solver_cg.h>
 #include <deal.II/lac/solver_bicgstab.h>
+#include <deal.II/lac/solver_gmres.h>
 #include <deal.II/lac/precondition.h>
 #include <deal.II/lac/constraint_matrix.h>
 #include <deal.II/grid/tria.h>
@@ -40,9 +41,11 @@
 #include <deal.II/grid/tria_accessor.h>
 #include <deal.II/grid/tria_iterator.h>
 #include <deal.II/dofs/dof_handler.h>
+#include <deal.II/dofs/dof_renumbering.h>
 #include <deal.II/dofs/dof_accessor.h>
 #include <deal.II/dofs/dof_tools.h>
 #include <deal.II/fe/fe_q.h>
+#include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/numerics/vector_tools.h>
 #include <deal.II/numerics/matrix_tools.h>
@@ -69,7 +72,22 @@
 namespace Peclet
 {
   using namespace dealii;
+
+  const unsigned int SCALAR_DEGREE = 1; /*! @todo: Expose to ParameterHandler */
+  const unsigned int VECTOR_DEGREE = 2; /*! @todo: Expose to ParameterHandler */
+  const unsigned int MAX_NEWTON_ITERATIONS = 100; /*! @todo: Expose to ParameterHandler */
+  const double NEWTON_TOLERANCE = 1.e-10; /*! @todo: Expose to ParameterHandler */
   
+  const double RAYLEIGH_NUMBER = 1.e6; /*! @todo: Expose to ParameterHandler */
+  const double PRANDTL_NUMBER = 0.71; /*! @todo: Expose to ParameterHandler */
+  const double REYNOLDS_NUMBER = 1.;
+
+  const double LIQUID_DYNAMIC_VISOCITY = 1.; /*! @todo: Expose to ParameterHandler */
+  const double SOLID_CONDUCTIVITY = 1.; /*! @todo: Expose to ParameterHandler */
+  const double LIQUID_CONDUCTIVITY = 2.; /*! @todo: Expose to ParameterHandler */
+  
+  const Tensor<1, 3> GRAVITY({0., -1., 0.}); /*! @todo: Expose to ParameterHandler */
+
   const double EPSILON = 1.e-14;
   
   struct SolverStatus
@@ -81,24 +99,29 @@ namespace Peclet
   class Peclet
   {
   public:
+  
     Peclet();
     Parameters::StructuredParameters params;
     void init(std::string file_path);
     void run(const std::string parameter_file = "");
 
   private:
+
     void create_coarse_grid();
     void adaptive_refine();
     void setup_system(bool quiet = false);
+    void assemble_system(bool quiet = false);
+    void apply_boundary_values_and_constraints();
     void step_time(bool quiet = false);
-    void assemble_system();
-    SolverStatus solve_time_step(bool quiet = false);
+
+    SolverStatus solve_linear_system(bool quiet = false);
+
     void write_solution();
 
-    const unsigned int scalar_degree = 1; /*! @todo: Expose scalar_degree to ParameterHandler */
-
     Triangulation<dim> triangulation;
-    FESystem<dim> fe;
+
+    FESystem<dim,dim> fe;
+    
     DoFHandler<dim> dof_handler;
 
     ConstraintMatrix constraints;
@@ -110,6 +133,7 @@ namespace Peclet
     Vector<double>       solution;
     Vector<double>       old_solution;
     Vector<double>       newton_solution;
+    Vector<double>       old_newton_solution;
 
     Vector<double>       system_rhs;
 
@@ -147,8 +171,8 @@ namespace Peclet
   template<int dim>
   Peclet<dim>::Peclet()
     :
-    fe(FE_Q<dim>(this->scalar_deg + 1), dim, // velocity
-       FE_Q<dim>(this->scalar_degree, 2)), // pressure and temperature
+    fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
+       FE_Q<dim>(SCALAR_DEGREE), 2),  // pressure and temperature
     dof_handler(this->triangulation)
   {}
   
@@ -351,7 +375,29 @@ namespace Peclet
             constant_functions.push_back(ConstantFunction<dim>(value));
         }
     }
+
+    /*! Organize boundary functions to simplify application during the time loop */
     
+    unsigned int constant_function_index = 0;
+    
+    for (unsigned int boundary = 0; boundary < boundary_count; boundary++)        
+    {
+        std::string boundary_type = this->params.boundary_conditions.implementation_types[boundary];
+        std::string function_name = this->params.boundary_conditions.function_names[boundary];
+
+        if (function_name == "constant")
+        {
+            assert(constant_function_index < constant_functions.size());
+            this->boundary_functions.push_back(&constant_functions[constant_function_index]);
+            constant_function_index++;
+        }
+        else if (function_name == "parsed")
+        {
+            this->boundary_functions.push_back(&parsed_boundary_function);
+        }
+        
+    }
+
     // Attach manifolds
     
     assert(dim < 3); // @todo: 3D extension: For now the CylindricalManifold is being ommitted.
@@ -397,7 +443,6 @@ start_time_iteration:
     this->time_step_counter = 0;
     this->time = 0;
     
-    double theta = this->params.time.semi_implicit_theta;
     this->time_step_size = this->params.time.step_size;
     if (this->time_step_size < EPSILON)
     {

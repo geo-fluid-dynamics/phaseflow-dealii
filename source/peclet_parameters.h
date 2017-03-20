@@ -52,6 +52,11 @@ namespace Peclet
             unsigned int dim;
         };
 
+        struct PhysicalModel
+        {
+            std::vector<double> gravity;
+        };
+
         struct BoundaryConditions
         {
             std::vector<std::string> implementation_types;

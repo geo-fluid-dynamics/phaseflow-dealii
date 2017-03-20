@@ -4,7 +4,6 @@ int main(int argc, char* argv[])
 {
     try
     {   
-        
         std::string parameter_input_file_path = "";
         
         if (argc == 2)
@@ -20,9 +19,9 @@ int main(int argc, char* argv[])
         so we must instantiate each possible dimensionality. This is virtually free, since of course
         data will only be generated for one of these models.
         */
-        Peclet::Peclet<1,1> peclet_1D;
-        Peclet::Peclet<2,1> peclet_2D;
-        Peclet::Peclet<3,1> peclet_3D;
+        Peclet::Peclet<1> peclet_1D;
+        Peclet::Peclet<2> peclet_2D;
+        Peclet::Peclet<3> peclet_3D;
 
         switch (mp.dim)
         {
@@ -60,5 +59,7 @@ int main(int argc, char* argv[])
               << std::endl;
         return 1;
     }
+
     return 0;
+
 }
