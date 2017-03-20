@@ -17,30 +17,27 @@ Doxygen generated HTML documentation: https://alexanderzimmerman.github.io/nsb-p
 
 Pull the image from https://hub.docker.com/r/zimmerman/nsb-pcm/
 
-```shell
-docker pull zimmerman/nsb-pcm
-```
+    docker pull zimmerman/nsb-pcm
 
 # For developers:
-## Build
+## Versions
 
 This is currently being tested with the following builds of deal.II:
 - deal.II v8.4.2 built by candi (https://github.com/koecher/candi) on Ubuntu 14.04
 - deal.II v8.4.2 from docker image dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release (as shown in nsb-pcm/tests/Dockerfile)
 
-To build:
+## Build
 
-```shell
-git clone git@github.com:alexanderzimmerman/nsb-pcm.git
+    git clone git@github.com:alexanderzimmerman/nsb-pcm.git
 
-mkdir build
+    mkdir build
 
-cd build
+    cd build
 
-cmake ../nsb-pcm
+    cmake ../nsb-pcm
 
-make test
-```
+    make test
+    
 ## Documentation
 The Doxygen generated HTML docs are hosted in the standard GitHub fashion on the gh-pages branch.
 
@@ -48,16 +45,14 @@ For initial set up with your local clone, follow the procedure found in https://
 
 Then whenever commiting to the master branch, update the gh-pages branch as follows:
 
-```shell
-git push origin master
+    git push origin master
 
-doxygen
+    doxygen
 
-cd doc/html
+    cd doc/html
 
-git add *
+    git add *
 
-git commit -m "Refreshed HTML doc"
+    git commit -m "Refreshed HTML doc"
 
-git push origin gh-pages
-```
+    git push origin gh-pages
