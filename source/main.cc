@@ -19,20 +19,21 @@ int main(int argc, char* argv[])
         so we must instantiate each possible dimensionality. This is virtually free, since of course
         data will only be generated for one of these models.
         */
-        Peclet::Peclet<1> peclet_1D;
         Peclet::Peclet<2> peclet_2D;
         Peclet::Peclet<3> peclet_3D;
 
         switch (mp.dim)
         {
-            case 1:
-                peclet_1D.run(parameter_input_file_path);
-                break;
             case 2:
                 peclet_2D.run(parameter_input_file_path);
                 break;
+            
             case 3:
                 peclet_3D.run(parameter_input_file_path);
+                break;
+            
+            default:
+                Assert(false, dealii::ExcNotImplemented());
                 break;
         }
 

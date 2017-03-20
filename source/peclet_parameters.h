@@ -167,7 +167,7 @@ namespace Peclet
             
             prm.enter_subsection("parsed_source_function");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm);    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
             }
             prm.leave_subsection();  
             
@@ -230,7 +230,7 @@ namespace Peclet
                     
                 prm.enter_subsection("parsed_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm); 
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
                 }
                 prm.leave_subsection();
                     
@@ -260,7 +260,7 @@ namespace Peclet
                     
                 prm.enter_subsection("parsed_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
                 }
                 prm.leave_subsection();
 
@@ -389,7 +389,7 @@ namespace Peclet
                 
                 prm.enter_subsection("parsed_exact_solution_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
                 }
                 prm.leave_subsection();
             }
@@ -438,8 +438,6 @@ namespace Peclet
         template <int dim>
         StructuredParameters read(
                 const std::string parameter_file,
-                Functions::ParsedFunction<dim> &parsed_velocity_function,
-                Functions::ParsedFunction<dim> &parsed_diffusivity_function,
                 Functions::ParsedFunction<dim> &parsed_source_function,
                 Functions::ParsedFunction<dim> &parsed_boundary_function,
                 Functions::ParsedFunction<dim> &parsed_exact_solution_function,
@@ -467,20 +465,6 @@ namespace Peclet
                 params.geometry.sizes = Parameters::get_vector<double>(prm, "sizes");
                 params.geometry.transformations = 
                     Parameters::get_vector<double>(prm, "transformations");    
-            }
-            prm.leave_subsection();
-            
-            
-            prm.enter_subsection("parsed_velocity_function");
-            {
-                parsed_velocity_function.parse_parameters(prm);    
-            }
-            prm.leave_subsection();
-            
-            
-            prm.enter_subsection("parsed_diffusivity_function");
-            {
-                parsed_diffusivity_function.parse_parameters(prm);    
             }
             prm.leave_subsection();
 

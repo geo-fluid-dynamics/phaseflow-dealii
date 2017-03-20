@@ -1,14 +1,13 @@
  /*
- * @brief peclet solves the convection-diffusion equation
+ * @brief nsb-pcm peclet solves the Navier-Stokes-Boussinesq equations coupled with phase-change
  *
  * @detail
  *
- *  This solves the unsteady convection-diffusion equation.
- *
- *  System assembly and time stepping are based on deal.II Tutorial 26 by Wolfgang Bangerth, Texas A&M University, 2013
+ *  Based on peclet, which was based on deal.II Tutorial 26 by Wolfgang Bangerth, Texas A&M University, 2013
  *
  *  Some of the more notable extensions include:
- *  - Builds convection-diffusion matrix instead of Laplace matrix
+ *  - Step time with Newton iterations; each Newton iteration requires a linear system solve
+ *  - Assembles Newton linearized differential of the Navier-Stokes-Boussinesq equation with latent heat of phase-change
  *  - Supports time-dependent non-zero Dirichlet and Neumann boundary condition
  *  - Re-designed parmameter handling
  *  - Generalized boundary condition handling via the parameter input file
@@ -18,7 +17,6 @@
  *  - Added test suite using ctest and the standard deal.II approach
  *  - Added a parameteric sphere-cylinder grid
  *  - Added a boundary grid refinement routine
- *  - Added a output option for 1D solutions in tabular format
  *
  * @author Alexander Zimmerman <zimmerman@aices.rwth-aachen.de>, RWTH AAchen University, 2016
  */
@@ -65,7 +63,6 @@
 #include "my_grid_generator.h"
 #include "fe_field_tools.h"
 #include "output.h"
-#include "my_vector_tools.h"
 
 #include "peclet_parameters.h"
 
@@ -110,7 +107,7 @@ namespace Peclet
     void create_coarse_grid();
     void adaptive_refine();
     void setup_system(bool quiet = false);
-    void assemble_system(bool quiet = false);
+    void assemble_system();
     void apply_boundary_values_and_constraints();
     void step_time(bool quiet = false);
 
@@ -150,7 +147,6 @@ namespace Peclet
     std::vector<std::string> manifold_descriptors;
     
     Function<dim>* velocity_function;
-    Function<dim>* diffusivity_function;
     Function<dim>* source_function;
     std::vector<Function<dim>*> boundary_functions;
     Function<dim>* initial_values_function;
@@ -160,11 +156,6 @@ namespace Peclet
     void write_verification_table();
     TableHandler verification_table;
     std::string verification_table_file_name = "verification_table.txt";
-    
-    void append_1D_solution_to_table();
-    void write_1D_solution_table(std::string file_name);
-    TableHandler solution_table_1D;
-    std::string solution_table_1D_file_name = "1D_solution_table.txt";
     
   };
   
@@ -182,8 +173,6 @@ namespace Peclet
 
   #include "peclet_step_time.h"
   
-  #include "peclet_1D_solution_table.h"
-  
   template<int dim>
   void Peclet<dim>::write_solution()
   {
@@ -194,11 +183,6 @@ namespace Peclet
             "solution-"+Utilities::int_to_string(this->time_step_counter)+".vtk",
             this->dof_handler,
             this->solution);    
-    }
-    
-    if (dim == 1)
-    {
-        this->append_1D_solution_to_table();
     }
     
   }
@@ -275,12 +259,7 @@ namespace Peclet
   {
     
     // Clean up the files in the working directory
-    
-    if (dim == 1)
-    {
-        std::remove(solution_table_1D_file_name.c_str()); // In 1D, the solution will be appended here at every time step.    
-    }        
-    
+
     if (this->params.verification.enabled)
     {
         std::remove(this->verification_table_file_name.c_str());
@@ -294,16 +273,13 @@ namespace Peclet
     actually being used.
     */
     Functions::ParsedFunction<dim> parsed_velocity_function(dim),
-        parsed_diffusivity_function,
-        parsed_source_function,
-        parsed_boundary_function,
-        parsed_initial_values_function,
-        parsed_exact_solution_function; 
+        parsed_source_function(dim + 2),
+        parsed_boundary_function(dim + 2),
+        parsed_initial_values_function(dim + 2),
+        parsed_exact_solution_function(dim + 2); 
     
     this->params = Parameters::read<dim>(
         parameter_file,
-        parsed_velocity_function,
-        parsed_diffusivity_function,
         parsed_source_function,
         parsed_boundary_function,
         parsed_exact_solution_function,
@@ -311,8 +287,6 @@ namespace Peclet
     
     this->create_coarse_grid();
     
-    this->velocity_function = &parsed_velocity_function;
-    this->diffusivity_function = &parsed_diffusivity_function;
     this->source_function = &parsed_source_function;
     this->exact_solution_function = &parsed_exact_solution_function;
     
@@ -536,13 +510,7 @@ start_time_iteration:
     {
         this->write_verification_table();
     }
-    
-    // Write the solution table containing pointwise values for every timestep.
-    if (dim == 1)
-    {
-        this->write_1D_solution_table(this->solution_table_1D_file_name);
-    }
-    
+
     // Cleanup
     this->triangulation.set_manifold(0);
     

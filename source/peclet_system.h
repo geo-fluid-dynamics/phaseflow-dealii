@@ -96,7 +96,7 @@ void Peclet<dim>::setup_system(bool quiet)
  @author Alexander Zimmerman 2016
 */
 template<int dim>
-void Peclet<dim>::assemble_system(bool quiet)
+void Peclet<dim>::assemble_system()
 {
     /*!
      Local parameters
@@ -181,7 +181,6 @@ void Peclet<dim>::assemble_system(bool quiet)
 
     const unsigned int dofs_per_cell = this->fe.dofs_per_cell;
     const unsigned int n_quad_points = quadrature_formula.size();
-    const unsigned int n_face_quad_points = face_quadrature_formula.size();
 
     FullMatrix<double> local_matrix(dofs_per_cell, dofs_per_cell);
     Vector<double> local_rhs(dofs_per_cell);
@@ -274,9 +273,7 @@ void Peclet<dim>::assemble_system(bool quiet)
             Name local variables to match notation in Danaila 2014
             */
             const Tensor<1, dim>  u_n = old_velocity_values[quad];
-            const double p_n = old_pressure_values[quad];
             const double theta_n = old_temperature_values[quad];
-            const Tensor<1, dim> gradtheta_n = old_temperature_gradients[quad];
             const Tensor<1, dim> u_k = newton_velocity_values[quad];
             const double p_k = newton_pressure_values[quad];
             const double theta_k = newton_temperature_values[quad];
@@ -307,7 +304,7 @@ void Peclet<dim>::assemble_system(bool quiet)
 
                     local_matrix(i,j) += // Momentum: Incompressible Navier-Stokes
                         scalar_product(u_w, v)/deltat
-                        + c(divu_w, u_k, v) + c(divu_k, u_w, v) + b(divv, p_w);
+                        + c(divu_w, u_k, v) + c(divu_k, u_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
 
                     local_matrix(i,j) -= // Momentum: Bouyancy (Classical linear Boussinesq approximation)
                         scalar_product(df_B_over_dtheta*theta_w, v);
@@ -400,13 +397,21 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             
             boundary_functions[boundary]->set_time(this->time);
             
+            /* 
+            @todo: Generalize boundary conditions 
+
+            e.g. allow for nonhomogeneous Dirichlet BC for velocity,
+            to simulate lid-driven cavity flow.
+            */
+            
             /*! Apply homogeneous Dirichlet boundary conditions for all components of the velocity. */
+            
             const FEValuesExtractors::Vector velocity(0);
             
             VectorTools::interpolate_boundary_values (
                 this->dof_handler,
                 boundary,
-                *boundary_functions[boundary],
+                ZeroFunction<dim>(dim),
                 boundary_values,
                 this->fe.component_mask(velocity));
 

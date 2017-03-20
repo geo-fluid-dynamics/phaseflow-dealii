@@ -62,17 +62,7 @@ namespace Refinement
     @todo Implement Danaila's metric
     */
     template <int dim>
-    void adaptive_refine_mesh(
-        Triangulation<dim> &triangulation,
-        DoFHandler<dim> &dof_handler,
-        Vector<double> &solution,
-        SolutionTransfer<dim> &solution_trans,
-        const FESystem<dim,dim> fe,
-        const unsigned int min_grid_level,
-        const unsigned int max_grid_level,
-        const unsigned int max_cells,
-        const double refine_fraction,
-        const double coarsen_fraction)
+    void adaptive_refine_mesh()
     {
         Assert(false, ExcNotImplemented());
     }
