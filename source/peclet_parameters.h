@@ -146,7 +146,7 @@ namespace Peclet
             prm.leave_subsection();
 
             
-            prm.enter_subsection("parsed_source_function");
+            prm.enter_subsection("source_function");
             {
                 Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
             }
@@ -351,10 +351,8 @@ namespace Peclet
             prm.enter_subsection("verification");
             {
                 prm.declare_entry("enabled", "false", Patterns::Bool());
-                prm.declare_entry("exact_solution_function_name", "parsed", 
-                    Patterns::Selection("parsed"));
-                
-                prm.enter_subsection("parsed_exact_solution_function");
+
+                prm.enter_subsection("exact_solution_function");
                 {
                     Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
                 }
@@ -437,6 +435,7 @@ namespace Peclet
                 prm.leave_subsection();
             }
             prm.leave_subsection();
+
             
             prm.enter_subsection("initial_values");
             {               
