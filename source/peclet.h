@@ -105,6 +105,9 @@ namespace Peclet
   private:
 
     void create_coarse_grid();
+    void read_parsed_boundary_function_inputs(
+        std::string parameter_file,
+        std::vector<Functions::ParsedFunction<dim>> &boundary_functions);
     void adaptive_refine();
     void setup_system(bool quiet = false);
     void assemble_system();
@@ -148,12 +151,17 @@ namespace Peclet
     std::vector<unsigned int> manifold_ids;
     std::vector<std::string> manifold_descriptors;
     
-    Function<dim>* velocity_function;
-    Function<dim>* source_function;
-    std::vector<Function<dim>*> boundary_functions;
-    Function<dim>* initial_values_function;
-    Function<dim>* exact_solution_function;
+    Functions::ParsedFunction<dim> source_function;
+    Functions::ParsedFunction<dim> exact_solution_function;
     
+    /*! 
+    Something internal to mu::Parser is throwing an error when
+    I try to do this with ParsedFunction<dim> instead of ParsedFunction<dim>*
+    */
+    std::vector<Functions::ParsedFunction<dim>*> boundary_function_pointers;
+
+    Function<dim>* initial_values_function_pointer;
+
     void append_verification_table();
     void write_verification_table();
     TableHandler verification_table;
@@ -166,10 +174,14 @@ namespace Peclet
     :
     fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
        FE_Q<dim>(SCALAR_DEGREE), 2),  // pressure and temperature
-    dof_handler(this->triangulation)
+    dof_handler(this->triangulation),
+    source_function(dim + 2),
+    exact_solution_function(dim + 2)
   {}
   
   #include "peclet_grid.h"
+
+  #include "peclet_boundary_conditions.h"
 
   #include "peclet_system.h"
 
@@ -194,14 +206,14 @@ namespace Peclet
   {
     assert(this->params.verification.enabled);
     
-    this->exact_solution_function->set_time(this->time);
+    this->exact_solution_function.set_time(this->time);
     
     Vector<float> difference_per_cell(triangulation.n_active_cells());
     
     VectorTools::integrate_difference(
         this->dof_handler,
         this->solution,
-        *this->exact_solution_function,
+        this->exact_solution_function,
         difference_per_cell,
         QGauss<dim>(dim + 1),
         VectorTools::L2_norm);
@@ -211,7 +223,7 @@ namespace Peclet
     VectorTools::integrate_difference(
         this->dof_handler,
         this->solution,
-        *this->exact_solution_function,
+        this->exact_solution_function,
         difference_per_cell,
         QGauss<dim>(dim + 1),
         VectorTools::L1_norm);
@@ -274,23 +286,15 @@ namespace Peclet
     then is to instantitate all of the functions that might be needed, and then to point to the ones
     actually being used.
     */
-    Functions::ParsedFunction<dim>
-        source_function(dim + 2),
-        parsed_initial_values_function(dim + 2),
-        exact_solution_function(dim + 2);
-
-    std::vector<Functions::ParsedFunction<dim>> boundary_functions(boundary_count);
+    Functions::ParsedFunction<dim> parsed_initial_values_function(dim + 2);
     
     this->params = Parameters::read<dim>(
         parameter_file,
-        source_function,
-        exact_solution_function,
+        this->source_function,
+        this->exact_solution_function,
         parsed_initial_values_function);
     
     this->create_coarse_grid();
-    
-    this->source_function = &parsed_source_function;
-    this->exact_solution_function = &parsed_exact_solution_function;
     
     /*
     Generalizing the handling of auxiliary functions is complicated. In most cases one should be able to use a ParsedFunction, but the generality of Function<dim>* allows for a standard way to account for any possible derived class of Function<dim>. 
@@ -324,23 +328,16 @@ namespace Peclet
 
     if (this->params.initial_values.function_name == "interpolate_old_field")
     {
-        this->initial_values_function = &field_function;                      
+        this->initial_values_function_pointer = &field_function;                      
     }
     else if (this->params.initial_values.function_name == "parsed")
     { 
-        this->initial_values_function = &parsed_initial_values_function;
+        this->initial_values_function_pointer = &parsed_initial_values_function;
     }
     
     // Boundary condition functions
-
-    this->params = Parameters::read_boundary_inputs<dim>(
-        parameter_file,
-        parsed_boundary_functions);
-
-    for (boundary = 0; boundary < boundary_count; ++boundary)
-    {
-        this->boundary_functions.push_back(&parsed_boundary_functions[boundary]);
-    }
+    std::vector<Functions::ParsedFunction<dim>> boundary_functions(this->boundary_count);
+    this->read_parsed_boundary_function_inputs(parameter_file, boundary_functions);
 
     // Attach manifolds
     
@@ -380,7 +377,7 @@ start_time_iteration:
     tmp.reinit(this->solution.size());
 
     VectorTools::interpolate(this->dof_handler,
-                             *this->initial_values_function,
+                             *this->initial_values_function_pointer,
                              this->old_solution); 
     
     this->solution = this->old_solution;
@@ -399,8 +396,6 @@ start_time_iteration:
 
     this->final_time_step = false;
     this->output_this_step = true;
-
-    double epsilon = 1e-14;
     
     do
     {
@@ -408,7 +403,7 @@ start_time_iteration:
         this->time = Delta_t*time_step_counter; // Incrementing the time directly would accumulate errors
         
         // Set some flags that will control output for this step.
-        this->final_time_step = this->time > this->params.time.end_time - epsilon;
+        this->final_time_step = this->time > this->params.time.end_time - EPSILON;
         
         bool at_interval = false;
         

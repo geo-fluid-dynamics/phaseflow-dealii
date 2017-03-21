@@ -4,11 +4,14 @@ template<>
 void Peclet<1>::create_coarse_grid()
 {
     const unsigned int dim = 1;
+    
     // Create grid
     MyGridGenerator::create_coarse_grid(
         this->triangulation,
+        this->boundary_count,
         this->manifold_ids, this->manifold_descriptors,
         this->params.geometry.grid_name, params.geometry.sizes);
+
     // Shift and rotate the grid.
     Point<dim> shifted_center;
     for (unsigned int i = 0; i < dim; i++)

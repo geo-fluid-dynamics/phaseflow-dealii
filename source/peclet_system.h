@@ -369,7 +369,7 @@ template<int dim>
 void Peclet<dim>::apply_boundary_values_and_constraints()
 {
 
-    unsigned int boundary_count = this->params.boundary_conditions.implementation_types.size();
+    std::map<types::global_dof_index, double> boundary_values;
 
     {
         /*!
@@ -382,52 +382,62 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
     {
         /*!
          Apply strong boundary conditions
-
-         @todo How do we apply separate boundary conditions to each variable?
         */
 
         std::map<types::global_dof_index, double> boundary_values;
 
-        for (unsigned int boundary = 0; boundary < boundary_count; boundary++)
-        {
+        for (unsigned int b = 0; b < this->boundary_count; ++b) /* For each boundary */
+        {                    
+            std::vector<std::string> mask = this->params.boundary_conditions.strong_masks[b];
 
+            FEValuesExtractors::Vector velocity_extractor(0);
+            FEValuesExtractors::Scalar pressure_extractor(dim);
+            FEValuesExtractors::Scalar temperature_extractor(dim + 1);
 
-            
+            std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
 
-            if (this->params.boundary_conditions.implementation_types[boundary] != "strong") 
+            for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
             {
-                continue;
+                std::string field_name = field_names[f];
+
+                if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
+                {
+                    continue;
+                }
+
+                /*!
+                    @todo: 
+                
+                    Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
+
+                    Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas.
+                */
+
+                if (field_name == "velocity")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->fe.component_mask(velocity_extractor));
+                }
+                else if (field_name == "pressure")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->fe.component_mask(pressure_extractor));
+                }
+                else if (field_name == "temperature")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->fe.component_mask(temperature_extractor));
+                }
+                else
+                {
+                    assert(false);
+                }
+
             }
             
-            boundary_functions[boundary]->set_time(this->time);
-            
-            /* 
-            @todo: Generalize boundary conditions 
-
-            e.g. allow for nonhomogeneous Dirichlet BC for velocity,
-            to simulate lid-driven cavity flow.
-            */
-            
-            /*! Apply homogeneous Dirichlet boundary conditions for all components of the velocity. */
-            
-            const FEValuesExtractors::Vector velocity(0);
-            
-            VectorTools::interpolate_boundary_values (
-                this->dof_handler,
-                boundary,
-                ZeroFunction<dim>(dim),
-                boundary_values,
-                this->fe.component_mask(velocity));
-
-            /*! Apply nonhomogeneous Dirichlet boundary conditions for temperature on the hot and cold walls */
-            const FEValuesExtractors::Scalar temperature(dim);
-
-            VectorTools::interpolate_boundary_values (
-                this->dof_handler,
-                boundary,
-                *boundary_functions[boundary],
-                boundary_values,
-                this->fe.component_mask(temperature));
         }
 
         MatrixTools::apply_boundary_values(
