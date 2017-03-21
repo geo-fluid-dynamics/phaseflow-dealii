@@ -1,14 +1,19 @@
 #ifndef _my_parameter_handler_h_
 #define _my_parameter_handler_h_
 
+#include <deal.II/base/parameter_handler.h>
+
 namespace MyParameterHandler
 {
+    using namespace dealii;
 
     template<typename ItemType>
     std::vector<ItemType> get_vector(ParameterHandler &prm, std::string parameter_name)
     {
         std::vector<std::string> strings = Utilities::split_string_list(prm.get(parameter_name));
+        
         std::vector<ItemType> items;
+
         for (auto &string : strings) 
         {
             std::stringstream parser(string);
@@ -16,6 +21,7 @@ namespace MyParameterHandler
             parser >> item;
             items.push_back(item);
         }
+        
         return items;
     } 
 

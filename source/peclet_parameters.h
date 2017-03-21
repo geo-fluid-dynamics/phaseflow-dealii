@@ -6,8 +6,6 @@
 #include <fstream>
 #include <functional>
 
-#include <deal.II/base/parameter_handler.h>
-
 #include "my_parameter_handler.h"
 
 /*
@@ -220,10 +218,18 @@ namespace Peclet
             
             prm.enter_subsection ("boundary_conditions");
             {
-                prm.declare_entry("strong_mask", "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
-                    Patterns::List(Patterns::List(
-                        Patterns::Integer(0,1), dim + 2, dim + 2, ';'),
-                        0, Patterns::List::max_int_value, ','));
+                /*!
+                It was originally attempted to make this parameter a list of lists,
+                but Patterns::List does not appear to allow for that.
+                So instead we have one string that we'll parse manually.
+                */
+                prm.declare_entry(
+                    "strong_mask",
+                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
+                    Patterns::Anything(),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
+                        "\nSemi-colons separate components, while commas separate boundaries."
+                        "Masks are required for every boundary ID in the coarse grid.");
 
             }
             prm.leave_subsection ();
@@ -423,13 +429,10 @@ namespace Peclet
             prm.enter_subsection("verification");
             {
                 params.verification.enabled = prm.get_bool("enabled");
-                
-                params.verification.exact_solution_function_name = 
-                        prm.get("exact_solution_function_name");
                         
-                prm.enter_subsection("parsed_exact_solution_function");
+                prm.enter_subsection("exact_solution_function");
                 {
-                    parsed_exact_solution_function.parse_parameters(prm);    
+                    exact_solution_function.parse_parameters(prm);    
                 }
                 prm.leave_subsection();
             }
@@ -451,24 +454,14 @@ namespace Peclet
 
             prm.enter_subsection ("boundary_conditions");
             {
-
                 std::string strong_mask_string = prm.get("strong_mask");
 
-                std::vector<std::string> boundary_strings(Utilities::split_string_list(strong_mask_string, ','));
+                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_mask_string, ',');
 
-                for (unsigned int b = 0; b < boundary_strings.size(); ++b)
+                for (unsigned int m = 0; m < mask_strings.size(); ++m)
                 {
-
-                    std::vector<std::string> strings(Utilities::split_string_list(boundary_strings[b], ';'));
-
-                    for (auto &string : strings) 
-                    {
-                        std::stringstream parser(string);
-                        std::vector<unsigned int> mask;
-                        parser >> mask;
-                        params.boundary_conditions.strong_mask.push_back(mask);
-                    }
-
+                    std::vector<std::string> mask = Utilities::split_string_list(mask_strings[m], ',');
+                    params.boundary_conditions.strong_masks.push_back(mask);
                 }
 
             }
@@ -531,66 +524,6 @@ namespace Peclet
             return params;
         }
 
-
-        /*!
-        @brief Read input parameters for parsed boundary functions.
-
-        @detail 
-            
-            This is separate from the reading of other parameters, because the number of boundary functions is not known until after generating the coarse grid.
-
-        @author Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de> 2017
-
-        */
-        template <int dim>
-        void read_parsed_boundary_function_inputs(
-                const std::string parameter_file,
-                std:::vector<Functions::ParsedFunction<dim>> &boundary_functions)
-        {
-            
-            ParameterHandler prm;
-
-            prm.enter_subsection("boundary_conditions");
-
-            for (unsigned int b = 0; b < boundary_count; ++b)
-            {
-                prm.enter_subsection("parsed_function_"+int_to_string(boundary));
-                {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
-                }
-                prm.leave_subsection();
-            }
-
-            prm.leave_subsection();
-                
-
-            if (parameter_file != "")
-            {
-                prm.read_input(parameter_file);    
-            }
-            
-            // Print a log file of all the ParameterHandler parameters
-            std::ofstream parameter_log_file("used_boundary_parameters.prm");
-            assert(parameter_log_file.good());
-            prm.print_parameters(parameter_log_file, ParameterHandler::Text);
-            
-            prm.enter_subsection("boundary_conditions");
-            {
-
-                for (unsigned int b = 0; b < boundary_count; ++b)
-                {
-                    prm.enter_subsection("parsed_function_"+int_to_string(boundary));
-                    {
-                        parsed_boundary_functions[i].parse_parameters(prm);
-                    }
-                    prm.leave_subsection();
-                }
-            }    
-            prm.leave_subsection();
-
-        }
-
-        
     }    
 
 }
