@@ -25,7 +25,7 @@ void Peclet<dim>::read_parsed_boundary_function_inputs(
     {
         prm.enter_subsection("parsed_function_"+std::to_string(b));
         {
-            Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+            boundary_functions[b].declare_parameters(prm, dim + 2);    
         }
         prm.leave_subsection();
     }

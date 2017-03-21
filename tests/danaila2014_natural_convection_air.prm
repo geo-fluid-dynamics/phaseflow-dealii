@@ -9,7 +9,7 @@ subsection geometry
     set sizes = 0., 0., 1., 1.
 end
 
-subsection parsed_source_function
+subsection source_function
     set Function expression = 0.; 0.; 0.; 0.
 end
 
@@ -27,19 +27,19 @@ subsection boundary_conditions
     
     set strong_mask = velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure
 
-    subsection parsed_boundary_function_0
+    subsection parsed_function_0
         set Function expression = 0., 0., 0.5, 0.
     end
 
-    subsection parsed_boundary_function_1
+    subsection parsed_function_1
         set Function expression = 0., 0., -0.5, 0.
     end
 
-    subsection parsed_boundary_function_2
+    subsection parsed_function_2
         set Function expression = 0., 0., 0., 0.
     end
 
-    subsection parsed_boundary_function_3
+    subsection parsed_function_3
         set Function expression = 0., 0., 0., 0.
     end
     
