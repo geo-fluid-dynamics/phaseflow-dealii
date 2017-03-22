@@ -21,9 +21,7 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
        
     SolverGMRES<> solver_gmres(solver_control);
 
-    PreconditionSSOR<> preconditioner; // @todo: What is the SSOR preconditioner? Probably not appropriate for Newton linearized Navier-Stokes-Boussinesq.
-    
-    preconditioner.initialize(this->system_matrix, 1.0);
+    PreconditionIdentity preconditioner;
 
     std::string solver_name;
     

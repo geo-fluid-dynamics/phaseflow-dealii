@@ -1,0 +1,9 @@
+
+===========================================
+Number of active cells: 1024
+Number of degrees of freedom: 10628
+
+Time step 1 at t=0.1
+     0 GMRES iterations.
+Newton method converged after 1 iterations.
+Reached steady state at t = 0.1

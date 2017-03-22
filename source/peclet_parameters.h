@@ -333,8 +333,8 @@ namespace Peclet
             
             prm.enter_subsection("solver");
             {
-                prm.declare_entry("method", "CG",
-                     Patterns::Selection("CG | BiCGStab"));
+                prm.declare_entry("method", "GMRES",
+                     Patterns::Selection("GMRES"));
                      
                 prm.declare_entry("max_iterations", "1000",
                     Patterns::Integer(0));
