@@ -25,32 +25,31 @@ namespace Data
     {
         
         public:
-        
-            Data(dealii::ParameterHandler &_prm)
-                : prm(_prm)
+
+            dealii::ParameterHandler prm;
+
+            Data(dealii::ParameterHandler &_prm) : prm(_prm)
+            {
+                /*! Declare parameters. */
+                this->declare();
+
+                /*! Read parameters. */
+                if (parameter_file != "")
+                {
+                    this->prm.read_input();    
+                }
+
+                this->get_data();
+            }
 
             void write(const std::string parameter_file_path="used_parameters.prm") const;
 
         private:
-            dealii::ParameterHandler prm;
             virtual void declare() const;
             virtual void get_data();
     };
 
-    Data::Data(dealii::ParameterHandler &_prm)
-        : prm(_prm)
-    {
-        /*! Declare parameters. */
-        this->declare();
 
-        /*! Read parameters. */
-        if (parameter_file != "")
-        {
-            prm.read_input();    
-        }
-
-        this->get_data();
-    }
 
     void Data::write(const std::string parameter_file_path)
     {
