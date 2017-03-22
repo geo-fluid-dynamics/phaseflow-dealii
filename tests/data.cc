@@ -4,9 +4,12 @@
 
 int main(int /*argc*/, char** /*argv*/)
 {
-    TestData data;
+    
+    dealii::ParameterHandler prm;
 
-    data.read();
+    TestData data;
+    
+    data.read(prm, "");
 
     assert(data.pass);
 

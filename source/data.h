@@ -23,17 +23,23 @@ class Data
 {
     public:
         Data() {};
-        void read(const std::string parameter_file_path="");
+        
+        virtual void read(
+            dealii::ParameterHandler &prm,
+            const std::string parameter_file_path);
 
-    private:
+        /* Pure virtual methods: derived classes must implement these. */
         virtual void declare(dealii::ParameterHandler &prm) const = 0;
+        
         virtual void get_data(dealii::ParameterHandler &prm) = 0;
+
+    
 };
 
-void Data::read(const std::string parameter_file_path)
+void Data::read(
+    dealii::ParameterHandler &prm,
+    const std::string parameter_file_path)
 {
-    dealii::ParameterHandler prm;
-
     /*! Declare parameters. */
     this->declare(prm);
 
@@ -43,6 +49,7 @@ void Data::read(const std::string parameter_file_path)
         prm.read_input(parameter_file_path);    
     }
 
+    /*! Organize parameters in this class's data structure*/
     this->get_data(prm);
 }
 
@@ -57,7 +64,6 @@ class TestData : public Data
     public:
         bool pass;
 
-    private:
         void declare(dealii::ParameterHandler &prm) const;
         void get_data(dealii::ParameterHandler &prm);
 };
