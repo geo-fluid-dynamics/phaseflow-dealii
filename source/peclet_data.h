@@ -10,6 +10,13 @@ namespace Peclet
 {
 
     /*!
+     @todo: Expose boundary_count to ParameterHandler
+
+     Related issue on GitHub: https://github.com/alexanderzimmerman/nsb-pcm/issues/10
+    */
+    const unsigned int BOUNDARY_COUNT = 4;
+
+    /*!
 
     @brief This is a class for boundary conditions data.
 
@@ -98,9 +105,10 @@ namespace Peclet
     {
 
         prm.declare_entry(
-            "boundary_count", "2", dealii::Patterns::Integer(2, dealii::Patterns::Integer::max_int_value),
+            "boundary_count", "4", dealii::Patterns::Integer(2, dealii::Patterns::Integer::max_int_value),
             "Set the number of boundaries on the domain."
-            "This information is needed to declare the proper number of parsed boundary functions.");
+            "This information is needed to declare the proper number of parsed boundary functions."
+            "Some error deep in TBB or mu::Parser isn't allowing this to be variable.'");
 
         prm.declare_entry(
             "vector_component_count", "4",
