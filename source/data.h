@@ -1,8 +1,7 @@
-#ifndef parameter_reader_h
-#define parameter_reader_h
+#ifndef _data_h
+#define _data_h
 
-#include <deal.II/base/function.h>
-#include <deal.II/base/parsed_function.h>
+#include <deal.II/base/parameter_handler.h>
 
 #include <iostream>
 #include <fstream>
@@ -11,216 +10,76 @@
 
 /*!
 
-@brief Contains data (parameters) class and related data structures.
+@brief This is a class for handling data/parameters.
 
 @detail
 
-    This will contain more parameters, but this file is a simplified test.
+    Parameter input file reading uses dealii::ParameterHandler.
+
+@author Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de>
 
 */
-namespace Data
+class Data
 {
+    public:
+        Data() {};
+        void read(const std::string parameter_file_path="");
 
-    class Data
+    private:
+        virtual void declare(dealii::ParameterHandler &prm) const = 0;
+        virtual void get_data(dealii::ParameterHandler &prm) = 0;
+};
+
+void Data::read(const std::string parameter_file_path)
+{
+    dealii::ParameterHandler prm;
+
+    /*! Declare parameters. */
+    this->declare(prm);
+
+    /*! Read parameters. */
+    if (parameter_file_path != "")
     {
-        
-        public:
-
-            Data(
-                dealii::ParameterHandler &_prm, 
-                const std::string parameter_file_path="") 
-            {
-                this->prm = _prm;
-
-                /*! Declare parameters. */
-                this->declare();
-
-                /*! Read parameters. */
-                if (parameter_file != "")
-                {
-                    this->prm.read_input(parameter_file_path);    
-                }
-
-                this->get_data();
-            }
-
-            void write(const std::string parameter_file_path="used_parameters.prm") const;
-
-        private:
-            dealii::ParameterHandler prm;
-            virtual void declare() const;
-            virtual void get_data();
-    };
-
-
-
-    void Data::write(const std::string parameter_file_path)
-    {
-        // Print a log file of all the ParameterHandler parameters
-        std::ofstream parameter_log_file(parameter_file_path);
-        assert(parameter_log_file.good());
-        this->prm.print_parameters(parameter_log_file, dealii::ParameterHandler::Text);
+        prm.read_input(parameter_file_path);    
     }
 
-
-    class MetaData : public Data
-    {
-        public:
-            unsigned int dim;
-            unsigned int boundary_count;
-            unsigned int vector_component_count;
-
-        private:
-            void declare() const;
-            void get_data();
-    };
-
-    void MetaData::declare() const
-    {
-        this->prm.enter_subsection("meta");
-        
-        this->prm.declare_entry(
-            "dim", "2", dealii::Patterns::Integer(1, 3),
-            "Set the number of dimensions in the spatial domain, i.e. the dim template parameter for most deal.II templates.");
-
-        this->prm.declare_entry(
-            "boundary_count", "2", dealii::Patterns::Integer(2, dealii::Patterns::max_int),
-            "Set the number of boundaries on the domain."
-            "This information is needed to declare the proper number of parsed boundary functions.");
-            
-        this->prm.declare_entry(
-            "vector_component_count", "4",
-            dealii::Patterns::Integer(),
-            "Specify the number of components in the vector."
-            "e.g. 4 for a 2D vector-valued velocity, scalar pressure, and scalar temperature.");
-
-        this->prm.leave_subsection();
-    }
-
-    void MetaData::get_data(const dealii::ParameterHandler)
-    {
-        this->prm.enter_subsection("meta");
-
-        this->dim = this->prm.get_integer("dim");  
-
-        this->boundary_count = this->prm.get_integer("boundary_count");
-
-        this->vector_component_count = this->prm.get_integer("vector_component_count");
-
-        this->prm.leave_subsection();
-    }
+    this->get_data(prm);
+}
 
 
-    /*!
+/*!
 
-    @brief This is a class for boundary conditions data.
+@brief This derived class demonstrates how to use the Data class.
 
-    */
-    template<int dim>
-    class BoundaryConditionsData : public Data
-    {
-        public:
-            std::vector<dealii::Functions::ParsedFunction<dim>> functions;
+*/
+class TestData : public Data
+{
+    public:
+        bool pass;
 
-        private:
-            virtual void declare() const;
-            virtual void get_data();
-    };
+    private:
+        void declare(dealii::ParameterHandler &prm) const;
+        void get_data(dealii::ParameterHandler &prm);
+};
 
-    template<int dim>
-    void BoundaryConditionsData::declare() const
-    {
-        
-        prm.enter_subsection("meta");
+void TestData::declare(dealii::ParameterHandler &prm) const
+{
+    prm.enter_subsection("test_section");
+    
+    prm.declare_entry(
+        "pass", "true", dealii::Patterns::Bool(),
+        "This is for test/data.cc. Set to true to pass or false to fail.");
 
-        unsigned int boundary_count = this->prm.get_integer("boundary_count");
-        unsigned int vector_component_count = this->prm.get_integer("vector_component_count");
+    prm.leave_subsection();
+}
 
-        prm.leave_subsection();
+void TestData::get_data(dealii::ParameterHandler &prm)
+{
+    prm.enter_subsection("test_section");
 
+    pass = prm.get_bool("pass");  
 
-        prm.enter_subsection("boundary_conditions");
-
-        /*! Declare parsed functions. */
-
-        std::vector<dealii::Functions::ParsedFunction<dim>> functions(boundary_count);
-
-        for (unsigned int b = 0; b < boundary_count; ++b)
-        {
-            prm.enter_subsection("parsed_function_"+std::to_string(b));
-            {
-                functions[b].declare_parameters(this->prm, vector_component_count);    
-            }
-            prm.leave_subsection();
-        }
-
-        prm.leave_subsection();
-
-    }
-
-    template<int dim>
-    void BoundaryConditionsData::get_data()
-    {
-
-        this->prm.enter_subsection("meta");
-
-        unsigned int boundary_count = this->prm.get_integer("boundary_count");
-
-        this->prm.leave_subsection();
-
-        
-        this->functions.resize(boundary_count);
-
-
-        this->prm.enter_subsection("boundary_conditions");
-
-        for (unsigned int b = 0; b < boundary_count; ++b)
-        {
-            this->prm.enter_subsection("parsed_function_"+std::to_string(b));
-            {
-                this->boundary_functions[b].parse_parameters(this->prm);
-            }
-            this->prm.leave_subsection();
-        }
-
-        this->prm.leave_subsection();
-
-
-        return data;
-    }
-
-
-    template<int dim>
-    class AllData
-    {
-        public:
-            MetaData meta;
-            BoundaryConditionsData<dim> boundary_conditions;
-
-            AllData(
-                dealii::ParameterHandler &_prm, 
-                const std::string parameter_file_path="") 
-                : 
-                Data(&_prm, parameter_file_path),
-                meta(&_prm, parameter_file_path),
-                boundary_conditions(&_prm, parameter_file_path)
-            {}
-
-            void write(const std::string parameter_file_path="used_parameters.prm") const;
-
-        private:
-            void declare() const;
-            void get_data();
-    };
-
-    template<int dim>
-    virtual void AllData::declare() const
-    {}
-
-    template<int dim>
-    virtual void AllData::get_data() const
-    {}
-
+    prm.leave_subsection();
 }
 
 #endif
