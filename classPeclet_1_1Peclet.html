@@ -73,7 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -122,19 +122,26 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a5504e8c6bde777bd1934fd42f3cd6496"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a5504e8c6bde777bd1934fd42f3cd6496">adaptive_refine</a> ()</td></tr>
 <tr class="separator:a5504e8c6bde777bd1934fd42f3cd6496"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb3c5e0931b2829e589986a286757b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#afb3c5e0931b2829e589986a286757b48">setup_system</a> (bool quiet=false)</td></tr>
+<tr class="memdesc:afb3c5e0931b2829e589986a286757b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the linear system objects.  <a href="#afb3c5e0931b2829e589986a286757b48">More...</a><br/></td></tr>
 <tr class="separator:afb3c5e0931b2829e589986a286757b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57a7b7bfaae38c58af3efc1da2b3743b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a57a7b7bfaae38c58af3efc1da2b3743b">solve_time_step</a> (bool quiet=false)</td></tr>
-<tr class="separator:a57a7b7bfaae38c58af3efc1da2b3743b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c545aabaf6328dade7d3ab4a94d195"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a52c545aabaf6328dade7d3ab4a94d195">assemble_system</a> ()</td></tr>
+<tr class="memdesc:a52c545aabaf6328dade7d3ab4a94d195"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for the Newton linearized Navier-Stokes-Boussinesq equtaions.  <a href="#a52c545aabaf6328dade7d3ab4a94d195">More...</a><br/></td></tr>
+<tr class="separator:a52c545aabaf6328dade7d3ab4a94d195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ec961a9457d9d5f29bf3d8e2c783f41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a6ec961a9457d9d5f29bf3d8e2c783f41">apply_boundary_values_and_constraints</a> ()</td></tr>
+<tr class="memdesc:a6ec961a9457d9d5f29bf3d8e2c783f41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes).  <a href="#a6ec961a9457d9d5f29bf3d8e2c783f41">More...</a><br/></td></tr>
+<tr class="separator:a6ec961a9457d9d5f29bf3d8e2c783f41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4b556fead68249ce6a33ce0f2f4fb54"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aa4b556fead68249ce6a33ce0f2f4fb54">step_time</a> (bool quiet=false)</td></tr>
+<tr class="memdesc:aa4b556fead68249ce6a33ce0f2f4fb54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Step the simulation from the current time step to the next time step.  <a href="#aa4b556fead68249ce6a33ce0f2f4fb54">More...</a><br/></td></tr>
+<tr class="separator:aa4b556fead68249ce6a33ce0f2f4fb54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac003d19bcd121dab3757f1eb101e8748"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ac003d19bcd121dab3757f1eb101e8748">solve_linear_system</a> (bool quiet=false)</td></tr>
+<tr class="memdesc:ac003d19bcd121dab3757f1eb101e8748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="#ac003d19bcd121dab3757f1eb101e8748">More...</a><br/></td></tr>
+<tr class="separator:ac003d19bcd121dab3757f1eb101e8748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a148f29535b2bd222b69b7a318455ea17"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a148f29535b2bd222b69b7a318455ea17">write_solution</a> ()</td></tr>
 <tr class="separator:a148f29535b2bd222b69b7a318455ea17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57e164692b52908fc3ba830d32223091"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a57e164692b52908fc3ba830d32223091">append_verification_table</a> ()</td></tr>
 <tr class="separator:a57e164692b52908fc3ba830d32223091"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a40ecea8903ebad87e00bb5d80a20aa46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a40ecea8903ebad87e00bb5d80a20aa46">write_verification_table</a> ()</td></tr>
 <tr class="separator:a40ecea8903ebad87e00bb5d80a20aa46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb5fcee9648bda64ec8542cc6ed8f89f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aeb5fcee9648bda64ec8542cc6ed8f89f">append_1D_solution_to_table</a> ()</td></tr>
-<tr class="separator:aeb5fcee9648bda64ec8542cc6ed8f89f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8dd86c247b47024f10d860e0b00350ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a8dd86c247b47024f10d860e0b00350ed">write_1D_solution_table</a> (std::string file_name)</td></tr>
-<tr class="separator:a8dd86c247b47024f10d860e0b00350ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a087748241dd1064d966b29295af7494b"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
 <tr class="memitem:a087748241dd1064d966b29295af7494b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a087748241dd1064d966b29295af7494b">create_coarse_grid</a> ()</td></tr>
 <tr class="separator:a087748241dd1064d966b29295af7494b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,24 +156,24 @@ Private Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr class="memitem:afd2b325f9aaf44a42970c7198ae144eb"><td class="memItemLeft" align="right" valign="top">Triangulation&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#afd2b325f9aaf44a42970c7198ae144eb">triangulation</a></td></tr>
 <tr class="separator:afd2b325f9aaf44a42970c7198ae144eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39493b851ba654eb5515d6c31a1e7ef2"><td class="memItemLeft" align="right" valign="top">FE_Q&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a39493b851ba654eb5515d6c31a1e7ef2">fe</a></td></tr>
-<tr class="separator:a39493b851ba654eb5515d6c31a1e7ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5f51c1b196970be0f9edbe73c039970"><td class="memItemLeft" align="right" valign="top">FESystem&lt; dim, dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ab5f51c1b196970be0f9edbe73c039970">fe</a></td></tr>
+<tr class="separator:ab5f51c1b196970be0f9edbe73c039970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9aa1e64d0d039e4c7deab3d7911e3791"><td class="memItemLeft" align="right" valign="top">DoFHandler&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a9aa1e64d0d039e4c7deab3d7911e3791">dof_handler</a></td></tr>
 <tr class="separator:a9aa1e64d0d039e4c7deab3d7911e3791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c3a0c010cef4b74b7617a34620127aa"><td class="memItemLeft" align="right" valign="top">ConstraintMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a1c3a0c010cef4b74b7617a34620127aa">constraints</a></td></tr>
 <tr class="separator:a1c3a0c010cef4b74b7617a34620127aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa168f6794009ea42a34b080446065568"><td class="memItemLeft" align="right" valign="top">SparsityPattern&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aa168f6794009ea42a34b080446065568">sparsity_pattern</a></td></tr>
 <tr class="separator:aa168f6794009ea42a34b080446065568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a36a7efab6716565c945a1c3a9acc8d"><td class="memItemLeft" align="right" valign="top">SparseMatrix&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a5a36a7efab6716565c945a1c3a9acc8d">mass_matrix</a></td></tr>
-<tr class="separator:a5a36a7efab6716565c945a1c3a9acc8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56a96355ac522dd537904fa417068322"><td class="memItemLeft" align="right" valign="top">SparseMatrix&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a56a96355ac522dd537904fa417068322">convection_diffusion_matrix</a></td></tr>
-<tr class="separator:a56a96355ac522dd537904fa417068322"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c514b9887f54374cb96cf34a9f36b81"><td class="memItemLeft" align="right" valign="top">SparseMatrix&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a9c514b9887f54374cb96cf34a9f36b81">system_matrix</a></td></tr>
 <tr class="separator:a9c514b9887f54374cb96cf34a9f36b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95111d9c76a294a9e08de3def7bb31c3"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a95111d9c76a294a9e08de3def7bb31c3">solution</a></td></tr>
 <tr class="separator:a95111d9c76a294a9e08de3def7bb31c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8140b031c3a7d984159ca39b52e262f"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aa8140b031c3a7d984159ca39b52e262f">old_solution</a></td></tr>
 <tr class="separator:aa8140b031c3a7d984159ca39b52e262f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5d5d452ec8e9f3777341bfb3a1ba9f3"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ab5d5d452ec8e9f3777341bfb3a1ba9f3">newton_solution</a></td></tr>
+<tr class="separator:ab5d5d452ec8e9f3777341bfb3a1ba9f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef3dfa57a188e219079e8a7a6fe01191"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aef3dfa57a188e219079e8a7a6fe01191">old_newton_solution</a></td></tr>
+<tr class="separator:aef3dfa57a188e219079e8a7a6fe01191"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace65bbc80d68d2eff2d17d364821c10d"><td class="memItemLeft" align="right" valign="top">Vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ace65bbc80d68d2eff2d17d364821c10d">system_rhs</a></td></tr>
 <tr class="separator:ace65bbc80d68d2eff2d17d364821c10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab915c6eb041e9aa559936e86246297d1"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ab915c6eb041e9aa559936e86246297d1">time</a></td></tr>
@@ -175,32 +182,32 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a6ed813c7f42df1380170492ce0580550"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade7ce00e756b1c4cd7a395fb157ac33f"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ade7ce00e756b1c4cd7a395fb157ac33f">time_step_counter</a></td></tr>
 <tr class="separator:ade7ce00e756b1c4cd7a395fb157ac33f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a479073f47f6a275de6f5a6c8d004e1ac"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a479073f47f6a275de6f5a6c8d004e1ac">final_time_step</a></td></tr>
+<tr class="separator:a479073f47f6a275de6f5a6c8d004e1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad974e310bbd3ca96d3b257d845a03f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aad974e310bbd3ca96d3b257d845a03f5">output_this_step</a></td></tr>
+<tr class="separator:aad974e310bbd3ca96d3b257d845a03f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb1d55326014c9937c65b13b0fa9c88d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aeb1d55326014c9937c65b13b0fa9c88d">solver_status</a></td></tr>
+<tr class="separator:aeb1d55326014c9937c65b13b0fa9c88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1efc4dc05c8346af1f7c4db1c8270c41"><td class="memItemLeft" align="right" valign="top">Point&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a1efc4dc05c8346af1f7c4db1c8270c41">spherical_manifold_center</a></td></tr>
 <tr class="separator:a1efc4dc05c8346af1f7c4db1c8270c41"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad205e1eb680b3cd92803078e39105da0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ad205e1eb680b3cd92803078e39105da0">manifold_ids</a></td></tr>
 <tr class="separator:ad205e1eb680b3cd92803078e39105da0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a928d3f4faab4d4c7d7bc14c7b13f6284"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a928d3f4faab4d4c7d7bc14c7b13f6284">manifold_descriptors</a></td></tr>
 <tr class="separator:a928d3f4faab4d4c7d7bc14c7b13f6284"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11582e851dcec89d5e498bc99a69d9a5"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a11582e851dcec89d5e498bc99a69d9a5">velocity_function</a></td></tr>
-<tr class="separator:a11582e851dcec89d5e498bc99a69d9a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96fb7759b68c3ca86a9b93b609be273a"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a96fb7759b68c3ca86a9b93b609be273a">diffusivity_function</a></td></tr>
-<tr class="separator:a96fb7759b68c3ca86a9b93b609be273a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8e082ecd375a5827ff41a84ba94a271"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#af8e082ecd375a5827ff41a84ba94a271">source_function</a></td></tr>
-<tr class="separator:af8e082ecd375a5827ff41a84ba94a271"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a2902a8a006bfed831301f2de63220b"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Function&lt; dim &gt; * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a4a2902a8a006bfed831301f2de63220b">boundary_functions</a></td></tr>
-<tr class="separator:a4a2902a8a006bfed831301f2de63220b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5307d59ad23dceafaac03cb1512b0e94"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a5307d59ad23dceafaac03cb1512b0e94">initial_values_function</a></td></tr>
-<tr class="separator:a5307d59ad23dceafaac03cb1512b0e94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a156445263f26b6f61d26cd7a918bca6e"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a156445263f26b6f61d26cd7a918bca6e">exact_solution_function</a></td></tr>
-<tr class="separator:a156445263f26b6f61d26cd7a918bca6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6acb4579d8e88674602f25ee263d7a3b"><td class="memItemLeft" align="right" valign="top">Functions::ParsedFunction&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a6acb4579d8e88674602f25ee263d7a3b">source_function</a></td></tr>
+<tr class="separator:a6acb4579d8e88674602f25ee263d7a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae271037a9372d5a621538635aed2e2e0"><td class="memItemLeft" align="right" valign="top">Functions::ParsedFunction&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ae271037a9372d5a621538635aed2e2e0">exact_solution_function</a></td></tr>
+<tr class="separator:ae271037a9372d5a621538635aed2e2e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4067053613df5346b97a4c3196beba78"><td class="memItemLeft" align="right" valign="top">std::vector<br class="typebreak"/>
+&lt; Functions::ParsedFunction<br class="typebreak"/>
+&lt; dim &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a4067053613df5346b97a4c3196beba78">boundary_functions</a></td></tr>
+<tr class="separator:a4067053613df5346b97a4c3196beba78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a0f9ec2658deb39ee736f194c46dce5"><td class="memItemLeft" align="right" valign="top">Function&lt; dim &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a0a0f9ec2658deb39ee736f194c46dce5">initial_values_function_pointer</a></td></tr>
+<tr class="separator:a0a0f9ec2658deb39ee736f194c46dce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab7c95adb6707e538c128905e8ab70f31"><td class="memItemLeft" align="right" valign="top">TableHandler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ab7c95adb6707e538c128905e8ab70f31">verification_table</a></td></tr>
 <tr class="separator:ab7c95adb6707e538c128905e8ab70f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b4583874b07ccfbf458790a8a7fae66"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#a1b4583874b07ccfbf458790a8a7fae66">verification_table_file_name</a> = &quot;verification_table.txt&quot;</td></tr>
 <tr class="separator:a1b4583874b07ccfbf458790a8a7fae66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad07607b391dc8071d079c262936d3cf"><td class="memItemLeft" align="right" valign="top">TableHandler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#aad07607b391dc8071d079c262936d3cf">solution_table_1D</a></td></tr>
-<tr class="separator:aad07607b391dc8071d079c262936d3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad28b03ffb1676a81c8034437374f2795"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html#ad28b03ffb1676a81c8034437374f2795">solution_table_1D_file_name</a> = &quot;1D_solution_table.txt&quot;</td></tr>
-<tr class="separator:ad28b03ffb1676a81c8034437374f2795"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a023be1faf427eb33ac0c45680d98813a"></a>
@@ -246,31 +253,6 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aeb5fcee9648bda64ec8542cc6ed8f89f"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int dim&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::append_1D_solution_to_table </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a57e164692b52908fc3ba830d32223091"></a>
 <div class="memitem">
 <div class="memproto">
@@ -293,6 +275,92 @@ template&lt;int dim&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6ec961a9457d9d5f29bf3d8e2c783f41"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::apply_boundary_values_and_constraints </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes). </p>
+<dl class="section author"><dt>Author</dt><dd>Alexander Zimmerman 2016 </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000014">Todo:</a></b></dt><dd>Apply natural boundary conditions </dd></dl>
+<p>Homogeneous Neumann boundary conditions on the adiabatic walls are implied</p>
+<p>Apply strong boundary conditions</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000015">Todo:</a></b></dt><dd>: </dd></dl>
+<p>Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?</p>
+<p>Neither std::vector&lt;void*&gt; nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas.</p>
+
+</div>
+</div>
+<a class="anchor" id="a52c545aabaf6328dade7d3ab4a94d195"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::assemble_system </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assemble the system for the Newton linearized Navier-Stokes-Boussinesq equtaions. </p>
+<p>This implements equation (17) from Danaila et al. 2014.</p>
+<p>This is the bouyancy force function from Danaila 2014,</p>
+<p>$f_B() = theta Ra / (Pr Re^2)$</p>
+<p>in terms of the Reynolds, Prandtl, and Rayleigh numbers, defined as: </p>
+<pre class="fragment">$Re = \rho_{ref} V_{ref} L_ref/\mu_l,
+    Pr = \nu_l / \alpha_l,
+    Ra = g \beta L_{ref}^3 (T_h - T_c) / (\nu_l \alpha_l)$
+</pre><p>Danaila's paper assumes gravity is pointing uniformly downward and treats gravity as a scalar. This implementation is generalized to a dim-dimensional gravity vector. This requires that we interpret the Rayleigh number also as vector-valued.</p>
+<p>This models the bouyancy force as only a function of $$.</p>
+<p>Following the implementation approach in </p>
+<pre class="fragment">http://dealii.org/8.4.1/doxygen/deal.II/group__vector__valued.html
+</pre><p>and </p>
+<pre class="fragment">http://dealii.org/8.4.1/doxygen/deal.II/step_20.html#Assemblingthelinearsystem
+</pre><dl class="section author"><dt>Author</dt><dd>Alexander Zimmerman 2016 </dd></dl>
+<p>Local parameters</p>
+<p>lambda function for classical (linear) Boussinesq bouyancy</p>
+<p>Analytical derivative of classical (linear) Boussinesq bouyancy</p>
+<p>lambda functions for linear, bilinear, and trilinear operator</p>
+<p>Organize data</p>
+<p>Set local variables to match notation in Danaila 2014</p>
+<p>Assemble element-wise</p>
+<p>Name local variables to match notation in Danaila 2014</p>
+<p>Map to the reference element</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000013">Todo:</a></b></dt><dd>: Add forcing function to RHS, e.g. for method of manufactured solution </dd></dl>
+<p>Map to the reference element </p>
 
 </div>
 </div>
@@ -429,6 +497,7 @@ template&lt;int dim&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Run the time step</p>
 
 </div>
 </div>
@@ -456,9 +525,13 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Setup the linear system objects. </p>
+<dl class="section author"><dt>Author</dt><dd>Alexander Zimmerman 2016 </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>Why must we reinit the solution and RHS vectors here? This is an artifact from the step-26 tutorial. </dd></dl>
+
 </div>
 </div>
-<a class="anchor" id="a57a7b7bfaae38c58af3efc1da2b3743b"></a>
+<a class="anchor" id="ac003d19bcd121dab3757f1eb101e8748"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -468,7 +541,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a> <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::solve_time_step </td>
+          <td class="memname"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a> <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::solve_linear_system </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>quiet</em> = <code>false</code></td><td>)</td>
@@ -482,9 +555,12 @@ template&lt;int dim&gt; </div>
 </table>
 </div><div class="memdoc">
 
+<p>Solve the linear system. </p>
+<dl class="section author"><dt>Author</dt><dd>Alexander G. Zimmerman 2016 <a href="#" onclick="location.href='mai'+'lto:'+'zim'+'me'+'rma'+'n@'+'aic'+'es'+'.rw'+'th'+'-aa'+'ch'+'en.'+'de'; return false;">zimme<span style="display: none;">.nosp@m.</span>rman<span style="display: none;">.nosp@m.</span>@aice<span style="display: none;">.nosp@m.</span>s.rw<span style="display: none;">.nosp@m.</span>th-aa<span style="display: none;">.nosp@m.</span>chen<span style="display: none;">.nosp@m.</span>.de</a> </dd></dl>
+
 </div>
 </div>
-<a class="anchor" id="a8dd86c247b47024f10d860e0b00350ed"></a>
+<a class="anchor" id="aa4b556fead68249ce6a33ce0f2f4fb54"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -494,10 +570,10 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::write_1D_solution_table </td>
+          <td class="memname">void <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::step_time </td>
           <td>(</td>
-          <td class="paramtype">std::string&#160;</td>
-          <td class="paramname"><em>file_name</em></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>quiet</em> = <code>false</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -507,6 +583,11 @@ template&lt;int dim&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Step the simulation from the current time step to the next time step. </p>
+<pre class="fragment">This requires iterating through each Newton substep of the timestep, 
+assembling and solving a linear system for each substep, until convergence.
+</pre><dl class="section author"><dt>Author</dt><dd>Alexander G. Zimmerman 2017 <a href="#" onclick="location.href='mai'+'lto:'+'zim'+'me'+'rma'+'n@'+'aic'+'es'+'.rw'+'th'+'-aa'+'ch'+'en.'+'de'; return false;">zimme<span style="display: none;">.nosp@m.</span>rman<span style="display: none;">.nosp@m.</span>@aice<span style="display: none;">.nosp@m.</span>s.rw<span style="display: none;">.nosp@m.</span>th-aa<span style="display: none;">.nosp@m.</span>chen<span style="display: none;">.nosp@m.</span>.de</a> </dd></dl>
 
 </div>
 </div>
@@ -561,7 +642,7 @@ template&lt;int dim&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a class="anchor" id="a4a2902a8a006bfed831301f2de63220b"></a>
+<a class="anchor" id="a4067053613df5346b97a4c3196beba78"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -571,7 +652,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;Function&lt;dim&gt;*&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::boundary_functions</td>
+          <td class="memname">std::vector&lt;Functions::ParsedFunction&lt;dim&gt; &gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::boundary_functions</td>
         </tr>
       </table>
   </td>
@@ -605,50 +686,6 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a56a96355ac522dd537904fa417068322"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int dim&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">SparseMatrix&lt;double&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::convection_diffusion_matrix</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a96fb7759b68c3ca86a9b93b609be273a"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int dim&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::diffusivity_function</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="a9aa1e64d0d039e4c7deab3d7911e3791"></a>
 <div class="memitem">
 <div class="memproto">
@@ -671,7 +708,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a156445263f26b6f61d26cd7a918bca6e"></a>
+<a class="anchor" id="ae271037a9372d5a621538635aed2e2e0"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -681,7 +718,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::exact_solution_function</td>
+          <td class="memname">Functions::ParsedFunction&lt;dim&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::exact_solution_function</td>
         </tr>
       </table>
   </td>
@@ -693,7 +730,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a39493b851ba654eb5515d6c31a1e7ef2"></a>
+<a class="anchor" id="ab5f51c1b196970be0f9edbe73c039970"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -703,7 +740,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">FE_Q&lt;dim&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::fe</td>
+          <td class="memname">FESystem&lt;dim,dim&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::fe</td>
         </tr>
       </table>
   </td>
@@ -715,7 +752,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a5307d59ad23dceafaac03cb1512b0e94"></a>
+<a class="anchor" id="a479073f47f6a275de6f5a6c8d004e1ac"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -725,7 +762,29 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::initial_values_function</td>
+          <td class="memname">bool <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::final_time_step</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a0a0f9ec2658deb39ee736f194c46dce5"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::initial_values_function_pointer</td>
         </tr>
       </table>
   </td>
@@ -781,7 +840,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a5a36a7efab6716565c945a1c3a9acc8d"></a>
+<a class="anchor" id="ab5d5d452ec8e9f3777341bfb3a1ba9f3"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -791,7 +850,29 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">SparseMatrix&lt;double&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::mass_matrix</td>
+          <td class="memname">Vector&lt;double&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::newton_solution</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aef3dfa57a188e219079e8a7a6fe01191"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector&lt;double&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::old_newton_solution</td>
         </tr>
       </table>
   </td>
@@ -814,6 +895,28 @@ template&lt;int dim&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">Vector&lt;double&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::old_solution</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aad974e310bbd3ca96d3b257d845a03f5"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::output_this_step</td>
         </tr>
       </table>
   </td>
@@ -861,7 +964,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aad07607b391dc8071d079c262936d3cf"></a>
+<a class="anchor" id="aeb1d55326014c9937c65b13b0fa9c88d"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -871,7 +974,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">TableHandler <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::solution_table_1D</td>
+          <td class="memname"><a class="el" href="structPeclet_1_1SolverStatus.html">SolverStatus</a> <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::solver_status</td>
         </tr>
       </table>
   </td>
@@ -883,7 +986,7 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ad28b03ffb1676a81c8034437374f2795"></a>
+<a class="anchor" id="a6acb4579d8e88674602f25ee263d7a3b"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -893,29 +996,7 @@ template&lt;int dim&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::solution_table_1D_file_name = &quot;1D_solution_table.txt&quot;</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af8e082ecd375a5827ff41a84ba94a271"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int dim&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::source_function</td>
+          <td class="memname">Functions::ParsedFunction&lt;dim&gt; <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::source_function</td>
         </tr>
       </table>
   </td>
@@ -1103,28 +1184,6 @@ template&lt;int dim&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a11582e851dcec89d5e498bc99a69d9a5"></a>
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int dim&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Function&lt;dim&gt;* <a class="el" href="classPeclet_1_1Peclet.html">Peclet::Peclet</a>&lt; dim &gt;::velocity_function</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ab7c95adb6707e538c128905e8ab70f31"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1175,7 +1234,7 @@ template&lt;int dim&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:48:39 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 22:07:07 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

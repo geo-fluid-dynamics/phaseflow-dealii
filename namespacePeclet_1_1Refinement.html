@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -97,7 +97,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 Functions</h2></td></tr>
 <tr class="memitem:a075713926ae343477726e4fe5ca258fa"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
 <tr class="memitem:a075713926ae343477726e4fe5ca258fa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacePeclet_1_1Refinement.html#a075713926ae343477726e4fe5ca258fa">adaptive_refine_mesh</a> (Triangulation&lt; dim &gt; &amp;triangulation, DoFHandler&lt; dim &gt; &amp;dof_handler, Vector&lt; double &gt; &amp;solution, SolutionTransfer&lt; dim &gt; &amp;solution_trans, const FE_Q&lt; dim &gt; fe, const unsigned int min_grid_level, const unsigned int max_grid_level, const unsigned int max_cells, const double refine_fraction, const double coarsen_fraction)</td></tr>
+<tr class="memdesc:a075713926ae343477726e4fe5ca258fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adaptive grid refinement method from deal.II's step-26 tutorial.  <a href="#a075713926ae343477726e4fe5ca258fa">More...</a><br/></td></tr>
 <tr class="separator:a075713926ae343477726e4fe5ca258fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ce2da90c484d7dd33e53fb90f4ac052"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
+<tr class="memitem:a0ce2da90c484d7dd33e53fb90f4ac052"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacePeclet_1_1Refinement.html#a0ce2da90c484d7dd33e53fb90f4ac052">adaptive_refine_mesh</a> ()</td></tr>
+<tr class="memdesc:a0ce2da90c484d7dd33e53fb90f4ac052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adaptive grid refinement for vector-valued PDE.  <a href="#a0ce2da90c484d7dd33e53fb90f4ac052">More...</a><br/></td></tr>
+<tr class="separator:a0ce2da90c484d7dd33e53fb90f4ac052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10c6000a386b52c4fe05acaa77dbc668"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
 <tr class="memitem:a10c6000a386b52c4fe05acaa77dbc668"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacePeclet_1_1Refinement.html#a10c6000a386b52c4fe05acaa77dbc668">refine_mesh_near_boundaries</a> (Triangulation&lt; dim &gt; &amp;triangulation, const std::vector&lt; unsigned int &gt; boundary_ids, const unsigned int refinement_cycles)</td></tr>
 <tr class="separator:a10c6000a386b52c4fe05acaa77dbc668"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +182,28 @@ template&lt;int dim&gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Adaptive grid refinement method from deal.II's step-26 tutorial. </p>
+
+</div>
+</div>
+<a class="anchor" id="a0ce2da90c484d7dd33e53fb90f4ac052"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void Peclet::Refinement::adaptive_refine_mesh </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adaptive grid refinement for vector-valued PDE. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000016">Todo:</a></b></dt><dd>Implement Danaila's metric </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a10c6000a386b52c4fe05acaa77dbc668"></a>
@@ -216,7 +243,7 @@ template&lt;int dim&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:48:40 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 22:07:08 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

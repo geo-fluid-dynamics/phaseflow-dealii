@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -95,11 +95,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>adaptive_refine()
 : <a class="el" href="classPeclet_1_1Peclet.html#a5504e8c6bde777bd1934fd42f3cd6496">Peclet::Peclet&lt; dim &gt;</a>
 </li>
-<li>append_1D_solution_to_table()
-: <a class="el" href="classPeclet_1_1Peclet.html#aeb5fcee9648bda64ec8542cc6ed8f89f">Peclet::Peclet&lt; dim &gt;</a>
-</li>
 <li>append_verification_table()
 : <a class="el" href="classPeclet_1_1Peclet.html#a57e164692b52908fc3ba830d32223091">Peclet::Peclet&lt; dim &gt;</a>
+</li>
+<li>apply_boundary_values_and_constraints()
+: <a class="el" href="classPeclet_1_1Peclet.html#a6ec961a9457d9d5f29bf3d8e2c783f41">Peclet::Peclet&lt; dim &gt;</a>
+</li>
+<li>assemble_system()
+: <a class="el" href="classPeclet_1_1Peclet.html#a52c545aabaf6328dade7d3ab4a94d195">Peclet::Peclet&lt; dim &gt;</a>
 </li>
 <li>create_coarse_grid()
 : <a class="el" href="classPeclet_1_1Peclet.html#ae7ac6e4d8ec8da400d5426578a13e65f">Peclet::Peclet&lt; dim &gt;</a>
@@ -119,20 +122,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>run()
 : <a class="el" href="classPeclet_1_1Peclet.html#a9b0ed314603f27385c5d01d3edddc742">Peclet::Peclet&lt; dim &gt;</a>
 </li>
-<li>Scratch()
-: <a class="el" href="structMyMatrixCreator_1_1AssemblerData_1_1Scratch.html#a1833d281826e5f1928af5683334bc07e">MyMatrixCreator::AssemblerData::Scratch&lt; dim, number &gt;</a>
-</li>
 <li>setup_system()
 : <a class="el" href="classPeclet_1_1Peclet.html#afb3c5e0931b2829e589986a286757b48">Peclet::Peclet&lt; dim &gt;</a>
 </li>
-<li>solve_time_step()
-: <a class="el" href="classPeclet_1_1Peclet.html#a57a7b7bfaae38c58af3efc1da2b3743b">Peclet::Peclet&lt; dim &gt;</a>
+<li>solve_linear_system()
+: <a class="el" href="classPeclet_1_1Peclet.html#ac003d19bcd121dab3757f1eb101e8748">Peclet::Peclet&lt; dim &gt;</a>
+</li>
+<li>step_time()
+: <a class="el" href="classPeclet_1_1Peclet.html#aa4b556fead68249ce6a33ce0f2f4fb54">Peclet::Peclet&lt; dim &gt;</a>
 </li>
 <li>value()
 : <a class="el" href="classMyFunctions_1_1ExtrapolatedField.html#ac36aa11cd2540b0ca571aaf855062353">MyFunctions::ExtrapolatedField&lt; dim &gt;</a>
-</li>
-<li>write_1D_solution_table()
-: <a class="el" href="classPeclet_1_1Peclet.html#a8dd86c247b47024f10d860e0b00350ed">Peclet::Peclet&lt; dim &gt;</a>
 </li>
 <li>write_solution()
 : <a class="el" href="classPeclet_1_1Peclet.html#a148f29535b2bd222b69b7a318455ea17">Peclet::Peclet&lt; dim &gt;</a>
@@ -144,7 +144,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:48:40 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 22:07:09 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>nsb-pcm: source/output.h File Reference</title>
+<title>nsb-pcm: source/my_parameter_handler.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,34 +86,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">output.h File Reference</div>  </div>
+<div class="title">my_parameter_handler.h</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;deal.II/dofs/dof_handler.h&gt;</code><br/>
-<code>#include &lt;deal.II/lac/vector.h&gt;</code><br/>
-<code>#include &lt;deal.II/grid/grid_out.h&gt;</code><br/>
-<code>#include &lt;deal.II/numerics/data_out.h&gt;</code><br/>
-<code>#include &lt;iostream&gt;</code><br/>
-<code>#include &lt;fstream&gt;</code><br/>
-</div>
-<p><a href="output_8h_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceOutput"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceOutput.html">Output</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:afe22cc905014b5d5f20568d71bb9f914"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
-<tr class="memitem:afe22cc905014b5d5f20568d71bb9f914"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceOutput.html#afe22cc905014b5d5f20568d71bb9f914">Output::write_solution_to_vtk</a> (const std::string filename, DoFHandler&lt; dim &gt; &amp;dof_handler, Vector&lt; double &gt; &amp;solution)</td></tr>
-<tr class="separator:afe22cc905014b5d5f20568d71bb9f914"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-</div><!-- contents -->
+<a href="my__parameter__handler_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#ifndef _my_parameter_handler_h_</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _my_parameter_handler_h_</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;deal.II/base/parameter_handler.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;</div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="namespaceMyParameterHandler.html">    6</a></span>&#160;<span class="keyword">namespace </span>MyParameterHandler</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    <span class="keyword">using namespace </span>dealii;</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> ItemType&gt;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="namespaceMyParameterHandler.html#a35ad72718f80749e4cc62dcc43614451">   11</a></span>&#160;    std::vector&lt;ItemType&gt; <a class="code" href="namespaceMyParameterHandler.html#a35ad72718f80749e4cc62dcc43614451">get_vector</a>(ParameterHandler &amp;prm, std::string parameter_name)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        std::vector&lt;std::string&gt; strings = Utilities::split_string_list(prm.get(parameter_name));</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        </div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        std::vector&lt;ItemType&gt; items;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;<span class="keywordtype">string</span> : strings) </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;            std::stringstream parser(<span class="keywordtype">string</span>);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            ItemType item;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            parser &gt;&gt; item;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            items.push_back(item);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;        }</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        <span class="keywordflow">return</span> items;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    } </div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="namespaceMyParameterHandler_html_a35ad72718f80749e4cc62dcc43614451"><div class="ttname"><a href="namespaceMyParameterHandler.html#a35ad72718f80749e4cc62dcc43614451">MyParameterHandler::get_vector</a></div><div class="ttdeci">std::vector&lt; ItemType &gt; get_vector(ParameterHandler &amp;prm, std::string parameter_name)</div><div class="ttdef"><b>Definition:</b> my_parameter_handler.h:11</div></div>
+</div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Wed Mar 22 2017 22:07:06 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">

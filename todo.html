@@ -65,7 +65,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -83,13 +83,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><dl class="reflist">
 <dt><a class="anchor" id="_todo000001"></a>Member <a class="el" href="namespaceMyGridGenerator.html#a4e0176fc7d39bf646b8f5beb87720731">MyGridGenerator::hemisphere_cylinder_shell</a>  (Triangulation&lt; dim &gt; &amp;tria, const double inner_radius=0.25, const double outer_radius=0.5, const double inner_length=1.0, const double outer_length=1.25)</dt>
 <dd><p class="startdd">Insert image showing coarse grid with overlaid geometry and labels </p>
-<p class="enddd">Implement in 3D </p>
+<p class="enddd">Implement in 3D  </p>
 </dd>
+<dt><a class="anchor" id="_todo000011"></a>Member <a class="el" href="namespacePeclet.html#ab4ebb615dbc17bc93fd628d0441e8771">Peclet::EPSILON</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000010"></a>Member <a class="el" href="namespacePeclet.html#ae67d7da56b7b8c79b90723180838fb25">Peclet::GRAVITY</a>  ({0.,-1., 0.})</dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000009"></a>Member <a class="el" href="namespacePeclet.html#ab1e8618635b56880b3cdfeea19fddd8d">Peclet::LIQUID_CONDUCTIVITY</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000003"></a>Member <a class="el" href="namespacePeclet.html#aed738519373611f79e88f6802cccb618">Peclet::MAX_NEWTON_ITERATIONS</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000004"></a>Member <a class="el" href="namespacePeclet.html#a241b97a7d08063536ee10a19252d59fd">Peclet::NEWTON_TOLERANCE</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000014"></a>Member <a class="el" href="classPeclet_1_1Peclet.html#a6ec961a9457d9d5f29bf3d8e2c783f41">Peclet::Peclet&lt; dim &gt;::apply_boundary_values_and_constraints</a>  ()</dt>
+<dd><p class="startdd">Apply natural boundary conditions </p>
+<p class="enddd">:  </p>
+</dd>
+<dt><a class="anchor" id="_todo000013"></a>Member <a class="el" href="classPeclet_1_1Peclet.html#a52c545aabaf6328dade7d3ab4a94d195">Peclet::Peclet&lt; dim &gt;::assemble_system</a>  ()</dt>
+<dd>: Add forcing function to RHS, e.g. for method of manufactured solution  </dd>
+<dt><a class="anchor" id="_todo000012"></a>Member <a class="el" href="classPeclet_1_1Peclet.html#afb3c5e0931b2829e589986a286757b48">Peclet::Peclet&lt; dim &gt;::setup_system</a>  (bool quiet=false)</dt>
+<dd>Why must we reinit the solution and RHS vectors here? This is an artifact from the step-26 tutorial.  </dd>
+<dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="namespacePeclet.html#a08f38f1db75405a172ed14e5971c6bb2">Peclet::PRANDTL_NUMBER</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000005"></a>Member <a class="el" href="namespacePeclet.html#a4a4381af2ba2992eba0ec7a9854f8e15">Peclet::RAYLEIGH_NUMBER</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000016"></a>Member <a class="el" href="namespacePeclet_1_1Refinement.html#a0ce2da90c484d7dd33e53fb90f4ac052">Peclet::Refinement::adaptive_refine_mesh</a>  ()</dt>
+<dd>Implement Danaila's metric  </dd>
+<dt><a class="anchor" id="_todo000007"></a>Member <a class="el" href="namespacePeclet.html#a41bc773f11733f3b0667dfaebf8c35da">Peclet::REYNOLDS_NUMBER</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="namespacePeclet.html#a1d32e1bd5a84def05c7dc58b18645db3">Peclet::SOLID_CONDUCTIVITY</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="namespacePeclet.html#af00d236d4dc871be99532c51d1463bf5">Peclet::VECTOR_DEGREE</a>  </dt>
+<dd>: Expose to ParameterHandler  </dd>
+<dt><a class="anchor" id="_todo000021"></a>Member <a class="el" href="namespaceRefinement.html#a42c03e6793b3ac17ab6933794f6c5a3e">Refinement::adaptive_refine_mesh</a>  ()</dt>
+<dd>Implement Danaila's metric </dd>
 </dl>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:48:39 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 22:07:07 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

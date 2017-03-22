@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['old_5fsolution',['old_solution',['../classPeclet_1_1Peclet.html#aa8140b031c3a7d984159ca39b52e262f',1,'Peclet::Peclet']]],
-  ['output',['Output',['../namespaceOutput.html',1,'Output'],['../structPeclet_1_1Parameters_1_1StructuredParameters.html#abca6808690d954ba23b407a982b662ae',1,'Peclet::Parameters::StructuredParameters::output()']]],
-  ['output',['Output',['../structPeclet_1_1Parameters_1_1Output.html',1,'Peclet::Parameters']]],
-  ['output_2eh',['output.h',['../output_8h.html',1,'']]]
+  ['newton_5fsolution',['newton_solution',['../classPeclet_1_1Peclet.html#ab5d5d452ec8e9f3777341bfb3a1ba9f3',1,'Peclet::Peclet']]],
+  ['newton_5ftolerance',['NEWTON_TOLERANCE',['../namespacePeclet.html#a241b97a7d08063536ee10a19252d59fd',1,'Peclet']]],
+  ['normalize_5ftolerance',['normalize_tolerance',['../structPeclet_1_1Parameters_1_1IterativeSolver.html#a6e1f0a097295592c5fdfdc62bf0da76e',1,'Peclet::Parameters::IterativeSolver']]]
 ];

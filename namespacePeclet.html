@@ -71,7 +71,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -85,6 +85,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Peclet Namespace Reference</div>  </div>
@@ -105,11 +106,54 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeclet_1_1Peclet.html">Peclet</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ae67d7da56b7b8c79b90723180838fb25"><td class="memItemLeft" align="right" valign="top">const Tensor&lt; 1, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#ae67d7da56b7b8c79b90723180838fb25">GRAVITY</a> ({0.,-1., 0.})</td></tr>
+<tr class="separator:ae67d7da56b7b8c79b90723180838fb25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a95c661d0a6cb337365c3fd33155c7634"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a95c661d0a6cb337365c3fd33155c7634">SCALAR_DEGREE</a> = 1</td></tr>
+<tr class="separator:a95c661d0a6cb337365c3fd33155c7634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af00d236d4dc871be99532c51d1463bf5"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#af00d236d4dc871be99532c51d1463bf5">VECTOR_DEGREE</a> = 2</td></tr>
+<tr class="separator:af00d236d4dc871be99532c51d1463bf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed738519373611f79e88f6802cccb618"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#aed738519373611f79e88f6802cccb618">MAX_NEWTON_ITERATIONS</a> = 100</td></tr>
+<tr class="separator:aed738519373611f79e88f6802cccb618"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a241b97a7d08063536ee10a19252d59fd"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a241b97a7d08063536ee10a19252d59fd">NEWTON_TOLERANCE</a> = 1.e-10</td></tr>
+<tr class="separator:a241b97a7d08063536ee10a19252d59fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a4381af2ba2992eba0ec7a9854f8e15"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a4a4381af2ba2992eba0ec7a9854f8e15">RAYLEIGH_NUMBER</a> = 1.e6</td></tr>
+<tr class="separator:a4a4381af2ba2992eba0ec7a9854f8e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08f38f1db75405a172ed14e5971c6bb2"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a08f38f1db75405a172ed14e5971c6bb2">PRANDTL_NUMBER</a> = 0.71</td></tr>
+<tr class="separator:a08f38f1db75405a172ed14e5971c6bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41bc773f11733f3b0667dfaebf8c35da"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a41bc773f11733f3b0667dfaebf8c35da">REYNOLDS_NUMBER</a> = 1.</td></tr>
+<tr class="separator:a41bc773f11733f3b0667dfaebf8c35da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f0a0a8cc1766a8d22476210b1f8a7b2"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a8f0a0a8cc1766a8d22476210b1f8a7b2">LIQUID_DYNAMIC_VISOCITY</a> = 1.</td></tr>
+<tr class="separator:a8f0a0a8cc1766a8d22476210b1f8a7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d32e1bd5a84def05c7dc58b18645db3"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#a1d32e1bd5a84def05c7dc58b18645db3">SOLID_CONDUCTIVITY</a> = 1.</td></tr>
+<tr class="separator:a1d32e1bd5a84def05c7dc58b18645db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1e8618635b56880b3cdfeea19fddd8d"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#ab1e8618635b56880b3cdfeea19fddd8d">LIQUID_CONDUCTIVITY</a> = 2.</td></tr>
+<tr class="separator:ab1e8618635b56880b3cdfeea19fddd8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4ebb615dbc17bc93fd628d0441e8771"><td class="memItemLeft" align="right" valign="top">const double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacePeclet.html#ab4ebb615dbc17bc93fd628d0441e8771">EPSILON</a> = 1.e-14</td></tr>
 <tr class="separator:ab4ebb615dbc17bc93fd628d0441e8771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ae67d7da56b7b8c79b90723180838fb25"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const Tensor&lt;1, 3&gt; Peclet::GRAVITY </td>
+          <td>(</td>
+          <td class="paramtype">{0.,-1., 0.}&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Variable Documentation</h2>
 <a class="anchor" id="ab4ebb615dbc17bc93fd628d0441e8771"></a>
 <div class="memitem">
@@ -120,13 +164,142 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab1e8618635b56880b3cdfeea19fddd8d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::LIQUID_CONDUCTIVITY = 2.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8f0a0a8cc1766a8d22476210b1f8a7b2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::LIQUID_DYNAMIC_VISOCITY = 1.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aed738519373611f79e88f6802cccb618"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int Peclet::MAX_NEWTON_ITERATIONS = 100</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a241b97a7d08063536ee10a19252d59fd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::NEWTON_TOLERANCE = 1.e-10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a08f38f1db75405a172ed14e5971c6bb2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::PRANDTL_NUMBER = 0.71</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4a4381af2ba2992eba0ec7a9854f8e15"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::RAYLEIGH_NUMBER = 1.e6</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a41bc773f11733f3b0667dfaebf8c35da"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::REYNOLDS_NUMBER = 1.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a95c661d0a6cb337365c3fd33155c7634"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int Peclet::SCALAR_DEGREE = 1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a1d32e1bd5a84def05c7dc58b18645db3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const double Peclet::SOLID_CONDUCTIVITY = 1.</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af00d236d4dc871be99532c51d1463bf5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned int Peclet::VECTOR_DEGREE = 2</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>: Expose to ParameterHandler </dd></dl>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Mar 20 2017 08:48:39 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Mar 22 2017 22:07:07 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
