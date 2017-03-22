@@ -77,7 +77,7 @@ void TestData::get_data(dealii::ParameterHandler &prm)
 {
     prm.enter_subsection("test_section");
 
-    pass = prm.get_bool("pass");  
+    this->pass = prm.get_bool("pass");  
 
     prm.leave_subsection();
 }
