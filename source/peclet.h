@@ -87,12 +87,6 @@ namespace Peclet
 
   const double EPSILON = 1.e-14;
 
-  /*
-  @todo: Expose boundary_count to ParameterHandler
-
-  Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
-  */
-  const unsigned int BOUNDARY_COUNT = 4;
   
   struct SolverStatus
   {
@@ -112,9 +106,6 @@ namespace Peclet
   private:
 
     void create_coarse_grid();
-    void read_parsed_boundary_function_inputs(
-        std::string parameter_file,
-        std::vector<Functions::ParsedFunction<dim>> &boundary_functions);
     void adaptive_refine();
     void setup_system(bool quiet = false);
     void assemble_system();
@@ -159,11 +150,7 @@ namespace Peclet
     Functions::ParsedFunction<dim> source_function;
     Functions::ParsedFunction<dim> exact_solution_function;
     
-    /*! 
-    Something internal to mu::Parser is throwing an error when
-    I try to do this with ParsedFunction<dim> instead of ParsedFunction<dim>*
-    */
-    std::vector<Functions::ParsedFunction<dim>*> boundary_function_pointers;
+    std::vector<Functions::ParsedFunction<dim>> boundary_functions;
 
     Function<dim>* initial_values_function_pointer;
 
@@ -181,12 +168,11 @@ namespace Peclet
        FE_Q<dim>(SCALAR_DEGREE), 2),  // pressure and temperature
     dof_handler(this->triangulation),
     source_function(dim + 2),
-    exact_solution_function(dim + 2)
+    exact_solution_function(dim + 2),
+    boundary_functions(BOUNDARY_COUNT)
   {}
   
   #include "peclet_grid.h"
-
-  #include "peclet_boundary_conditions.h"
 
   #include "peclet_system.h"
 
@@ -297,7 +283,8 @@ namespace Peclet
         parameter_file,
         this->source_function,
         this->exact_solution_function,
-        parsed_initial_values_function);
+        parsed_initial_values_function,
+        this->boundary_functions);
     
     this->create_coarse_grid();
     
@@ -339,10 +326,6 @@ namespace Peclet
     { 
         this->initial_values_function_pointer = &parsed_initial_values_function;
     }
-    
-    // Boundary condition functions
-    std::vector<Functions::ParsedFunction<dim>> boundary_functions(BOUNDARY_COUNT);
-    this->read_parsed_boundary_function_inputs(parameter_file, boundary_functions);
 
     // Attach manifolds
     

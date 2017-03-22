@@ -40,6 +40,13 @@
     
 */
 
+/*
+@todo: Expose boundary_count to ParameterHandler
+
+Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
+*/
+const unsigned int BOUNDARY_COUNT = 4;
+
 namespace Peclet
 {
     namespace Parameters
@@ -231,6 +238,15 @@ namespace Peclet
                         "\nSemi-colons separate components, while commas separate boundaries."
                         "Masks are required for every boundary ID in the coarse grid.");
 
+                for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
+                {
+                    prm.enter_subsection("parsed_function_"+std::to_string(b));
+                    {
+                        Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+                    }
+                    prm.leave_subsection();
+                }
+
             }
             prm.leave_subsection ();
             
@@ -389,7 +405,8 @@ namespace Peclet
                 const std::string parameter_file,
                 Functions::ParsedFunction<dim> &source_function,
                 Functions::ParsedFunction<dim> &exact_solution_function,
-                Functions::ParsedFunction<dim> &parsed_initial_values_function)
+                Functions::ParsedFunction<dim> &parsed_initial_values_function,
+                std::vector<Functions::ParsedFunction<dim>> &boundary_functions)
         {
 
             StructuredParameters params;
@@ -461,6 +478,15 @@ namespace Peclet
                 {
                     std::vector<std::string> mask = Utilities::split_string_list(mask_strings[m], ',');
                     params.boundary_conditions.strong_masks.push_back(mask);
+                }
+
+                for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
+                {
+                    prm.enter_subsection("parsed_function_"+std::to_string(b));
+                    {
+                        boundary_functions[b].parse_parameters(prm);
+                    }
+                    prm.leave_subsection();
                 }
 
             }

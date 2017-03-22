@@ -416,19 +416,19 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
                 if (field_name == "velocity")
                 {
                     VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
                         this->fe.component_mask(velocity_extractor));
                 }
                 else if (field_name == "pressure")
                 {
                     VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
                         this->fe.component_mask(pressure_extractor));
                 }
                 else if (field_name == "temperature")
                 {
                     VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, *this->boundary_function_pointers[b], boundary_values,
+                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
                         this->fe.component_mask(temperature_extractor));
                 }
                 else
