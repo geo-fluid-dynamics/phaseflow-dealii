@@ -3,23 +3,7 @@
 template<>
 void Peclet<1>::create_coarse_grid()
 {
-    const unsigned int dim = 1;
-    
-    // Create grid
-    MyGridGenerator::create_coarse_grid(
-        this->triangulation,
-        this->boundary_count,
-        this->manifold_ids, this->manifold_descriptors,
-        this->params.geometry.grid_name, params.geometry.sizes);
-
-    // Shift and rotate the grid.
-    Point<dim> shifted_center;
-    for (unsigned int i = 0; i < dim; i++)
-    {
-        shifted_center[i] = params.geometry.transformations[i];
-    }
-    GridTools::shift(shifted_center, this->triangulation); 
-    this->spherical_manifold_center = shifted_center;
+    Assert(false, ExcNotImplemented()); // Is there a sensible 1D problem?
 }
 
 template <>
@@ -28,11 +12,20 @@ void Peclet<2>::create_coarse_grid()
     const unsigned int dim = 2;
     
     // Create grid
+    unsigned int boundary_count;
+
     MyGridGenerator::create_coarse_grid(
         this->triangulation,
-        this->boundary_count,
+        boundary_count,
         this->manifold_ids, this->manifold_descriptors,
-        params.geometry.grid_name, params.geometry.sizes);
+        this->params.geometry.grid_name, params.geometry.sizes);
+
+    /*
+    @todo: Allow for a variable boundary_count.
+
+    Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
+    */
+    assert(boundary_count == BOUNDARY_COUNT);
 
     // Shift and rotate the grid.
     Point<dim> shifted_center;

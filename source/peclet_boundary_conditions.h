@@ -1,6 +1,7 @@
 #ifndef peclet_boundary_conditions_h
 #define peclet_boundary_conditions_h
 
+
 /*!
 @brief Read input parameters for parsed boundary functions.
 
@@ -21,7 +22,7 @@ void Peclet<dim>::read_parsed_boundary_function_inputs(
 
     prm.enter_subsection("boundary_conditions");
 
-    for (unsigned int b = 0; b < this->boundary_count; ++b)
+    for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
     {
         prm.enter_subsection("parsed_function_"+std::to_string(b));
         {
@@ -46,7 +47,7 @@ void Peclet<dim>::read_parsed_boundary_function_inputs(
     prm.enter_subsection("boundary_conditions");
     {
 
-        for (unsigned int b = 0; b < boundary_count; ++b)
+        for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
         {
             prm.enter_subsection("parsed_function_"+std::to_string(b));
             {

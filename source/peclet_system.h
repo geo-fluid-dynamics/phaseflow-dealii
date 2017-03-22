@@ -386,7 +386,7 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
 
         std::map<types::global_dof_index, double> boundary_values;
 
-        for (unsigned int b = 0; b < this->boundary_count; ++b) /* For each boundary */
+        for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b) /* For each boundary */
         {                    
             std::vector<std::string> mask = this->params.boundary_conditions.strong_masks[b];
 

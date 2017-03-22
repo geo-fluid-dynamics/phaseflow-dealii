@@ -86,6 +86,13 @@ namespace Peclet
   const Tensor<1, 3> GRAVITY({0., -1., 0.}); /*! @todo: Expose to ParameterHandler */
 
   const double EPSILON = 1.e-14;
+
+  /*
+  @todo: Expose boundary_count to ParameterHandler
+
+  Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
+  */
+  const unsigned int BOUNDARY_COUNT = 4;
   
   struct SolverStatus
   {
@@ -145,8 +152,6 @@ namespace Peclet
     SolverStatus solver_status;
 
     Point<dim> spherical_manifold_center;
-    
-    unsigned int boundary_count;
 
     std::vector<unsigned int> manifold_ids;
     std::vector<std::string> manifold_descriptors;
@@ -336,7 +341,7 @@ namespace Peclet
     }
     
     // Boundary condition functions
-    std::vector<Functions::ParsedFunction<dim>> boundary_functions(this->boundary_count);
+    std::vector<Functions::ParsedFunction<dim>> boundary_functions(BOUNDARY_COUNT);
     this->read_parsed_boundary_function_inputs(parameter_file, boundary_functions);
 
     // Attach manifolds
