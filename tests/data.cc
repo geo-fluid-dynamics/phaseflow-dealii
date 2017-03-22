@@ -9,7 +9,9 @@ int main(int /*argc*/, char** /*argv*/)
 {
     const unsigned int dim = 2;
 
-    auto data = Data::read<dim>();
+    dealii::ParameterHandler prm;
+
+    Data::AllData data(prm);
     
     dealii::Point<dim> point;
     dealii::Vector<double> vector_value(

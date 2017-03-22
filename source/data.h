@@ -26,17 +26,19 @@ namespace Data
         
         public:
 
-            dealii::ParameterHandler prm;
-
-            Data(dealii::ParameterHandler &_prm) : prm(_prm)
+            Data(
+                dealii::ParameterHandler &_prm, 
+                const std::string parameter_file_path="") 
             {
+                this->prm = _prm;
+
                 /*! Declare parameters. */
                 this->declare();
 
                 /*! Read parameters. */
                 if (parameter_file != "")
                 {
-                    this->prm.read_input();    
+                    this->prm.read_input(parameter_file_path);    
                 }
 
                 this->get_data();
@@ -45,6 +47,7 @@ namespace Data
             void write(const std::string parameter_file_path="used_parameters.prm") const;
 
         private:
+            dealii::ParameterHandler prm;
             virtual void declare() const;
             virtual void get_data();
     };
@@ -186,8 +189,6 @@ namespace Data
         return data;
     }
 
-    }
-        
 
     template<int dim>
     class AllData
@@ -196,16 +197,20 @@ namespace Data
             MetaData meta;
             BoundaryConditionsData<dim> boundary_conditions;
 
-            AllData(dealii::ParameterHandler &_prm) 
-                : prm(&_prm), meta(&_prm), boundary_conditions(&_prm)
+            AllData(
+                dealii::ParameterHandler &_prm, 
+                const std::string parameter_file_path="") 
+                : 
+                Data(&_prm, parameter_file_path),
+                meta(&_prm, parameter_file_path),
+                boundary_conditions(&_prm, parameter_file_path)
             {}
 
             void write(const std::string parameter_file_path="used_parameters.prm") const;
 
         private:
-            dealii::ParameterHandler prm;
-            virtual void declare() const;
-            virtual void get_data();
+            void declare() const;
+            void get_data();
     };
 
     template<int dim>
