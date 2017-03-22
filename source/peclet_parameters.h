@@ -156,11 +156,18 @@ namespace Peclet
             prm.enter_subsection ("geometry");
             {
                     
-                prm.declare_entry("grid_name", "hyper_cube",
+                prm.declare_entry("grid_name", "hyper_rectangle",
                      Patterns::Selection("hyper_rectangle | hyper_cube | hyper_shell | hemisphere_cylinder_shell"
                                       " | cylinder | cylinder_with_split_boundaries"
                                       " | hyper_cube_with_cylindrical_hole"),
                      "Select the name of the geometry and grid to generate."
+
+                     "\nhyper_rectangle"
+                     "\n\tLeft (x_min) boundary ID = 0"
+                     "\n\tRight (x_max) boundary ID = 1"
+                     "\n\tBottom (y_min) boundary ID = 2"
+                     "\n\tTop (y_max) boundary ID = 3"
+
                      "\nhyper_shell"
                      "\n\tInner boundary ID = 0"
                      "\n\tOuter boundary ID = 1"
