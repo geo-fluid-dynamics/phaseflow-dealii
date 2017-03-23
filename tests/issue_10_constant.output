@@ -1,0 +1,6 @@
+ParameterHandler::read_input: could not open file <default.prm> for reading.
+Trying to make file <default.prm> with default values for you.
+f(0 0) = 0
+f(0 0) = 0
+f(0 0) = 0
+f(0 0) = 0

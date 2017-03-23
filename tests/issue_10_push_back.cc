@@ -19,13 +19,14 @@ int main(int /*argc*/, char** /*argv*/)
 
     std::vector<std::shared_ptr<dealii::Functions::ParsedFunction<dim>>>
         function_pointers;
-    
-    function_pointers.resize(function_count);
 
     dealii::ParameterHandler prm;
 
     for (unsigned int f = 0; f < function_count; ++f)
     {
+        function_pointers.push_back(
+            std::shared_ptr<dealii::Functions::ParsedFunction<dim>>(new dealii::Functions::ParsedFunction<dim>()));
+            
         prm.enter_subsection("parsed_function_"+std::to_string(f));
         {
             function_pointers[f]->declare_parameters(prm);
