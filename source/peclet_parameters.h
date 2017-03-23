@@ -102,7 +102,6 @@ namespace Peclet
         struct Output
         {
             bool write_solution_vtk;
-            bool write_solution_table;
             int time_step_interval;
         };
         
@@ -300,11 +299,7 @@ namespace Peclet
             prm.enter_subsection("output");
             {
                 prm.declare_entry("write_solution_vtk", "true", Patterns::Bool());
-                prm.declare_entry("write_solution_table", "false", Patterns::Bool(),
-                    "This allow for simple export of 1D solutions into a table format"
-                    " easily read by MATLAB."
-                    "\nThe way this is currently implemented takes a great deal of memory"
-                    ", so you should probably only use this in 1D.");
+
                 prm.declare_entry("time_step_interval", "1", Patterns::Integer(0),
                     "Solutions will only be written at every time_step_interval time step."
                     "\nSet to one to output at every time step."
@@ -462,7 +457,6 @@ namespace Peclet
             prm.enter_subsection("output");
             {
                 params.output.write_solution_vtk = prm.get_bool("write_solution_vtk");
-                params.output.write_solution_table = prm.get_bool("write_solution_table");
                 params.output.time_step_interval = prm.get_integer("time_step_interval");
             }
             prm.leave_subsection();
