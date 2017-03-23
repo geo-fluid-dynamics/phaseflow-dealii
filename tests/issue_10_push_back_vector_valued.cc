@@ -9,9 +9,6 @@
 
 @brief Test for issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
 
-@detail 
-    If the bug still exists, then this test will seg fault when calling parse_parameters.
-
 */
 int main(int /*argc*/, char** /*argv*/)
 {
