@@ -142,6 +142,8 @@ namespace Peclet
     bool output_this_step;
     SolverStatus solver_status;
 
+    unsigned int boundary_count;
+
     Point<dim> spherical_manifold_center;
 
     std::vector<unsigned int> manifold_ids;
@@ -149,8 +151,6 @@ namespace Peclet
     
     Functions::ParsedFunction<dim> source_function;
     Functions::ParsedFunction<dim> exact_solution_function;
-    
-    std::vector<Functions::ParsedFunction<dim>> boundary_functions;
 
     Function<dim>* initial_values_function_pointer;
 
@@ -168,8 +168,7 @@ namespace Peclet
        FE_Q<dim>(SCALAR_DEGREE), 2),  // pressure and temperature
     dof_handler(this->triangulation),
     source_function(dim + 2),
-    exact_solution_function(dim + 2),
-    boundary_functions(BOUNDARY_COUNT)
+    exact_solution_function(dim + 2)
   {}
   
   #include "peclet_grid.h"
@@ -283,8 +282,7 @@ namespace Peclet
         parameter_file,
         this->source_function,
         this->exact_solution_function,
-        parsed_initial_values_function,
-        this->boundary_functions);
+        parsed_initial_values_function);
     
     this->create_coarse_grid();
     

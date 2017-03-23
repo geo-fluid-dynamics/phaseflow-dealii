@@ -30,22 +30,10 @@
 
         Every parameter name appears three times in this file. Once for the data structure,
         once for declaring to the ParameterHandler class, and once for parsing the input file.
-
-        
-    @todo Allow for multiple parsed boundary functions.
-        This might not be possible.
-        This will obsolete the "constant" function option.
     
     @author A. Zimmerman <zimmerman@aices.rwth-aachen.de>
     
 */
-
-/*
-@todo: Expose boundary_count to ParameterHandler
-
-Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
-*/
-const unsigned int BOUNDARY_COUNT = 4;
 
 namespace Peclet
 {
@@ -62,11 +50,6 @@ namespace Peclet
         struct PhysicalModel
         {
             std::vector<double> gravity;
-        };
-
-        struct BoundaryConditions
-        {
-            std::vector<std::vector<std::string>> strong_masks;
         };
         
         struct InitialValues
@@ -106,7 +89,6 @@ namespace Peclet
             double end_time;
             double step_size;
             double global_refinement_levels;
-            bool stop_when_steady;
         };
         
         struct IterativeSolver
@@ -132,7 +114,6 @@ namespace Peclet
         struct StructuredParameters
         {
             Meta meta;
-            BoundaryConditions boundary_conditions;
             InitialValues initial_values;
             Geometry geometry;
             Refinement refinement;
@@ -223,34 +204,6 @@ namespace Peclet
             prm.leave_subsection ();
             
             
-            prm.enter_subsection ("boundary_conditions");
-            {
-                /*!
-                It was originally attempted to make this parameter a list of lists,
-                but Patterns::List does not appear to allow for that.
-                So instead we have one string that we'll parse manually.
-                */
-                prm.declare_entry(
-                    "strong_mask",
-                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
-                    Patterns::Anything(),
-                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
-                        "\nSemi-colons separate components, while commas separate boundaries."
-                        "Masks are required for every boundary ID in the coarse grid.");
-
-                for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
-                {
-                    prm.enter_subsection("parsed_function_"+std::to_string(b));
-                    {
-                        Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
-                    }
-                    prm.leave_subsection();
-                }
-
-            }
-            prm.leave_subsection ();
-            
-            
             prm.enter_subsection ("refinement");
             {
                 prm.declare_entry("initial_global_cycles", "4",
@@ -322,11 +275,6 @@ namespace Peclet
                     Patterns::Integer(0),
                     "If step_size is set to zero, then compute "
                     "step_size = end_time/(2^global_refinement_levels)");
-
-                prm.declare_entry("stop_when_steady", "false",
-                    Patterns::Bool(),
-                    "If true, then stop when solver reports zero iterations"
-                    " instead of waiting for end_time");
                     
             }
             prm.leave_subsection();
@@ -405,8 +353,7 @@ namespace Peclet
                 const std::string parameter_file,
                 Functions::ParsedFunction<dim> &source_function,
                 Functions::ParsedFunction<dim> &exact_solution_function,
-                Functions::ParsedFunction<dim> &parsed_initial_values_function,
-                std::vector<Functions::ParsedFunction<dim>> &boundary_functions)
+                Functions::ParsedFunction<dim> &parsed_initial_values_function)
         {
 
             StructuredParameters params;
@@ -466,33 +413,8 @@ namespace Peclet
               
             }    
             prm.leave_subsection();
-
-
-            prm.enter_subsection ("boundary_conditions");
-            {
-                std::string strong_mask_string = prm.get("strong_mask");
-
-                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_mask_string, ',');
-
-                for (unsigned int m = 0; m < mask_strings.size(); ++m)
-                {
-                    std::vector<std::string> mask = Utilities::split_string_list(mask_strings[m], ',');
-                    params.boundary_conditions.strong_masks.push_back(mask);
-                }
-
-                for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b)
-                {
-                    prm.enter_subsection("parsed_function_"+std::to_string(b));
-                    {
-                        boundary_functions[b].parse_parameters(prm);
-                    }
-                    prm.leave_subsection();
-                }
-
-            }
-            prm.leave_subsection ();
             
-            
+
             prm.enter_subsection("refinement");
             {
                 
@@ -524,7 +446,6 @@ namespace Peclet
                 params.time.step_size = prm.get_double("step_size");
                 params.time.global_refinement_levels = 
                     prm.get_integer("global_refinement_levels");
-                params.time.stop_when_steady = prm.get_bool("stop_when_steady");
             }    
             prm.leave_subsection();
             

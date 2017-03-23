@@ -382,62 +382,19 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
     {
         /*!
          Apply strong boundary conditions
+
+         To reproduce results in Danaila 2014, use homogeneous Dirichlet BC's on every boundary
         */
 
         std::map<types::global_dof_index, double> boundary_values;
 
-        for (unsigned int b = 0; b < BOUNDARY_COUNT; ++b) /* For each boundary */
+        for (unsigned int b = 0; b < this->boundary_count; ++b) /* For each boundary */
         {                    
-            std::vector<std::string> mask = this->params.boundary_conditions.strong_masks[b];
-
-            FEValuesExtractors::Vector velocity_extractor(0);
-            FEValuesExtractors::Scalar pressure_extractor(dim);
-            FEValuesExtractors::Scalar temperature_extractor(dim + 1);
-
-            std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
-
-            for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
-            {
-                std::string field_name = field_names[f];
-
-                if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
-                {
-                    continue;
-                }
-
-                /*!
-                    @todo: 
-                
-                    Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
-
-                    Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas.
-                */
-
-                if (field_name == "velocity")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
-                        this->fe.component_mask(velocity_extractor));
-                }
-                else if (field_name == "pressure")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
-                        this->fe.component_mask(pressure_extractor));
-                }
-                else if (field_name == "temperature")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_functions[b], boundary_values,
-                        this->fe.component_mask(temperature_extractor));
-                }
-                else
-                {
-                    assert(false);
-                }
-
-            }
-            
+            VectorTools::interpolate_boundary_values(
+                this->dof_handler,
+                b,
+                ZeroFunction<dim>(dim + 2),
+                boundary_values);      
         }
 
         MatrixTools::apply_boundary_values(
