@@ -54,12 +54,15 @@ namespace Peclet
     void BoundaryConditionsData<dim>::get_data(dealii::ParameterHandler &prm)
     {
         
-        this->function_pointers.resize(this->boundary_count);
-
         prm.enter_subsection("boundary_conditions");
 
         for (unsigned int b = 0; b < this->boundary_count; ++b)
         {
+            this->function_pointers.push_back(
+                std::shared_ptr<dealii::Functions::ParsedFunction<dim>>(
+                    new dealii::Functions::ParsedFunction<dim>(
+                        this->vector_component_count)));
+
             prm.enter_subsection("parsed_function_"+std::to_string(b));
             {
                 this->function_pointers[b]->parse_parameters(prm);
