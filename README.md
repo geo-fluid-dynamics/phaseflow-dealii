@@ -10,7 +10,7 @@ Author: Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de>
 
 Doxygen generated HTML documentation: https://alexanderzimmerman.github.io/nsb-pcm/
 
-<img style="float: left;" src="https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master"> (<b>Continuous integration status</b>; click the button to go to Travis-CI)
+[![Build Status](https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master)](https://travis-ci.org/alexanderzimmerman/nsb-pcm) (<b>Continuous integration status</b>; click the button to go to Travis-CI)
 
 # For users:
 ## Run pre-built version on docker image
