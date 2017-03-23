@@ -18,29 +18,8 @@ subsection initial_values
     set function_name = parsed
     
     subsection parsed_function
-        set Function expression = 0.; 0.; 0.; 0.
-    end
-    
-end
-
-subsection boundary_conditions
-    
-    set strong_mask = velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure
-
-    subsection parsed_function_0
-        set Function expression = 0., 0., 0.5, 0.
-    end
-
-    subsection parsed_function_1
-        set Function expression = 0., 0., -0.5, 0.
-    end
-
-    subsection parsed_function_2
-        set Function expression = 0., 0., 0., 0.
-    end
-
-    subsection parsed_function_3
-        set Function expression = 0., 0., 0., 0.
+        set Function constants = theta_c=-0.5, theta_h=0.5
+        set Function expression = 0.; 0.; 0.; theta_h + (theta_c - theta_h)*x
     end
     
 end
@@ -48,13 +27,12 @@ end
 subsection refinement
     set boundaries_to_refine = 0
     set initial_boundary_cycles = 0
-    set initial_global_cycles = 5
+    set initial_global_cycles = 3
 end
 
 subsection time
-    set end_time = 0.1
-    set step_size = 0.1
-    set stop_when_steady = true
+    set end_time = 1.0
+    set global_refinement_levels = 1
 end
 
 subsection solver

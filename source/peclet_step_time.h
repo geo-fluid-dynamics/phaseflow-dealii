@@ -112,27 +112,6 @@ void Peclet<dim>::step_time(bool quiet)
     {
         std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
     }
-    
-    bool steady = false;
-    diff = this->solution;
-    diff -= this->old_solution;
-    const double l2_norm_diff = diff.l2_norm();
-    if ((l2_norm_diff < NEWTON_TOLERANCE) & 
-        (l2_norm_diff < this->params.solver.tolerance))
-    {
-        steady = true;
-    }
-
-    if (this->params.time.stop_when_steady & steady)
-    {
-        if (!quiet)
-        {
-            std::cout << "Reached steady state at t = " << this->time << std::endl;
-        }
-        
-        this->final_time_step = true;
-        this->output_this_step = true;
-    }
         
     if (this->output_this_step)
     {
