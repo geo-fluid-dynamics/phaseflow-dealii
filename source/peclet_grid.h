@@ -12,20 +12,12 @@ void Peclet<2>::create_coarse_grid()
     const unsigned int dim = 2;
     
     // Create grid
-    unsigned int boundary_count;
 
     MyGridGenerator::create_coarse_grid(
         this->triangulation,
-        boundary_count,
+        this->boundary_count,
         this->manifold_ids, this->manifold_descriptors,
         this->params.geometry.grid_name, params.geometry.sizes);
-
-    /*
-    @todo: Allow for a variable boundary_count.
-
-    Related to issue https://github.com/alexanderzimmerman/nsb-pcm/issues/10
-    */
-    assert(boundary_count == BOUNDARY_COUNT);
 
     // Shift and rotate the grid.
     Point<dim> shifted_center;
