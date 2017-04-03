@@ -46,12 +46,21 @@ namespace Output
         data_out.write_vtk(output);
     }  
     
-    void write_matrix(SparseMatrix<double> &matrix, std::string file_path)
+    void write_linear_system(SparseMatrix<double> &A, Vector<double> &b)
     {
         
-        std::ofstream output(file_path);
+        {
+            std::ofstream output("A.txt");
         
-        matrix.print(output);
+            A.print(output);
+        }
+        
+        {
+            std::ofstream output("b.txt");
+        
+            b.print(output);
+        }
+        
         
     }
     
