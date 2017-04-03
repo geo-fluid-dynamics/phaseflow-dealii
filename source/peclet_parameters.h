@@ -280,8 +280,8 @@ namespace Peclet
             
             prm.enter_subsection("linear_solver");
             {
-                prm.declare_entry("method", "GMRES",
-                     Patterns::Selection("GMRES"));
+                prm.declare_entry("method", "LU",
+                     Patterns::Selection("LU | GMRES"));
                      
                 prm.declare_entry("max_iterations", "1000",
                     Patterns::Integer(0));
@@ -375,7 +375,8 @@ namespace Peclet
 
             if (parameter_file != "")
             {
-                prm.read_input(parameter_file);    
+                bool read_successful = prm.read_input(parameter_file);
+                assert(read_successful);
             }
             
             // Print a log file of all the ParameterHandler parameters
@@ -474,10 +475,10 @@ namespace Peclet
             
             prm.enter_subsection("nonlinear_solver");
             {
-                params.linear_solver.method = prm.get("method");
-                params.linear_solver.max_iterations = prm.get_integer("max_iterations");
-                params.linear_solver.tolerance = prm.get_double("tolerance");
-                params.linear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
+                params.nonlinear_solver.method = prm.get("method");
+                params.nonlinear_solver.max_iterations = prm.get_integer("max_iterations");
+                params.nonlinear_solver.tolerance = prm.get_double("tolerance");
+                params.nonlinear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
             }    
             prm.leave_subsection(); 
             

@@ -27,18 +27,21 @@ end
 subsection refinement
     set boundaries_to_refine = 0
     set initial_boundary_cycles = 0
-    set initial_global_cycles = 3
+    set initial_global_cycles = 2
 end
 
 subsection time
     set end_time = 1.0
-    set global_refinement_levels = 1
+    set global_refinement_levels = 0
 end
 
-subsection solver
-    set max_iterations = 1000
-    set normalize_tolerance = false
-    set tolerance           = 1e-6
+subsection nonlinear_solver
+    set max_iterations = 50
+    set tolerance = 1e-8
+end
+
+subsection linear_solver
+    set method = LU
 end
 
 subsection output
