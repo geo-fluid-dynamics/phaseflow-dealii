@@ -202,7 +202,7 @@ void Peclet<dim>::assemble_system()
 
     const FEValuesExtractors::Vector velocity(0);
     const FEValuesExtractors::Scalar pressure(dim);
-    const FEValuesExtractors::Scalar temperature(dim);
+    const FEValuesExtractors::Scalar temperature(dim + 1);
 
     std::vector<Tensor<1,dim>> u_k(n_quad_points);
     std::vector<double> p_k(n_quad_points);

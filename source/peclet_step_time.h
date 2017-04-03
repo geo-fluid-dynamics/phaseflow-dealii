@@ -10,10 +10,16 @@
 template<int dim>
 SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 {
+    if (write_linear_system)
+    {
+        Output::write_linear_system(this->system_matrix, this->system_rhs);
+    }
+    
     double tolerance = this->params.linear_solver.tolerance;
     if (this->params.linear_solver.normalize_tolerance)
     {
-        tolerance *= this->system_rhs.l2_norm();
+        double norm = this->system_rhs.l2_norm(); 
+        tolerance *= norm;
     }
     SolverControl solver_control(
         this->params.linear_solver.max_iterations,
@@ -21,18 +27,25 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
        
     SolverGMRES<> solver_gmres(solver_control);
 
+    SparseDirectUMFPACK A_inv;
+    
     PreconditionIdentity preconditioner;
 
     std::string solver_name;
     
-    if (write_linear_system)
-    {
-        Output::write_linear_system(this->system_matrix, this->system_rhs);
-    }
+    std::string solver_type;
     
-    if (this->params.linear_solver.method == "GMRES")
+    if (this->params.linear_solver.method == "LU")
+    {
+        solver_name = "LU";
+        solver_type = "direct";
+        A_inv.initialize(this->system_matrix);
+        A_inv.vmult(this->newton_residual, this->system_rhs);
+    }
+    else if (this->params.linear_solver.method == "GMRES")
     {
         solver_name = "GMRES";
+        solver_type = "iterative";
         solver_gmres.solve(
             this->system_matrix,
             this->newton_residual,
@@ -48,8 +61,15 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 
     if (!quiet)
     {
-        std::cout << "     " << solver_control.last_step()
-              << " " << solver_name << " iterations." << std::endl;
+        if (solver_type == "iterative")\
+        {
+            std::cout << "     " << solver_control.last_step()
+                << " " << solver_name << " iterations." << std::endl;
+        }
+        else if (solver_type == "direct")
+        {
+            std::cout << "Solved linear system" << std::endl;
+        }
     }
     
     SolverStatus status;
@@ -83,8 +103,6 @@ void Peclet<dim>::step_time(bool quiet)
     unsigned int i;
 
     this->old_solution = this->solution;
-
-    Vector<double> diff(this->solution.size());
 
     for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {

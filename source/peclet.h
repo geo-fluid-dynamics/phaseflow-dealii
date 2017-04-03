@@ -58,6 +58,7 @@
 #include <deal.II/grid/manifold_lib.h>
 #include <deal.II/grid/tria_boundary_lib.h>
 #include <deal.II/base/parsed_function.h>
+#include <deal.II/lac/sparse_direct.h>
 
 #include "extrapolated_field.h"
 #include "my_grid_generator.h"
