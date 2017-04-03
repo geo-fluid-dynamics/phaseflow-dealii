@@ -130,7 +130,7 @@ namespace Peclet
 
     Vector<double>       solution;
     Vector<double>       old_solution;
-    Vector<double>       newton_solution;
+    Vector<double>       newton_residual;
     Vector<double>       old_newton_solution;
 
     Vector<double>       system_rhs;

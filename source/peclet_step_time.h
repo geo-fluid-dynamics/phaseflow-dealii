@@ -30,7 +30,7 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
         solver_name = "GMRES";
         solver_gmres.solve(
             this->system_matrix,
-            this->newton_solution,
+            this->newton_residual,
             this->system_rhs,
             preconditioner);    
     }
@@ -74,7 +74,6 @@ void Peclet<dim>::step_time(bool quiet)
     }
 
     bool converged = false;
-    double residual = 1.e32; // Initialize to an arbitrarily large number
 
     unsigned int i;
 
@@ -88,19 +87,15 @@ void Peclet<dim>::step_time(bool quiet)
 
         this->apply_boundary_values_and_constraints();
 
-        this->old_newton_solution = this->newton_solution;
+        this->old_newton_solution = this->solution;
 
         this->solve_linear_system();
 
-        diff = this->newton_solution;
-        diff -= this->old_newton_solution;
+        this->solution -= this->newton_residual;
 
-        residual = diff.l2_norm();
-
-        if (residual < NEWTON_TOLERANCE)
+        if (this->newton_residual.l2_norm() < NEWTON_TOLERANCE)
         {
             converged = true;
-            this->solution = this->newton_solution;
             break;
         }
 
