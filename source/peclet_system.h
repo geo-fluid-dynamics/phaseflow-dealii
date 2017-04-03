@@ -55,8 +55,10 @@ void Peclet<dim>::setup_system(bool quiet)
 
     this->old_solution.reinit(this->dof_handler.n_dofs());
 
-    this->newton_solution.reinit(this->dof_handler.n_dofs());
+    this->newton_residual.reinit(this->dof_handler.n_dofs());
 
+    this->old_newton_solution.reinit(this->dof_handler.n_dofs());
+    
     this->system_rhs.reinit(this->dof_handler.n_dofs());
 
 }
@@ -157,11 +159,23 @@ void Peclet<dim>::assemble_system()
     };
 
     auto c = [](
-        const double _divw,
-        const Tensor<1, dim> _z,
+        const Tensor<1, dim> _w,
+        const Tensor<2, dim> _gradz,
         const Tensor<1, dim> _v)
     {
-        return scalar_product(_divw*_z, _v);
+        double sum = 0.;
+        
+        for (unsigned int i = 0; i < dim ; ++i)
+        {
+            for (unsigned int j = 0; j < dim; ++j)
+            {
+
+                sum += _w[j]*_gradz[i][j]*_v[i]; // @todo maybe _gradz[j][i] instead
+        
+            }
+        }            
+                
+        return sum;
     };
 
     /*!
@@ -243,27 +257,27 @@ void Peclet<dim>::assemble_system()
 
 
         fe_values[velocity].get_function_values(
-            this->solution,
+            this->old_newton_solution,
             newton_velocity_values);
 
         fe_values[pressure].get_function_values(
-            this->solution,
+            this->old_newton_solution,
             newton_pressure_values);
 
         fe_values[temperature].get_function_values(
-            this->solution,
+            this->old_newton_solution,
             newton_temperature_values);
 
         fe_values[temperature].get_function_gradients(
-            this->solution,
+            this->old_newton_solution,
             newton_temperature_gradients);
 
         fe_values[velocity].get_function_gradients(
-            this->solution,
+            this->old_newton_solution,
             newton_velocity_gradients);
 
         fe_values[velocity].get_function_divergences(
-            this->solution,
+            this->old_newton_solution,
             newton_velocity_divergences);
 
 
@@ -304,10 +318,10 @@ void Peclet<dim>::assemble_system()
 
                     local_matrix(i,j) += // Momentum: Incompressible Navier-Stokes
                         scalar_product(u_w, v)/deltat
-                        + c(divu_w, u_k, v) + c(divu_k, u_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
+                        + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
 
-                    local_matrix(i,j) -= // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        scalar_product(df_B_over_dtheta*theta_w, v);
+                    local_matrix(i,j) += // Momentum: Bouyancy (Classical linear Boussinesq approximation)
+                        scalar_product(theta_w*df_B_over_dtheta, v);
 
                     local_matrix(i,j) += // Energy
                         theta_w*phi/deltat
@@ -321,10 +335,10 @@ void Peclet<dim>::assemble_system()
                         b(divu_k, q) - gamma*p_k*q;
 
                     local_rhs(i) += // Momentum: Incompressible Navier-Stokes
-                        scalar_product(u_k - u_n, v) + c(divu_k, u_k, v) + a(mu_l, gradu_k, gradv) 
+                        scalar_product(u_k - u_n, v) + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
                         + b(divv, p_k);
 
-                    local_rhs(i) -= // Momentum: Bouyancy (Classical linear Boussinesq approximation)
+                    local_rhs(i) += // Momentum: Bouyancy (Classical linear Boussinesq approximation)
                         scalar_product(f_B(theta_k), v);
 
                     local_rhs(i) += // Energy
@@ -400,7 +414,7 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
         MatrixTools::apply_boundary_values(
             boundary_values,
             this->system_matrix,
-            this->solution,
+            this->newton_residual,
             this->system_rhs);
     }
 
