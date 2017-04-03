@@ -117,7 +117,7 @@ namespace Peclet
             Geometry geometry;
             Refinement refinement;
             Time time;
-            IterativeSolver solver;
+            IterativeSolver linear_solver, nonlinear_solver;
             Output output;
             Verification verification;
         };    
@@ -278,7 +278,7 @@ namespace Peclet
             }
             prm.leave_subsection();
             
-            prm.enter_subsection("solver");
+            prm.enter_subsection("linear_solver");
             {
                 prm.declare_entry("method", "GMRES",
                      Patterns::Selection("GMRES"));
@@ -293,6 +293,23 @@ namespace Peclet
                     Patterns::Bool(),
                     "If true, then the residual will be multiplied by the L2-norm of the RHS"
                     " before comparing to the tolerance.");
+            }
+            prm.leave_subsection();
+            
+            prm.enter_subsection("nonlinear_solver");
+            {
+                prm.declare_entry("method", "Newton",
+                     Patterns::Selection("Newton"));
+                     
+                prm.declare_entry("max_iterations", "50",
+                    Patterns::Integer(0));
+                    
+                prm.declare_entry("tolerance", "1e-8",
+                    Patterns::Double(0.));
+                    
+                prm.declare_entry("normalize_tolerance", "false",
+                    Patterns::Bool(),
+                    "@todo: This isn't implemented. How is the residual of a Newton iteration normalized?");
             }
             prm.leave_subsection();
             
@@ -445,14 +462,25 @@ namespace Peclet
             prm.leave_subsection();
             
             
-            prm.enter_subsection("solver");
+            prm.enter_subsection("linear_solver");
             {
-                params.solver.method = prm.get("method");
-                params.solver.max_iterations = prm.get_integer("max_iterations");
-                params.solver.tolerance = prm.get_double("tolerance");
-                params.solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
+                params.linear_solver.method = prm.get("method");
+                params.linear_solver.max_iterations = prm.get_integer("max_iterations");
+                params.linear_solver.tolerance = prm.get_double("tolerance");
+                params.linear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
             }    
             prm.leave_subsection(); 
+            
+            
+            prm.enter_subsection("nonlinear_solver");
+            {
+                params.linear_solver.method = prm.get("method");
+                params.linear_solver.max_iterations = prm.get_integer("max_iterations");
+                params.linear_solver.tolerance = prm.get_double("tolerance");
+                params.linear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
+            }    
+            prm.leave_subsection(); 
+            
             
             prm.enter_subsection("output");
             {

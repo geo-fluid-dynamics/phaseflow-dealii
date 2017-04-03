@@ -10,13 +10,13 @@
 template<int dim>
 SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 {
-    double tolerance = this->params.solver.tolerance;
-    if (this->params.solver.normalize_tolerance)
+    double tolerance = this->params.linear_solver.tolerance;
+    if (this->params.linear_solver.normalize_tolerance)
     {
         tolerance *= this->system_rhs.l2_norm();
     }
     SolverControl solver_control(
-        this->params.solver.max_iterations,
+        this->params.linear_solver.max_iterations,
         tolerance);
        
     SolverGMRES<> solver_gmres(solver_control);
@@ -30,7 +30,7 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
         Output::write_linear_system(this->system_matrix, this->system_rhs);
     }
     
-    if (this->params.solver.method == "GMRES")
+    if (this->params.linear_solver.method == "GMRES")
     {
         solver_name = "GMRES";
         solver_gmres.solve(
@@ -86,7 +86,7 @@ void Peclet<dim>::step_time(bool quiet)
 
     Vector<double> diff(this->solution.size());
 
-    for (i = 0; i < MAX_NEWTON_ITERATIONS; ++i)
+    for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {
         this->old_newton_solution = this->solution;
         
@@ -98,7 +98,7 @@ void Peclet<dim>::step_time(bool quiet)
 
         this->solution -= this->newton_residual;
 
-        if (this->newton_residual.l2_norm() < NEWTON_TOLERANCE)
+        if (this->newton_residual.l2_norm() < this->params.nonlinear_solver.tolerance)
         {
             converged = true;
             break;
