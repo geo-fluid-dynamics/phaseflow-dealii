@@ -3,6 +3,10 @@ language: cpp
 services:
   - docker
 
+branches:
+    only:
+        -master
+  
 notifications:
   email: false
   slack: aices-pcm-cfd:ShncJAFCJzx48zt8hrXpRwGw
