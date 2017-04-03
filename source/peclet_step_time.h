@@ -86,6 +86,8 @@ void Peclet<dim>::step_time(bool quiet)
         this->assemble_system();
 
         this->apply_boundary_values_and_constraints();
+        
+        Output::write_matrix(this->system_matrix, "system_matrix.txt");
 
         this->old_newton_solution = this->solution;
 

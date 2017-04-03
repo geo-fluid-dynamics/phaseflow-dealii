@@ -2,6 +2,7 @@
 #include <deal.II/lac/vector.h>
 #include <deal.II/grid/grid_out.h>
 #include <deal.II/numerics/data_out.h>
+#include <deal.II/lac/sparse_matrix.h>
 
 #include <iostream>
 #include <fstream>
@@ -43,6 +44,15 @@ namespace Output
         /*! Write the solution data. */
         std::ofstream output(filename.c_str());
         data_out.write_vtk(output);
-    }    
+    }  
+    
+    void write_matrix(SparseMatrix<double> &matrix, std::string file_path)
+    {
+        
+        std::ofstream output(file_path);
+        
+        matrix.print(output);
+        
+    }
     
 }
