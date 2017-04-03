@@ -25,6 +25,11 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 
     std::string solver_name;
     
+    if (write_linear_system)
+    {
+        Output::write_linear_system(this->system_matrix, this->system_rhs);
+    }
+    
     if (this->params.solver.method == "GMRES")
     {
         solver_name = "GMRES";
@@ -83,13 +88,11 @@ void Peclet<dim>::step_time(bool quiet)
 
     for (i = 0; i < MAX_NEWTON_ITERATIONS; ++i)
     {
+        this->old_newton_solution = this->solution;
+        
         this->assemble_system();
 
         this->apply_boundary_values_and_constraints();
-        
-        Output::write_matrix(this->system_matrix, "system_matrix.txt");
-
-        this->old_newton_solution = this->solution;
 
         this->solve_linear_system();
 

@@ -86,6 +86,8 @@ namespace Peclet
   const Tensor<1, 3> GRAVITY({0., -1., 0.}); /*! @todo: Expose to ParameterHandler */
 
   const double EPSILON = 1.e-14;
+  
+  const bool write_linear_system = true; /*! @todo: Expose to ParameterHandler */
 
   
   struct SolverStatus
