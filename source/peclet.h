@@ -72,8 +72,6 @@ namespace Peclet
 
   const unsigned int SCALAR_DEGREE = 1; /*! @todo: Expose to ParameterHandler */
   const unsigned int VECTOR_DEGREE = 2; /*! @todo: Expose to ParameterHandler */
-  const unsigned int MAX_NEWTON_ITERATIONS = 100; /*! @todo: Expose to ParameterHandler */
-  const double NEWTON_TOLERANCE = 1.e-10; /*! @todo: Expose to ParameterHandler */
   
   const double RAYLEIGH_NUMBER = 1.e6; /*! @todo: Expose to ParameterHandler */
   const double PRANDTL_NUMBER = 0.71; /*! @todo: Expose to ParameterHandler */
