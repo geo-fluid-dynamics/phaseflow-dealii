@@ -142,12 +142,13 @@ void Peclet<dim>::assemble_system()
     */
     auto a = [](
         const double _mu,
-        const Tensor<2, dim> _gradu, const Tensor<2,dim> _gradv)
+        const Tensor<2, dim> _gradu,
+        const Tensor<2, dim> _gradv)
     {
         auto D = [_mu](
-            const Tensor<2, dim> _gradu)
+            const Tensor<2, dim> _gradw)
         {
-            return 0.5*(_gradu + transpose(_gradu));
+            return 0.5*(_gradw + transpose(_gradw));
         };
 
         return 2.*_mu*scalar_product(D(_gradu), D(_gradv));
@@ -337,7 +338,7 @@ void Peclet<dim>::assemble_system()
                         b(divu_k, q) - gamma*p_k*q;
 
                     local_rhs(i) += // Momentum: Incompressible Navier-Stokes
-                        scalar_product(u_k - u_n, v) + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
+                        scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
                         + b(divv, p_k);
 
                     local_rhs(i) += // Momentum: Bouyancy (Classical linear Boussinesq approximation)
@@ -345,7 +346,7 @@ void Peclet<dim>::assemble_system()
 
                     local_rhs(i) += // Energy
                         (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k
-                        + K/Pr*gradtheta_k*gradphi;
+                        + scalar_product(K/Pr*gradtheta_k, gradphi);
                 }
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
