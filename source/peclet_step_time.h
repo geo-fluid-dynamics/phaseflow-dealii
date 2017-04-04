@@ -104,9 +104,11 @@ void Peclet<dim>::step_time(bool quiet)
 
     this->old_solution = this->solution;
 
+    this->newton_solution = this->solution;
+    
     for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {
-        this->old_newton_solution = this->solution;
+        this->old_newton_solution = this->newton_solution;
         
         this->assemble_system();
 
@@ -114,8 +116,18 @@ void Peclet<dim>::step_time(bool quiet)
 
         this->solve_linear_system();
 
-        this->solution -= this->newton_residual;
+        Output::write_solution_to_vtk( // @todo Debugging
+            "newton_residual.vtk",
+            this->dof_handler,
+            this->newton_residual);
+        
+        this->newton_solution -= this->newton_residual;
 
+        Output::write_solution_to_vtk( // @todo Debugging
+            "newton_solution.vtk",
+            this->dof_handler,
+            this->newton_solution);
+        
         if (this->newton_residual.l2_norm() < this->params.nonlinear_solver.tolerance)
         {
             converged = true;
@@ -125,6 +137,8 @@ void Peclet<dim>::step_time(bool quiet)
     }
 
     assert(converged);
+    
+    this->solution = this->newton_solution;
 
     if (!quiet)
     {

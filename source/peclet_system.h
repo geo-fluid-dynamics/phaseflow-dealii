@@ -57,6 +57,8 @@ void Peclet<dim>::setup_system(bool quiet)
 
     this->newton_residual.reinit(this->dof_handler.n_dofs());
 
+    this->newton_solution.reinit(this->dof_handler.n_dofs());
+    
     this->old_newton_solution.reinit(this->dof_handler.n_dofs());
     
     this->system_rhs.reinit(this->dof_handler.n_dofs());
