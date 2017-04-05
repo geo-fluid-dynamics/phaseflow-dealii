@@ -79,6 +79,21 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 
 }
 
+/*! Setup and solve a Newton iteration */
+template<int dim>
+void Peclet<dim>::step_newton()
+{
+    this->old_newton_solution = this->newton_solution;
+    
+    this->assemble_system();
+
+    this->apply_boundary_values_and_constraints();
+
+    this->solve_linear_system();
+
+    this->newton_solution -= this->newton_residual;
+}
+
 /*!
 @brief Step the simulation from the current time step to the next time step.
 
@@ -92,7 +107,7 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 template<int dim>
 void Peclet<dim>::step_time(bool quiet)
 {
-    if (!quiet & output_this_step)
+    if (!quiet & this->output_this_step)
     {
         std::cout << "Time step " << this->time_step_counter 
             << " at t=" << this->time << std::endl;    
@@ -108,20 +123,12 @@ void Peclet<dim>::step_time(bool quiet)
     
     for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {
-        this->old_newton_solution = this->newton_solution;
+        this->step_newton();
         
-        this->assemble_system();
-
-        this->apply_boundary_values_and_constraints();
-
-        this->solve_linear_system();
-
         Output::write_solution_to_vtk( // @todo Debugging
             "newton_residual.vtk",
             this->dof_handler,
             this->newton_residual);
-        
-        this->newton_solution -= this->newton_residual;
 
         Output::write_solution_to_vtk( // @todo Debugging
             "newton_solution.vtk",
@@ -130,9 +137,9 @@ void Peclet<dim>::step_time(bool quiet)
             
         double norm_residual = this->newton_residual.l2_norm();
         
-        if (!quiet)
+        if (!quiet & this->output_this_step)
         {
-            std::cout << "Newton iteration norm residual = " << norm_residual << std::endl;
+            std::cout << "Newton iteration L2 norm residual = " << norm_residual << std::endl;
         }
         
         if (norm_residual < this->params.nonlinear_solver.tolerance)
@@ -147,7 +154,7 @@ void Peclet<dim>::step_time(bool quiet)
     
     this->solution = this->newton_solution;
 
-    if (!quiet)
+    if (!quiet & this->output_this_step)
     {
         std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
     }
