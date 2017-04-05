@@ -67,27 +67,11 @@
 
 #include "peclet_parameters.h"
 
+#include "global_parameters.h"
+
 namespace Peclet
 {
   using namespace dealii;
-
-  const unsigned int SCALAR_DEGREE = 1; /*! @todo: Expose to ParameterHandler */
-  const unsigned int VECTOR_DEGREE = 2; /*! @todo: Expose to ParameterHandler */
-  
-  const double RAYLEIGH_NUMBER = 1.e6; /*! @todo: Expose to ParameterHandler */
-  const double PRANDTL_NUMBER = 0.71; /*! @todo: Expose to ParameterHandler */
-  const double REYNOLDS_NUMBER = 1.;
-
-  const double LIQUID_DYNAMIC_VISOCITY = 1.; /*! @todo: Expose to ParameterHandler */
-  const double SOLID_CONDUCTIVITY = 1.; /*! @todo: Expose to ParameterHandler */
-  const double LIQUID_CONDUCTIVITY = 2.; /*! @todo: Expose to ParameterHandler */
-  
-  const Tensor<1, 3> GRAVITY({0., -1., 0.}); /*! @todo: Expose to ParameterHandler */
-
-  const double EPSILON = 1.e-14;
-  
-  const bool write_linear_system = true; /*! @todo: Expose to ParameterHandler */
-
   
   struct SolverStatus
   {
@@ -167,10 +151,10 @@ namespace Peclet
   Peclet<dim>::Peclet()
     :
     fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
-       FE_Q<dim>(SCALAR_DEGREE), 2),  // pressure and temperature
+       FE_Q<dim>(SCALAR_DEGREE), 1),  // pressure
     dof_handler(this->triangulation),
-    source_function(dim + 2),
-    exact_solution_function(dim + 2)
+    source_function(dim + 1 + ENERGY_ENABLED),
+    exact_solution_function(dim + 1 + ENERGY_ENABLED)
   {}
   
   #include "peclet_grid.h"
@@ -278,7 +262,7 @@ namespace Peclet
     then is to instantitate all of the functions that might be needed, and then to point to the ones
     actually being used.
     */
-    Functions::ParsedFunction<dim> parsed_initial_values_function(dim + 2);
+    Functions::ParsedFunction<dim> parsed_initial_values_function(dim + 1 + ENERGY_ENABLED);
     
     this->params = Parameters::read<dim>(
         parameter_file,

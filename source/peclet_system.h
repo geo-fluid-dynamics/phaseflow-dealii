@@ -107,35 +107,7 @@ void Peclet<dim>::assemble_system()
     */
     const double penalty = 1.e-7; // @todo: Expose this to ParameterHandler.
 
-    const double
-        Ra = RAYLEIGH_NUMBER,
-        Pr = PRANDTL_NUMBER,
-        Re = REYNOLDS_NUMBER;
-    
-    const double K = SOLID_CONDUCTIVITY/LIQUID_CONDUCTIVITY;
-
-    Tensor<1, dim> g; // @todo: Make this const.
-    for (unsigned int i = 0; i < dim; ++i)
-    {
-        g[i] = GRAVITY[i];
-    }
-
     const double mu_l = LIQUID_DYNAMIC_VISOCITY;
-
-    const double Ra_over_PrRe2(Ra/(Pr*Re*Re));
-
-    /*!
-     lambda function for classical (linear) Boussinesq bouyancy
-    */
-    auto f_B = [Ra_over_PrRe2, g](const double _theta) 
-    {
-        return _theta*Ra_over_PrRe2*g;
-    };
-
-    /*!
-     Analytical derivative of classical (linear) Boussinesq bouyancy
-    */
-    const Tensor<1, dim> df_B_over_dtheta(Ra_over_PrRe2*g);
 
     /*!
      lambda functions for linear, bilinear, and trilinear operator
@@ -145,7 +117,7 @@ void Peclet<dim>::assemble_system()
         const Tensor<2, dim> _gradu,
         const Tensor<2, dim> _gradv)
     {
-        auto D = [_mu](
+        auto D = [](
             const Tensor<2, dim> _gradw)
         {
             return 0.5*(_gradw + transpose(_gradw));
@@ -205,7 +177,6 @@ void Peclet<dim>::assemble_system()
 
     const FEValuesExtractors::Vector velocity(0);
     const FEValuesExtractors::Scalar pressure(dim);
-    const FEValuesExtractors::Scalar temperature(dim + 1);
 
     std::vector<Tensor<1,dim>> u_k(n_quad_points);
     std::vector<double> p_k(n_quad_points);
@@ -213,13 +184,9 @@ void Peclet<dim>::assemble_system()
 
     std::vector<Tensor<1,dim>> old_velocity_values(n_quad_points);
     std::vector<double> old_pressure_values(n_quad_points);
-    std::vector<double> old_temperature_values(n_quad_points);
-    std::vector<Tensor<1,dim>> old_temperature_gradients(n_quad_points);
 
     std::vector<Tensor<1,dim>> newton_velocity_values(n_quad_points);
     std::vector<double> newton_pressure_values(n_quad_points);
-    std::vector<double> newton_temperature_values(n_quad_points);
-    std::vector<Tensor<1,dim>> newton_temperature_gradients(n_quad_points);
     std::vector<Tensor<2,dim>> newton_velocity_gradients(n_quad_points);
 
     std::vector<double> newton_velocity_divergences(n_quad_points);
@@ -241,7 +208,6 @@ void Peclet<dim>::assemble_system()
         local_matrix = 0;
         local_rhs = 0;
 
-
         fe_values[velocity].get_function_values(
             this->old_solution,
             old_velocity_values);
@@ -249,14 +215,6 @@ void Peclet<dim>::assemble_system()
         fe_values[pressure].get_function_values(
             this->old_solution,
             old_pressure_values);
-
-        fe_values[temperature].get_function_values(
-            this->old_solution,
-            old_temperature_values);
-
-        fe_values[temperature].get_function_gradients(
-            this->old_solution,
-            old_temperature_gradients);
 
 
         fe_values[velocity].get_function_values(
@@ -267,14 +225,6 @@ void Peclet<dim>::assemble_system()
             this->old_newton_solution,
             newton_pressure_values);
 
-        fe_values[temperature].get_function_values(
-            this->old_newton_solution,
-            newton_temperature_values);
-
-        fe_values[temperature].get_function_gradients(
-            this->old_newton_solution,
-            newton_temperature_gradients);
-
         fe_values[velocity].get_function_gradients(
             this->old_newton_solution,
             newton_velocity_gradients);
@@ -283,18 +233,14 @@ void Peclet<dim>::assemble_system()
             this->old_newton_solution,
             newton_velocity_divergences);
 
-
         for (unsigned int quad = 0; quad< n_quad_points; ++quad)
         {
             /*!
             Name local variables to match notation in Danaila 2014
             */
             const Tensor<1, dim>  u_n = old_velocity_values[quad];
-            const double theta_n = old_temperature_values[quad];
             const Tensor<1, dim> u_k = newton_velocity_values[quad];
             const double p_k = newton_pressure_values[quad];
-            const double theta_k = newton_temperature_values[quad];
-            const Tensor<1, dim> gradtheta_k = newton_temperature_gradients[quad];
             const Tensor<2, dim> gradu_k = newton_velocity_gradients[quad];
             const double divu_k = newton_velocity_divergences[quad];
 
@@ -302,8 +248,6 @@ void Peclet<dim>::assemble_system()
             {
                 const Tensor<1, dim> u_w = fe_values[velocity].value(i, quad);
                 const double p_w = fe_values[pressure].value(i, quad);
-                const double theta_w = fe_values[temperature].value(i, quad);
-                const Tensor<1, dim> gradtheta_w = fe_values[temperature].gradient(i, quad);
                 const Tensor<2, dim> gradu_w = fe_values[velocity].gradient(i, quad);
                 const double divu_w = fe_values[velocity].divergence(i, quad);
 
@@ -311,8 +255,6 @@ void Peclet<dim>::assemble_system()
                 {
                     const Tensor<1, dim> v = fe_values[velocity].value(j, quad);
                     const double q = fe_values[pressure].value(j, quad);
-                    const double phi = fe_values[temperature].value(j, quad);
-                    const Tensor<1, dim> gradphi = fe_values[temperature].gradient(j, quad);
                     const Tensor<2, dim> gradv = fe_values[velocity].gradient(j, quad);
                     const double divv = fe_values[velocity].divergence(j, quad);
 
@@ -323,15 +265,6 @@ void Peclet<dim>::assemble_system()
                         scalar_product(u_w, v)/deltat
                         + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
 
-                    local_matrix(i,j) += // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        scalar_product(theta_w*df_B_over_dtheta, v);
-
-                    local_matrix(i,j) += // Energy
-                        theta_w*phi/deltat
-                        - scalar_product(u_k, gradphi)*theta_w
-                        - scalar_product(u_w, gradphi)*theta_k
-                        + scalar_product(K/Pr*gradtheta_w, gradphi);
-
                     local_matrix(i,j) *= fe_values.JxW(quad);  /*! Map to the reference element */
 
                     local_rhs(i) += // Mass
@@ -341,12 +274,6 @@ void Peclet<dim>::assemble_system()
                         scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
                         + b(divv, p_k);
 
-                    local_rhs(i) += // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        scalar_product(f_B(theta_k), v);
-
-                    local_rhs(i) += // Energy
-                        (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k
-                        + scalar_product(K/Pr*gradtheta_k, gradphi);
                 }
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
@@ -410,7 +337,7 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             VectorTools::interpolate_boundary_values(
                 this->dof_handler,
                 b,
-                ZeroFunction<dim>(dim + 2),
+                ZeroFunction<dim>(dim + 1 + ENERGY_ENABLED),
                 boundary_values);      
         }
 
