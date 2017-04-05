@@ -95,6 +95,7 @@ namespace Peclet
     void setup_system(bool quiet = false);
     void assemble_system();
     void apply_boundary_values_and_constraints();
+    void step_newton();
     void step_time(bool quiet = false);
 
     SolverStatus solve_linear_system(bool quiet = false);
