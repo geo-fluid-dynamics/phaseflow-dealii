@@ -10,7 +10,7 @@
 template<int dim>
 SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 {
-    if (write_linear_system)
+    if (WRITE_LINEAR_SYSTEM)
     {
         Output::write_linear_system(this->system_matrix, this->system_rhs);
     }
@@ -127,8 +127,15 @@ void Peclet<dim>::step_time(bool quiet)
             "newton_solution.vtk",
             this->dof_handler,
             this->newton_solution);
+            
+        double norm_residual = this->newton_residual.l2_norm();
         
-        if (this->newton_residual.l2_norm() < this->params.nonlinear_solver.tolerance)
+        if (!quiet)
+        {
+            std::cout << "Newton iteration norm residual = " << norm_residual << std::endl;
+        }
+        
+        if (norm_residual < this->params.nonlinear_solver.tolerance)
         {
             converged = true;
             break;

@@ -9,17 +9,13 @@ subsection geometry
     set sizes = 0., 0., 1., 1.
 end
 
-subsection source_function
-    set Function expression = 0.; 0.; 0.; 0.
-end
-
 subsection initial_values
     
     set function_name = parsed
     
     subsection parsed_function
-        set Function constants = theta_c=-0.5, theta_h=0.5
-        set Function expression = 0.; 0.; 0.; theta_h + (theta_c - theta_h)*x
+        set Function constants = epsilon=1.e-12
+        set Function expression = if(y > (1. - epsilon), 1., 0.); 0.; 0.
     end
     
 end
@@ -27,16 +23,16 @@ end
 subsection refinement
     set boundaries_to_refine = 0
     set initial_boundary_cycles = 0
-    set initial_global_cycles = 2
+    set initial_global_cycles = 3
 end
 
 subsection time
     set end_time = 1.0
-    set global_refinement_levels = 0
+    set global_refinement_levels = 1
 end
 
 subsection nonlinear_solver
-    set max_iterations = 50
+    set max_iterations = 10
     set tolerance = 1e-8
 end
 

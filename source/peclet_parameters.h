@@ -8,6 +8,8 @@
 
 #include "my_parameter_handler.h"
 
+#include "global_parameters.h"
+
 /*
     
     @brief Encapsulates parameter handling and paramter input file handling.
@@ -135,10 +137,10 @@ namespace Peclet
             
             prm.enter_subsection("source_function");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
             }
             prm.leave_subsection();  
-            
+
             
             prm.enter_subsection ("geometry");
             {
@@ -195,7 +197,7 @@ namespace Peclet
                     
                 prm.enter_subsection("parsed_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED); 
                 }
                 prm.leave_subsection();
                     
@@ -330,7 +332,7 @@ namespace Peclet
 
                 prm.enter_subsection("exact_solution_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
                 }
                 prm.leave_subsection();
             }
