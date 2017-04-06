@@ -83,7 +83,7 @@ SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
 template<int dim>
 void Peclet<dim>::step_newton()
 {
-    this->old_newton_solution = this->newton_solution;
+    this->old_newton_solution = this->solution;
     
     this->assemble_system();
 
@@ -91,36 +91,17 @@ void Peclet<dim>::step_newton()
 
     this->solve_linear_system();
 
-    this->newton_solution -= this->newton_residual;
+    this->solution -= this->newton_residual;
 }
 
-/*!
-@brief Step the simulation from the current time step to the next time step.
-
-@detail
-
-    This requires iterating through each Newton substep of the timestep, 
-    assembling and solving a linear system for each substep, until convergence.
-
-@author Alexander G. Zimmerman 2017 <zimmerman@aices.rwth-aachen.de>
-*/
+/*! Iterate the Newton method to solve the nonlinear problem */
 template<int dim>
-void Peclet<dim>::step_time(bool quiet)
+void Peclet<dim>::solve_nonlinear_problem(bool quiet)
 {
-    if (!quiet & this->output_this_step)
-    {
-        std::cout << "Time step " << this->time_step_counter 
-            << " at t=" << this->time << std::endl;    
-    }
-
     bool converged = false;
 
     unsigned int i;
 
-    this->old_solution = this->solution;
-
-    this->newton_solution = this->solution;
-    
     for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {
         this->step_newton();
@@ -133,11 +114,11 @@ void Peclet<dim>::step_time(bool quiet)
         Output::write_solution_to_vtk( // @todo Debugging
             "newton_solution.vtk",
             this->dof_handler,
-            this->newton_solution);
+            this->solution);
             
         double norm_residual = this->newton_residual.l2_norm();
         
-        if (!quiet & this->output_this_step)
+        if (!quiet)
         {
             std::cout << "Newton iteration L2 norm residual = " << norm_residual << std::endl;
         }
@@ -151,25 +132,12 @@ void Peclet<dim>::step_time(bool quiet)
     }
 
     assert(converged);
-    
-    this->solution = this->newton_solution;
 
-    if (!quiet & this->output_this_step)
+    if (!quiet)
     {
         std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
     }
-        
-    if (this->output_this_step)
-    {
-        this->write_solution();
-        
-        if (this->params.verification.enabled)
-        {
-            this->append_verification_table();
-        }
-        
-    }
-
+    
 }
 
 #endif

@@ -54,11 +54,6 @@ namespace Peclet
             std::vector<double> gravity;
         };
         
-        struct InitialValues
-        {
-            std::string function_name;
-        };
-        
         struct Geometry
         {
             unsigned int dim;
@@ -86,13 +81,6 @@ namespace Peclet
             AdaptiveRefinement adaptive;
         };
         
-        struct Time
-        {
-            double end_time;
-            double step_size;
-            double global_refinement_levels;
-        };
-        
         struct IterativeSolver
         {
             std::string method;
@@ -104,7 +92,6 @@ namespace Peclet
         struct Output
         {
             bool write_solution_vtk;
-            int time_step_interval;
         };
         
         struct Verification
@@ -115,10 +102,8 @@ namespace Peclet
         struct StructuredParameters
         {
             Meta meta;
-            InitialValues initial_values;
             Geometry geometry;
             Refinement refinement;
-            Time time;
             IterativeSolver linear_solver, nonlinear_solver;
             Output output;
             Verification verification;
@@ -137,7 +122,7 @@ namespace Peclet
             
             prm.enter_subsection("source_function");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1);    
             }
             prm.leave_subsection();  
 
@@ -145,46 +130,13 @@ namespace Peclet
             prm.enter_subsection ("geometry");
             {
                     
-                prm.declare_entry("grid_name", "hyper_cube",
-                     Patterns::Selection("hyper_rectangle | hyper_cube | hyper_shell | hemisphere_cylinder_shell"
-                                      " | cylinder | cylinder_with_split_boundaries"
-                                      " | hyper_cube_with_cylindrical_hole"),
-                     "Select the name of the geometry and grid to generate."
-                     "\nhyper_shell"
-                     "\n\tInner boundary ID = 0"
-                     "\n\tOuter boundary ID = 1"
-                     
-                     "\nhemisphere_cylinder_shell"
-                     
-                     "\ncylinder:"
-                     "\n\tBoundary ID's"
-                     "\n\t\t0: Heat flux"
-                     "\n\t\t1: Outflow"
-                     "\n\t\t2: Domain sides"
-                     "\n\t\t3: Inflow"
-                     
-                     "\nhyper_cube_with_cylindrical_hole:"
-                     "\n\tOuter boundary ID = 0"
-                     "\n\tInner spherical boundary ID = 1");
+                prm.declare_entry("grid_name", "hyper_rectangle",
+                     Patterns::Selection("hyper_rectangle"),
+                     "Select the name of the geometry and grid to generate.");
                      
                 prm.declare_entry("sizes", "0., 1.",
                     Patterns::List(Patterns::Double(0.)),
-                    "Set the sizes for the grid's geometry."
-                    "\n hyper_shell:"
-                        "{inner_radius, outer_radius}"
-                    "\n  hemisphere_cylinder_shell: "
-                         "{inner_sphere_radius, outer_sphere_radius, "
-                         "inner_cylinder_length, outer_cylinder_length}"
-                    "\n cylinder: "
-                        "{L0, L1, L2}"
-                    "\n  hyper_cube_with_cylindrical_hole : {hole_radius, half_of_outer_edge_length}");
-                    
-                prm.declare_entry("transformations", "0., 0., 0.",
-                    Patterns::List(Patterns::Double()),
-                    "Set the rigid body transformation vector."
-                    "\n  2D : {shift_along_x, shift_along_y, rotate_about_z}"
-                    "\n  3D : {shift_along_x, shift_along_y, shift_along_z, "
-                              "rotate_about_x, rotate_about_y, rotate_about_z}");
+                    "Set the sizes for the grid's geometry.");
                               
             }
             prm.leave_subsection ();
@@ -192,15 +144,7 @@ namespace Peclet
 
             prm.enter_subsection ("initial_values");
             {
-                prm.declare_entry("function_name", "parsed",
-                    Patterns::List(Patterns::Selection("parsed | interpolate_old_field")));
-                    
-                prm.enter_subsection("parsed_function");
-                {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED); 
-                }
-                prm.leave_subsection();
-                    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1); 
             }
             prm.leave_subsection ();
             
@@ -211,74 +155,10 @@ namespace Peclet
                     Patterns::Integer(),
                     "Initially globally refine the grid this many times "
                     "without using any error measure");
-                    
-                prm.declare_entry("initial_boundary_cycles", "0",
-                    Patterns::Integer(),
-                    "Initially refine the grid this many times"
-                    "near the boundaries that are listed for refinement");
-                    
-                prm.declare_entry("boundaries_to_refine", "0",
-                    Patterns::List(Patterns::Integer()),
-                    "Refine cells that contain these boundaries");
-                    
-                prm.enter_subsection ("adaptive");
-                {
-                    prm.declare_entry("initial_cycles", "0",
-                        Patterns::Integer(),
-                        "Refine grid adaptively using an error measure "
-                        "this many times before beginning the time stepping.");
-                        
-                    prm.declare_entry("interval", "0",
-                        Patterns::Integer(),
-                        "Only refine the grid after every occurence of "
-                        "this many time steps.");
-                        
-                    prm.declare_entry("max_level", "10",
-                        Patterns::Integer(),
-                        "Max grid refinement level");
-                        
-                    prm.declare_entry("max_cells", "2000",
-                        Patterns::Integer(),
-                        "Skip grid refinement if the number of active cells "
-                        "already exceeds this");
-                        
-                    prm.declare_entry("refine_fraction", "0.3",
-                        Patterns::Double(),
-                        "Fraction of cells to refine");
-                        
-                    prm.declare_entry("coarsen_fraction", "0.3",
-                        Patterns::Double(),
-                        "Fraction of cells to coarsen");
-                        
-                    prm.declare_entry("cycles_at_interval", "5",
-                        Patterns::Integer(),
-                        "Max grid refinement level");
-                        
-                }
-                prm.leave_subsection();
                 
             }
             prm.leave_subsection();
             
-            
-            prm.enter_subsection ("time");
-            {
-                prm.declare_entry("end_time", "1.",
-                    Patterns::Double(0.),
-                    "End the time-dependent simulation once this time is reached.");
-                    
-                prm.declare_entry("step_size", "0.",
-                    Patterns::Double(0.),
-                    "End the time-dependent simulation once this time is reached."
-                    "\nSet to zero to instead use global_refinement_levels");
-                    
-                prm.declare_entry("global_refinement_levels", "4",
-                    Patterns::Integer(0),
-                    "If step_size is set to zero, then compute "
-                    "step_size = end_time/(2^global_refinement_levels)");
-                    
-            }
-            prm.leave_subsection();
             
             prm.enter_subsection("linear_solver");
             {
@@ -298,6 +178,7 @@ namespace Peclet
             }
             prm.leave_subsection();
             
+            
             prm.enter_subsection("nonlinear_solver");
             {
                 prm.declare_entry("method", "Newton",
@@ -315,16 +196,13 @@ namespace Peclet
             }
             prm.leave_subsection();
             
+            
             prm.enter_subsection("output");
             {
                 prm.declare_entry("write_solution_vtk", "true", Patterns::Bool());
-
-                prm.declare_entry("time_step_interval", "1", Patterns::Integer(0),
-                    "Solutions will only be written at every time_step_interval time step."
-                    "\nSet to one to output at every time step."
-                    "\n Set to zero to output only the final time.");
             }
             prm.leave_subsection();
+            
             
             prm.enter_subsection("verification");
             {
@@ -332,7 +210,7 @@ namespace Peclet
 
                 prm.enter_subsection("exact_solution_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1);    
                 }
                 prm.leave_subsection();
             }
@@ -366,8 +244,8 @@ namespace Peclet
         StructuredParameters read(
                 const std::string parameter_file,
                 Functions::ParsedFunction<dim> &source_function,
-                Functions::ParsedFunction<dim> &exact_solution_function,
-                Functions::ParsedFunction<dim> &parsed_initial_values_function)
+                Functions::ParsedFunction<dim> &initial_values_function,
+                Functions::ParsedFunction<dim> &exact_solution_function)
         {
 
             StructuredParameters params;
@@ -389,8 +267,6 @@ namespace Peclet
             {
                 params.geometry.grid_name = prm.get("grid_name");
                 params.geometry.sizes = MyParameterHandler::get_vector<double>(prm, "sizes");
-                params.geometry.transformations = 
-                    MyParameterHandler::get_vector<double>(prm, "transformations");    
             }
             prm.leave_subsection();
 
@@ -404,6 +280,7 @@ namespace Peclet
             
             prm.enter_subsection("verification");
             {
+                
                 params.verification.enabled = prm.get_bool("enabled");
                         
                 prm.enter_subsection("exact_solution_function");
@@ -411,20 +288,16 @@ namespace Peclet
                     exact_solution_function.parse_parameters(prm);    
                 }
                 prm.leave_subsection();
+                
             }
             prm.leave_subsection();
 
             
             prm.enter_subsection("initial_values");
             {               
-                params.initial_values.function_name = prm.get("function_name"); 
-                
-                prm.enter_subsection("parsed_function");
-                {
-                    parsed_initial_values_function.parse_parameters(prm);
-                }
-                prm.leave_subsection();
-              
+
+                 initial_values_function.parse_parameters(prm);
+                 
             }    
             prm.leave_subsection();
             
@@ -433,34 +306,8 @@ namespace Peclet
             {
                 
                 params.refinement.initial_global_cycles = prm.get_integer("initial_global_cycles");
-                params.refinement.initial_boundary_cycles = prm.get_integer("initial_boundary_cycles");
-                params.refinement.boundaries_to_refine = 
-                    MyParameterHandler::get_vector<unsigned int>(prm, "boundaries_to_refine");
-                
-                prm.enter_subsection("adaptive");
-                {
-                    params.refinement.adaptive.initial_cycles = prm.get_integer("initial_cycles");
-                    params.refinement.adaptive.max_level = prm.get_integer("max_level");
-                    params.refinement.adaptive.max_cells = prm.get_integer("max_cells");
-                    params.refinement.adaptive.interval = prm.get_integer("interval");
-                    params.refinement.adaptive.cycles_at_interval = prm.get_integer("cycles_at_interval");
-                    params.refinement.adaptive.refine_fraction = prm.get_double("refine_fraction");
-                    params.refinement.adaptive.coarsen_fraction = prm.get_double("coarsen_fraction");    
-                }        
-                
-                prm.leave_subsection();
                 
             }
-            prm.leave_subsection();
-                
-                
-            prm.enter_subsection("time");
-            {
-                params.time.end_time = prm.get_double("end_time");
-                params.time.step_size = prm.get_double("step_size");
-                params.time.global_refinement_levels = 
-                    prm.get_integer("global_refinement_levels");
-            }    
             prm.leave_subsection();
             
             
@@ -487,7 +334,6 @@ namespace Peclet
             prm.enter_subsection("output");
             {
                 params.output.write_solution_vtk = prm.get_bool("write_solution_vtk");
-                params.output.time_step_interval = prm.get_integer("time_step_interval");
             }
             prm.leave_subsection();
             
