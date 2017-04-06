@@ -129,28 +129,7 @@ void Peclet<dim>::assemble_system()
         const Tensor<2, dim> _gradz,
         const Tensor<1, dim> _v)
     {
-        double sum = 0.;
-        
-        for (unsigned int i = 0; i < dim ; ++i)
-        {
-            for (unsigned int j = 0; j < dim; ++j)
-            {
-
-                /*! 
-                Per the documentation for dealii::FEValuesViews::Vector<dim,spacedim>,
-                the gradient of a vector $d_k, 0 <= k < dim$ is defined as $S_{ij} = \frac{\partial d_i}{\partial x_j}, 0 <= i,j < dim$.
-                
-                But this doesn't say how to index the Tensor. We want to access Tensor component $S_{ij}$. The question is, with a deal.II Tensor<2,dim> S, do we write S[i][j] or S[j][i]?
-                
-                S[i][j] would be most intuitive, but I'm not 100% convinced this is correct. Jean-Paul from the deal.II maililng list confirmed that I'm using the correct indexing; but I haven't seen a clear example yet.
-                
-                */
-                sum += _w[j]*_gradz[i][j]*_v[i];
-        
-            }
-        }            
-                
-        return sum;
+        return _v*_gradz*_w;
     };
 
     /*!
