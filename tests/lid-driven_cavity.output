@@ -1,8 +1,8 @@
-Time step 1 at t=0.5
+
+===========================================
+Number of active cells: 64
+Number of degrees of freedom: 659
+
 Solved linear system
-Newton iteration L2 norm residual = 6.75173e-11
-Newton method converged after 1 iterations.
-Time step 2 at t=1
-Solved linear system
-Newton iteration L2 norm residual = 2.69832e-09
+Newton iteration L2 norm residual = 3.63271e-10
 Newton method converged after 1 iterations.
