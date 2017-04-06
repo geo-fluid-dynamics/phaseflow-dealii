@@ -91,12 +91,11 @@ namespace Peclet
   private:
 
     void create_coarse_grid();
-    void adaptive_refine();
     void setup_system(bool quiet = false);
     void assemble_system();
     void apply_boundary_values_and_constraints();
     void step_newton();
-    void step_time(bool quiet = false);
+    void solve_nonlinear_problem(bool quiet = false);
 
     SolverStatus solve_linear_system(bool quiet = false);
 
@@ -115,31 +114,18 @@ namespace Peclet
     SparseMatrix<double> system_matrix;
 
     Vector<double>       solution;
-    Vector<double>       old_solution;
     Vector<double>       newton_residual;
-    Vector<double>       newton_solution;
     Vector<double>       old_newton_solution;
 
     Vector<double>       system_rhs;
 
-    double               time;
-    double               time_step_size;
-    unsigned int         time_step_counter;
-    bool final_time_step;
-    bool output_this_step;
     SolverStatus solver_status;
 
     unsigned int boundary_count;
-
-    Point<dim> spherical_manifold_center;
-
-    std::vector<unsigned int> manifold_ids;
-    std::vector<std::string> manifold_descriptors;
     
+    Functions::ParsedFunction<dim> initial_values_function;
     Functions::ParsedFunction<dim> source_function;
     Functions::ParsedFunction<dim> exact_solution_function;
-
-    Function<dim>* initial_values_function_pointer;
 
     void append_verification_table();
     void write_verification_table();
@@ -154,15 +140,16 @@ namespace Peclet
     fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
        FE_Q<dim>(SCALAR_DEGREE), 1),  // pressure
     dof_handler(this->triangulation),
-    source_function(dim + 1 + ENERGY_ENABLED),
-    exact_solution_function(dim + 1 + ENERGY_ENABLED)
+    initial_values_function(dim + 1),
+    source_function(dim + 1),
+    exact_solution_function(dim + 1)
   {}
   
   #include "peclet_grid.h"
 
   #include "peclet_system.h"
 
-  #include "peclet_step_time.h"
+  #include "peclet_solve_nonlinear_problem.h"
   
   template<int dim>
   void Peclet<dim>::write_solution()
@@ -171,7 +158,7 @@ namespace Peclet
     if (this->params.output.write_solution_vtk)
     {
         Output::write_solution_to_vtk(
-            "solution-"+Utilities::int_to_string(this->time_step_counter)+".vtk",
+            "solution.vtk",
             this->dof_handler,
             this->solution);    
     }
@@ -182,8 +169,6 @@ namespace Peclet
   void Peclet<dim>::append_verification_table()
   {
     assert(this->params.verification.enabled);
-    
-    this->exact_solution_function.set_time(this->time);
     
     Vector<float> difference_per_cell(triangulation.n_active_cells());
     
@@ -206,9 +191,7 @@ namespace Peclet
         VectorTools::L1_norm);
         
     double L1_norm_error = difference_per_cell.l1_norm();
-        
-    this->verification_table.add_value("time_step_size", this->time_step_size);
-    this->verification_table.add_value("time", this->time);
+
     this->verification_table.add_value("cells", this->triangulation.n_active_cells());
     this->verification_table.add_value("dofs", this->dof_handler.n_dofs());
     this->verification_table.add_value("L1_norm_error", L1_norm_error);
@@ -220,13 +203,7 @@ namespace Peclet
   void Peclet<dim>::write_verification_table()
   {
     const int precision = 14;
-    
-    this->verification_table.set_precision("time", precision);
-    this->verification_table.set_scientific("time", true);
-    
-    this->verification_table.set_precision("time_step_size", precision);
-    this->verification_table.set_scientific("time_step_size", true);
-    
+
     this->verification_table.set_precision("cells", precision);
     this->verification_table.set_scientific("cells", true);
     
@@ -263,194 +240,31 @@ namespace Peclet
     then is to instantitate all of the functions that might be needed, and then to point to the ones
     actually being used.
     */
-    Functions::ParsedFunction<dim> parsed_initial_values_function(dim + 1 + ENERGY_ENABLED);
     
     this->params = Parameters::read<dim>(
         parameter_file,
         this->source_function,
-        this->exact_solution_function,
-        parsed_initial_values_function);
+        this->initial_values_function,
+        this->exact_solution_function);
     
     this->create_coarse_grid();
-    
-    /*
-    Generalizing the handling of auxiliary functions is complicated. In most cases one should be able to use a ParsedFunction, but the generality of Function<dim>* allows for a standard way to account for any possible derived class of Function<dim>. 
-    For example this allows for....
-        - an optional initial values function that interpolates an old solution loaded from disk. 
-        - flexibily implementing general boundary conditions
-    */
-
-    // Initial values function
-    
-    Triangulation<dim> field_grid;
-    DoFHandler<dim> field_dof_handler(field_grid);
-    Vector<double> field_solution;
-    
-    if (this->params.initial_values.function_name != "interpolate_old_field")
-    { // This will write files that need to exist.
-        this->setup_system(true);
-        FEFieldTools::save_field_parts(this->triangulation, this->dof_handler, this->solution); 
-    }
-    
-    FEFieldTools::load_field_parts(
-        field_grid,
-        field_dof_handler,
-        field_solution,
-        this->fe);
-    
-    MyFunctions::ExtrapolatedField<dim> field_function(
-        field_dof_handler,
-        field_solution);
-    
-
-    if (this->params.initial_values.function_name == "interpolate_old_field")
-    {
-        this->initial_values_function_pointer = &field_function;                      
-    }
-    else if (this->params.initial_values.function_name == "parsed")
-    { 
-        this->initial_values_function_pointer = &parsed_initial_values_function;
-    }
-
-    // Attach manifolds
-    
-    assert(dim < 3); // @todo: 3D extension: For now the CylindricalManifold is being ommitted.
-        // deal.II makes is impractical for a CylindricalManifold to exist in 2D.
-    SphericalManifold<dim> spherical_manifold(this->spherical_manifold_center);
-    
-    for (unsigned int i = 0; i < manifold_ids.size(); i++)
-    {
-        if (manifold_descriptors[i] == "spherical")
-        {
-            this->triangulation.set_manifold(manifold_ids[i], spherical_manifold);      
-        }
-    }
     
     // Run initial refinement cycles
     
     this->triangulation.refine_global(this->params.refinement.initial_global_cycles);
     
-    Refinement::refine_mesh_near_boundaries(
-        this->triangulation,
-        this->params.refinement.boundaries_to_refine,
-        this->params.refinement.initial_boundary_cycles);
-        
     // Initialize the linear system
     
     this->setup_system(); 
 
-    Vector<double> tmp;
-    Vector<double> forcing_terms;
-    
-    // Iterate
-    unsigned int pre_refinement_step = 0;
-    
-start_time_iteration:
-
-    tmp.reinit(this->solution.size());
-
     VectorTools::interpolate(this->dof_handler,
-                             *this->initial_values_function_pointer,
-                             this->old_solution); 
+                             this->initial_values_function,
+                             this->solution); 
     
-    this->solution = this->old_solution;
-    this->time_step_counter = 0;
-    this->time = 0;
-    
-    this->time_step_size = this->params.time.step_size;
-    if (this->time_step_size < EPSILON)
-    {
-        this->time_step_size = this->params.time.end_time/
-            pow(2., this->params.time.global_refinement_levels);
-    }
-    double Delta_t = this->time_step_size;
+    this->solve_nonlinear_problem();
     
     this->write_solution();
-
-    this->final_time_step = false;
-    this->output_this_step = true;
-    
-    do
-    {
-        ++this->time_step_counter;
-        this->time = Delta_t*time_step_counter; // Incrementing the time directly would accumulate errors
-        
-        // Set some flags that will control output for this step.
-        this->final_time_step = this->time > this->params.time.end_time - EPSILON;
-        
-        bool at_interval = false;
-        
-        if (this->params.output.time_step_interval == 1)
-        {
-            at_interval = true;
-        }
-        else if (this->params.output.time_step_interval != 0)
-        {
-            if ((this->time_step_counter % this->params.output.time_step_interval) == 0)
-            {
-                at_interval = true;
-            }
-        }
-        else
-        {
-            at_interval = false;
-        }
-        
-        if (at_interval)
-        {
-            this->output_this_step = true;
-        }
-        else
-        {
-            this->output_this_step = false;
-        }
-        
-        /*!
-         Run the time step
-         */
-
-        this->step_time();
-        
-        if ((this->time_step_counter == 1) &&
-            (pre_refinement_step < this->params.refinement.adaptive.initial_cycles))
-        {
-            this->adaptive_refine();
-            ++pre_refinement_step;
-
-            tmp.reinit(this->solution.size());
-
-            std::cout << std::endl;
-
-            goto start_time_iteration;
-        }
-        else if ((this->time_step_counter > 0) 
-                 && (params.refinement.adaptive.interval > 0)  // % 0 (mod 0) is undefined
-                 && (this->time_step_counter % params.refinement.adaptive.interval == 0))
-        {
-            for (unsigned int cycle = 0;
-                 cycle < params.refinement.adaptive.cycles_at_interval; cycle++)
-            {
-                this->adaptive_refine();
-            }
-            tmp.reinit(this->solution.size());
-            
-        }
-        
-        this->old_solution = this->solution;
-        
-    } while (!this->final_time_step);
-    
-    // Save data for FEFieldFunction so that it can be loaded for initialization
-    FEFieldTools::save_field_parts(triangulation, dof_handler, solution);
-    
-    // Write error table
-    if (this->params.verification.enabled)
-    {
-        this->write_verification_table();
-    }
-
-    // Cleanup
-    this->triangulation.set_manifold(0);
     
   }
+  
 }

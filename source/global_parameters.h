@@ -15,8 +15,6 @@ const double LIQUID_DYNAMIC_VISOCITY = 1.; /*! @todo: Expose to ParameterHandler
 
 const double EPSILON = 1.e-14; /*! @todo: Expose to ParameterHandler */
 
-const bool ENERGY_ENABLED = false; /*! @todo: How to generalize this? */
-
 const bool WRITE_LINEAR_SYSTEM = true; /*! @todo: Expose to ParameterHandler */
 
 #endif

@@ -14,7 +14,7 @@ void Peclet<dim>::setup_system(bool quiet)
 
     DoFRenumbering::component_wise(this->dof_handler);
 
-    if (!quiet & this->output_this_step)
+    if (!quiet)
     {
         std::cout << std::endl
                 << "==========================================="
@@ -46,18 +46,9 @@ void Peclet<dim>::setup_system(bool quiet)
 
     this->system_matrix.reinit(this->sparsity_pattern);
 
-    /*!
-        @todo
-         Why must we reinit the solution and RHS vectors here?
-         This is an artifact from the step-26 tutorial.
-    */
     this->solution.reinit(this->dof_handler.n_dofs());
 
-    this->old_solution.reinit(this->dof_handler.n_dofs());
-
     this->newton_residual.reinit(this->dof_handler.n_dofs());
-
-    this->newton_solution.reinit(this->dof_handler.n_dofs());
     
     this->old_newton_solution.reinit(this->dof_handler.n_dofs());
     
@@ -208,7 +199,6 @@ void Peclet<dim>::assemble_system()
     /*!
         Set local variables to match notation in Danaila 2014
     */
-    const double deltat = this->time_step_size;
     const double gamma = penalty;
     
     for (; cell != endc; ++cell) /*! Assemble element-wise */
@@ -216,15 +206,6 @@ void Peclet<dim>::assemble_system()
         fe_values.reinit(cell);
         local_matrix = 0;
         local_rhs = 0;
-
-        fe_values[velocity].get_function_values(
-            this->old_solution,
-            old_velocity_values);
-
-        fe_values[pressure].get_function_values(
-            this->old_solution,
-            old_pressure_values);
-
 
         fe_values[velocity].get_function_values(
             this->old_newton_solution,
@@ -247,7 +228,6 @@ void Peclet<dim>::assemble_system()
             /*!
             Name local variables to match notation in Danaila 2014
             */
-            const Tensor<1, dim>  u_n = old_velocity_values[quad];
             const Tensor<1, dim> u_k = newton_velocity_values[quad];
             const double p_k = newton_pressure_values[quad];
             const Tensor<2, dim> gradu_k = newton_velocity_gradients[quad];
@@ -271,7 +251,6 @@ void Peclet<dim>::assemble_system()
                         b(divu_w, q) - gamma*p_w*q;
 
                     local_matrix(i,j) += // Momentum: Incompressible Navier-Stokes
-                        scalar_product(u_w, v)/deltat
                         + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
 
                     local_matrix(i,j) *= fe_values.JxW(quad);  /*! Map to the reference element */
@@ -280,7 +259,7 @@ void Peclet<dim>::assemble_system()
                         b(divu_k, q) - gamma*p_k*q;
 
                     local_rhs(i) += // Momentum: Incompressible Navier-Stokes
-                        scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
+                        c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
                         + b(divv, p_k);
 
                 }
@@ -346,7 +325,7 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             VectorTools::interpolate_boundary_values(
                 this->dof_handler,
                 b,
-                ZeroFunction<dim>(dim + 1 + ENERGY_ENABLED),
+                ZeroFunction<dim>(dim + 1),
                 boundary_values);      
         }
 
