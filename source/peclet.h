@@ -157,11 +157,12 @@ namespace Peclet
   Peclet<dim>::Peclet()
     :
     fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
-       FE_Q<dim>(SCALAR_DEGREE), 1),  // pressure
+       FE_Q<dim>(SCALAR_DEGREE), 1, // pressure
+       FE_Q<dim>(SCALAR_DEGREE), 1), // temperature
     dof_handler(this->triangulation),
-    initial_values_function(dim + 1),
-    source_function(dim + 1),
-    exact_solution_function(dim + 1)
+    initial_values_function(dim + 1 + ENERGY_ENABLED),
+    source_function(dim + 1 + ENERGY_ENABLED),
+    exact_solution_function(dim + 1 + ENERGY_ENABLED)
   {}
   
   #include "peclet_grid.h"

@@ -131,7 +131,7 @@ namespace Peclet
             
             prm.enter_subsection("source_function");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1);    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
             }
             prm.leave_subsection();  
 
@@ -153,7 +153,7 @@ namespace Peclet
 
             prm.enter_subsection ("initial_values");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1); 
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED); 
             }
             prm.leave_subsection ();
             
@@ -220,7 +220,7 @@ namespace Peclet
 
                 prm.enter_subsection("exact_solution_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
                 }
                 prm.leave_subsection();
             }
