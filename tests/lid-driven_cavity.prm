@@ -19,7 +19,7 @@ subsection refinement
 end
 
 subsection nonlinear_solver
-    set max_iterations = 10
+    set max_iterations = 50
     set tolerance = 1e-8
 end
 

@@ -139,13 +139,15 @@ void Peclet<dim>::assemble_system()
     QGauss<dim>   quadrature_formula(SCALAR_DEGREE + 2);
     QGauss<dim-1> face_quadrature_formula(SCALAR_DEGREE + 2);
 
-    FEValues<dim> fe_values (
-        this->fe, quadrature_formula,
-        update_values    | update_gradients | update_quadrature_points  | update_JxW_values);
+    FEValues<dim> fe_values(
+        this->fe,
+        quadrature_formula,
+        update_values | update_gradients | update_quadrature_points | update_JxW_values);
 
-    FEFaceValues<dim> fe_face_values (
-        this->fe, face_quadrature_formula,
-        update_values    | update_normal_vectors | update_quadrature_points  | update_JxW_values);
+    FEFaceValues<dim> fe_face_values(
+        this->fe,
+        face_quadrature_formula,
+        update_values | update_normal_vectors | update_quadrature_points | update_JxW_values);
 
     const unsigned int dofs_per_cell = this->fe.dofs_per_cell;
     const unsigned int n_quad_points = quadrature_formula.size();
@@ -159,10 +161,6 @@ void Peclet<dim>::assemble_system()
 
     std::vector<Tensor<1,dim>> u_k(n_quad_points);
     std::vector<double> p_k(n_quad_points);
-    std::vector<double> theta_k(n_quad_points);
-
-    std::vector<Tensor<1,dim>> old_velocity_values(n_quad_points);
-    std::vector<double> old_pressure_values(n_quad_points);
 
     std::vector<Tensor<1,dim>> newton_velocity_values(n_quad_points);
     std::vector<double> newton_pressure_values(n_quad_points);
@@ -183,8 +181,6 @@ void Peclet<dim>::assemble_system()
     for (; cell != endc; ++cell) /*! Assemble element-wise */
     {
         fe_values.reinit(cell);
-        local_matrix = 0;
-        local_rhs = 0;
 
         fe_values[velocity].get_function_values(
             this->old_newton_solution,
@@ -201,6 +197,10 @@ void Peclet<dim>::assemble_system()
         fe_values[velocity].get_function_divergences(
             this->old_newton_solution,
             newton_velocity_divergences);
+            
+        local_matrix = 0.;
+        
+        local_rhs = 0.;
 
         for (unsigned int quad = 0; quad< n_quad_points; ++quad)
         {
@@ -211,41 +211,40 @@ void Peclet<dim>::assemble_system()
             const double p_k = newton_pressure_values[quad];
             const Tensor<2, dim> gradu_k = newton_velocity_gradients[quad];
             const double divu_k = newton_velocity_divergences[quad];
-
+            
             for (unsigned int i = 0; i < dofs_per_cell; ++i)
             {
-                const Tensor<1, dim> u_w = fe_values[velocity].value(i, quad);
-                const double p_w = fe_values[pressure].value(i, quad);
-                const Tensor<2, dim> gradu_w = fe_values[velocity].gradient(i, quad);
-                const double divu_w = fe_values[velocity].divergence(i, quad);
-
+                
+                /* 
+                @todo How did I choose which functions correspond to i or j?
+                */
+                    
+                const Tensor<1, dim> v = fe_values[velocity].value(i, quad);
+                const double q = fe_values[pressure].value(i, quad);
+                const Tensor<2, dim> gradv = fe_values[velocity].gradient(i, quad);
+                const double divv = fe_values[velocity].divergence(i, quad);
+                
                 for (unsigned int j = 0; j< dofs_per_cell; ++j)
                 {
-                    const Tensor<1, dim> v = fe_values[velocity].value(j, quad);
-                    const double q = fe_values[pressure].value(j, quad);
-                    const Tensor<2, dim> gradv = fe_values[velocity].gradient(j, quad);
-                    const double divv = fe_values[velocity].divergence(j, quad);
+                    const Tensor<1, dim> u_w = fe_values[velocity].value(j, quad);
+                    const double p_w = fe_values[pressure].value(j, quad);
+                    const Tensor<2, dim> gradu_w = fe_values[velocity].gradient(j, quad);
+                    const double divu_w = fe_values[velocity].divergence(j, quad);
 
-                    local_matrix(i,j) += // Mass
-                        b(divu_w, q) - gamma*p_w*q;
-
-                    local_matrix(i,j) += // Momentum: Incompressible Navier-Stokes
-                        + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w);
-
-                    local_matrix(i,j) *= fe_values.JxW(quad);  /*! Map to the reference element */
-
-                    local_rhs(i) += // Mass
-                        b(divu_k, q) - gamma*p_k*q;
-
-                    local_rhs(i) += // Momentum: Incompressible Navier-Stokes
-                        c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) 
-                        + b(divv, p_k);
-
+                    local_matrix(i,j) += (
+                        b(divu_w, q) - gamma*p_w*q // Mass
+                        + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
+                        )*fe_values.JxW(quad);  /*! Map to the reference element */
+                    
                 }
+                
+                local_rhs(i) += (
+                        b(divu_k, q) - gamma*p_k*q // Mass
+                        + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
+                        )*fe_values.JxW(quad); /*! Map to the reference element */
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
 
-                local_rhs(i) *= fe_values.JxW(quad); /*! Map to the reference element */
             }
         }
             
