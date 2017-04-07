@@ -4,5 +4,104 @@ Number of active cells: 64
 Number of degrees of freedom: 659
 
 Solved linear system
-Newton iteration L2 norm residual = 3.63271e-10
-Newton method converged after 1 iterations.
+Newton iteration L2 norm residual = 18.8461
+Solved linear system
+Newton iteration L2 norm residual = 9.42416
+Solved linear system
+Newton iteration L2 norm residual = 3.14442
+Solved linear system
+Newton iteration L2 norm residual = 0.793534
+Solved linear system
+Newton iteration L2 norm residual = 2.98493
+Solved linear system
+Newton iteration L2 norm residual = 3.95276
+Solved linear system
+Newton iteration L2 norm residual = 4.07984
+Solved linear system
+Newton iteration L2 norm residual = 3.66537
+Solved linear system
+Newton iteration L2 norm residual = 2.93587
+Solved linear system
+Newton iteration L2 norm residual = 2.05882
+Solved linear system
+Newton iteration L2 norm residual = 1.15434
+Solved linear system
+Newton iteration L2 norm residual = 0.30621
+Solved linear system
+Newton iteration L2 norm residual = 0.441021
+Solved linear system
+Newton iteration L2 norm residual = 1.04512
+Solved linear system
+Newton iteration L2 norm residual = 1.49973
+Solved linear system
+Newton iteration L2 norm residual = 1.80392
+Solved linear system
+Newton iteration L2 norm residual = 1.96626
+Solved linear system
+Newton iteration L2 norm residual = 2.00136
+Solved linear system
+Newton iteration L2 norm residual = 1.92745
+Solved linear system
+Newton iteration L2 norm residual = 1.76458
+Solved linear system
+Newton iteration L2 norm residual = 1.53323
+Solved linear system
+Newton iteration L2 norm residual = 1.25325
+Solved linear system
+Newton iteration L2 norm residual = 0.943185
+Solved linear system
+Newton iteration L2 norm residual = 0.619781
+Solved linear system
+Newton iteration L2 norm residual = 0.297891
+Solved linear system
+Newton iteration L2 norm residual = 0.0284585
+Solved linear system
+Newton iteration L2 norm residual = 0.299113
+Solved linear system
+Newton iteration L2 norm residual = 0.553271
+Solved linear system
+Newton iteration L2 norm residual = 0.771145
+Solved linear system
+Newton iteration L2 norm residual = 0.948878
+Solved linear system
+Newton iteration L2 norm residual = 1.08458
+Solved linear system
+Newton iteration L2 norm residual = 1.17793
+Solved linear system
+Newton iteration L2 norm residual = 1.22994
+Solved linear system
+Newton iteration L2 norm residual = 1.24273
+Solved linear system
+Newton iteration L2 norm residual = 1.2193
+Solved linear system
+Newton iteration L2 norm residual = 1.1633
+Solved linear system
+Newton iteration L2 norm residual = 1.07891
+Solved linear system
+Newton iteration L2 norm residual = 0.970573
+Solved linear system
+Newton iteration L2 norm residual = 0.84292
+Solved linear system
+Newton iteration L2 norm residual = 0.700594
+Solved linear system
+Newton iteration L2 norm residual = 0.54815
+Solved linear system
+Newton iteration L2 norm residual = 0.389968
+Solved linear system
+Newton iteration L2 norm residual = 0.230223
+Solved linear system
+Newton iteration L2 norm residual = 0.0735186
+Solved linear system
+Newton iteration L2 norm residual = 0.0823493
+Solved linear system
+Newton iteration L2 norm residual = 0.225448
+Solved linear system
+Newton iteration L2 norm residual = 0.358427
+Solved linear system
+Newton iteration L2 norm residual = 0.478519
+Solved linear system
+Newton iteration L2 norm residual = 0.583986
+Solved linear system
+Newton iteration L2 norm residual = 0.673575
+nsb-pcm: /mnt/c/Users/Alex/UbuntuShared/nsb-pcm/source/peclet_solve_nonlinear_problem.h:134: void Peclet::Peclet<dim>::solve_nonlinear_problem(bool) [with int dim = 2]: Assertion `converged' failed.
+Aborted (core dumped)
