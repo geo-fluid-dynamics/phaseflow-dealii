@@ -67,17 +67,12 @@
 
 #include "peclet_parameters.h"
 
-#include "global_parameters.h"
+#include "peclet_global_parameters.h"
 
 namespace Peclet
 {
   using namespace dealii;
-  
-  struct SolverStatus
-  {
-      unsigned int last_step;
-  };
-  
+    
   template<int dim>
   class Peclet
   {
@@ -91,13 +86,22 @@ namespace Peclet
   private:
 
     void create_coarse_grid();
-    void setup_system(bool quiet = false);
+    
+    void setup_system();
+    
     void assemble_system();
+    
     void apply_boundary_values_and_constraints();
+    
+    void solve_linear_system();
+    
     void step_newton();
-    void solve_nonlinear_problem(bool quiet = false);
-
-    SolverStatus solve_linear_system(bool quiet = false);
+    
+    bool solve_nonlinear_problem();
+    
+    void set_time_step_size(double new_size);
+    
+    void step_time();
 
     void write_solution();
 
@@ -113,23 +117,38 @@ namespace Peclet
 
     SparseMatrix<double> system_matrix;
 
-    Vector<double>       solution;
-    Vector<double>       newton_residual;
-    Vector<double>       old_newton_solution;
+    Vector<double> solution;
+    
+    Vector<double> newton_residual;
+    
+    Vector<double> newton_solution;
+    
+    Vector<double> old_solution;
+    
+    Vector<double> old_newton_solution;
 
-    Vector<double>       system_rhs;
-
-    SolverStatus solver_status;
+    Vector<double> system_rhs;
+    
+    double time;
+    
+    double time_step_size;
+    
+    unsigned int time_step_counter;
 
     unsigned int boundary_count;
     
     Functions::ParsedFunction<dim> initial_values_function;
+    
     Functions::ParsedFunction<dim> source_function;
+    
     Functions::ParsedFunction<dim> exact_solution_function;
 
     void append_verification_table();
+    
     void write_verification_table();
+    
     TableHandler verification_table;
+    
     std::string verification_table_file_name = "verification_table.txt";
     
   };
@@ -151,76 +170,11 @@ namespace Peclet
 
   #include "peclet_solve_nonlinear_problem.h"
   
-  template<int dim>
-  void Peclet<dim>::write_solution()
-  {
-      
-    if (this->params.output.write_solution_vtk)
-    {
-        Output::write_solution_to_vtk(
-            "solution.vtk",
-            this->dof_handler,
-            this->solution);    
-    }
-    
-  }
+  #include "peclet_step_time.h"
   
-  template<int dim>
-  void Peclet<dim>::append_verification_table()
-  {
-    assert(this->params.verification.enabled);
-    
-    Vector<float> difference_per_cell(triangulation.n_active_cells());
-    
-    VectorTools::integrate_difference(
-        this->dof_handler,
-        this->solution,
-        this->exact_solution_function,
-        difference_per_cell,
-        QGauss<dim>(dim + 1),
-        VectorTools::L2_norm);
-        
-    double L2_norm_error = difference_per_cell.l2_norm();
-    
-    VectorTools::integrate_difference(
-        this->dof_handler,
-        this->solution,
-        this->exact_solution_function,
-        difference_per_cell,
-        QGauss<dim>(dim + 1),
-        VectorTools::L1_norm);
-        
-    double L1_norm_error = difference_per_cell.l1_norm();
-
-    this->verification_table.add_value("cells", this->triangulation.n_active_cells());
-    this->verification_table.add_value("dofs", this->dof_handler.n_dofs());
-    this->verification_table.add_value("L1_norm_error", L1_norm_error);
-    this->verification_table.add_value("L2_norm_error", L2_norm_error);
-    
-  }
+  #include "peclet_output.h"
   
-  template<int dim>
-  void Peclet<dim>::write_verification_table()
-  {
-    const int precision = 14;
-
-    this->verification_table.set_precision("cells", precision);
-    this->verification_table.set_scientific("cells", true);
-    
-    this->verification_table.set_precision("dofs", precision);
-    this->verification_table.set_scientific("dofs", true);
-    
-    this->verification_table.set_precision("L2_norm_error", precision);
-    this->verification_table.set_scientific("L2_norm_error", true);
-    
-    this->verification_table.set_precision("L1_norm_error", precision);
-    this->verification_table.set_scientific("L1_norm_error", true);
-    
-    std::ofstream out_file(this->verification_table_file_name, std::fstream::app);
-    assert(out_file.good());
-    this->verification_table.write_text(out_file);
-    out_file.close(); 
-  }
+  #include "peclet_verification.h"
   
   template<int dim>
   void Peclet<dim>::run(const std::string parameter_file)
@@ -257,13 +211,25 @@ namespace Peclet
     
     this->setup_system(); 
 
-    VectorTools::interpolate(this->dof_handler,
-                             this->initial_values_function,
-                             this->solution); 
+    VectorTools::interpolate(
+        this->dof_handler,
+        this->initial_values_function,
+        this->solution); 
+        
+    this->time_step_size = this->params.time.max_step_size;
     
-    this->solve_nonlinear_problem();
+    do
+    {        
+        this->step_time();
+        
+        this->write_solution();
+
+        if (this->params.verification.enabled)
+        {
+            this->append_verification_table();
+        }
     
-    this->write_solution();
+    } while (this->time < (this->params.time.end - EPSILON));
     
   }
   

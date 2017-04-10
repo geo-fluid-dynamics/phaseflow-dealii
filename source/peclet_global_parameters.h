@@ -1,5 +1,5 @@
-#ifndef global_parameters_h
-#define global_parameters_h
+#ifndef peclet_global_parameters_h
+#define peclet_global_parameters_h
 
 /*! Set global parameters.
 
@@ -16,5 +16,9 @@ const double LIQUID_DYNAMIC_VISOCITY = 1.; /*! @todo: Expose to ParameterHandler
 const double EPSILON = 1.e-14; /*! @todo: Expose to ParameterHandler */
 
 const bool WRITE_LINEAR_SYSTEM = true; /*! @todo: Expose to ParameterHandler */
+
+const double STEADY_TOLERANCE = 1.e-4; /*! @todo: Expose to ParameterHandler */
+
+const double TIME_GROWTH_RATE = 2.; /*! @todo: Expose to ParameterHandler */
 
 #endif

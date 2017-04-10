@@ -8,7 +8,7 @@
 
 #include "my_parameter_handler.h"
 
-#include "global_parameters.h"
+#include "peclet_global_parameters.h"
 
 /*
     
@@ -81,6 +81,14 @@ namespace Peclet
             AdaptiveRefinement adaptive;
         };
         
+        struct Time
+        {
+            double end;
+            double min_step_size;
+            double max_step_size;
+            double global_refinement_levels;
+        };
+
         struct IterativeSolver
         {
             std::string method;
@@ -104,7 +112,8 @@ namespace Peclet
             Meta meta;
             Geometry geometry;
             Refinement refinement;
-            IterativeSolver linear_solver, nonlinear_solver;
+            Time time;
+            IterativeSolver nonlinear_solver;
             Output output;
             Verification verification;
         };    
@@ -160,21 +169,22 @@ namespace Peclet
             prm.leave_subsection();
             
             
-            prm.enter_subsection("linear_solver");
+            prm.enter_subsection ("time");
             {
-                prm.declare_entry("method", "LU",
-                     Patterns::Selection("LU | GMRES"));
-                     
-                prm.declare_entry("max_iterations", "1000",
-                    Patterns::Integer(0));
+                prm.declare_entry("end", "1.",
+                    Patterns::Double(0.),
+                    "End the time-dependent simulation once this time is reached.");
                     
-                prm.declare_entry("tolerance", "1e-8",
-                    Patterns::Double(0.));
+                prm.declare_entry("min_step_size", "1.e-8",
+                    Patterns::Double(0.),
+                    "If this is less than the max_step_size, then the time step size will"
+                    " automatically be reduced when a Newton iteration diverges.");
                     
-                prm.declare_entry("normalize_tolerance", "false",
-                    Patterns::Bool(),
-                    "If true, then the residual will be multiplied by the L2-norm of the RHS"
-                    " before comparing to the tolerance.");
+                prm.declare_entry("max_step_size", "1.",
+                    Patterns::Double(0.),
+                    "End the time-dependent simulation once this time is reached."
+                    "\nSet to zero to instead use global_refinement_levels");
+                    
             }
             prm.leave_subsection();
             
@@ -312,14 +322,13 @@ namespace Peclet
             prm.leave_subsection();
             
             
-            prm.enter_subsection("linear_solver");
+            prm.enter_subsection("time");
             {
-                params.linear_solver.method = prm.get("method");
-                params.linear_solver.max_iterations = prm.get_integer("max_iterations");
-                params.linear_solver.tolerance = prm.get_double("tolerance");
-                params.linear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
+                params.time.end = prm.get_double("end");
+                params.time.min_step_size = prm.get_double("min_step_size");
+                params.time.max_step_size = prm.get_double("max_step_size");
             }    
-            prm.leave_subsection(); 
+            prm.leave_subsection();
             
             
             prm.enter_subsection("nonlinear_solver");

@@ -7,7 +7,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "global_parameters.h"
 
 namespace Output
 {

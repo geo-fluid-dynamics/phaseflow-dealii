@@ -7,25 +7,22 @@
     @author Alexander Zimmerman 2016
 */
 template<int dim>
-void Peclet<dim>::setup_system(bool quiet)
+void Peclet<dim>::setup_system()
 {
     
     this->dof_handler.distribute_dofs(this->fe);
 
     DoFRenumbering::component_wise(this->dof_handler);
 
-    if (!quiet)
-    {
-        std::cout << std::endl
-                << "==========================================="
-                << std::endl
-                << "Number of active cells: " << this->triangulation.n_active_cells()
-                << std::endl
-                << "Number of degrees of freedom: " << this->dof_handler.n_dofs()
-                << std::endl
-                << std::endl;    
-    }
-
+    std::cout << std::endl
+            << "==========================================="
+            << std::endl
+            << "Number of active cells: " << this->triangulation.n_active_cells()
+            << std::endl
+            << "Number of degrees of freedom: " << this->dof_handler.n_dofs()
+            << std::endl
+            << std::endl;
+            
     this->constraints.clear();
 
     DoFTools::make_hanging_node_constraints(
@@ -49,6 +46,10 @@ void Peclet<dim>::setup_system(bool quiet)
     this->solution.reinit(this->dof_handler.n_dofs());
 
     this->newton_residual.reinit(this->dof_handler.n_dofs());
+    
+    this->newton_solution.reinit(this->dof_handler.n_dofs());
+    
+    this->old_solution.reinit(this->dof_handler.n_dofs());
     
     this->old_newton_solution.reinit(this->dof_handler.n_dofs());
     
@@ -96,8 +97,8 @@ void Peclet<dim>::assemble_system()
     /*!
      Local parameters
     */
-    const double penalty = 1.e-7; // @todo: Expose this to ParameterHandler.
-
+    const double PENALTY = 1.e-7; // @todo: Expose this to ParameterHandler.
+    
     const double mu_l = LIQUID_DYNAMIC_VISOCITY;
 
     /*!
@@ -137,36 +138,41 @@ void Peclet<dim>::assemble_system()
     */
 
     QGauss<dim>   quadrature_formula(SCALAR_DEGREE + 2);
-    QGauss<dim-1> face_quadrature_formula(SCALAR_DEGREE + 2);
 
     FEValues<dim> fe_values(
         this->fe,
         quadrature_formula,
         update_values | update_gradients | update_quadrature_points | update_JxW_values);
 
-    FEFaceValues<dim> fe_face_values(
-        this->fe,
-        face_quadrature_formula,
-        update_values | update_normal_vectors | update_quadrature_points | update_JxW_values);
-
     const unsigned int dofs_per_cell = this->fe.dofs_per_cell;
+    
     const unsigned int n_quad_points = quadrature_formula.size();
 
     FullMatrix<double> local_matrix(dofs_per_cell, dofs_per_cell);
+    
     Vector<double> local_rhs(dofs_per_cell);
+    
     std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
 
     const FEValuesExtractors::Vector velocity(0);
+    
     const FEValuesExtractors::Scalar pressure(dim);
 
     std::vector<Tensor<1,dim>> u_k(n_quad_points);
+    
     std::vector<double> p_k(n_quad_points);
+    
+    std::vector<Tensor<1,dim>> old_velocity_values(n_quad_points);
+    
+    std::vector<double> old_pressure_values(n_quad_points);
 
-    std::vector<Tensor<1,dim>> newton_velocity_values(n_quad_points);
-    std::vector<double> newton_pressure_values(n_quad_points);
-    std::vector<Tensor<2,dim>> newton_velocity_gradients(n_quad_points);
+    std::vector<Tensor<1,dim>> old_newton_velocity_values(n_quad_points);
+    
+    std::vector<double> old_newton_pressure_values(n_quad_points);
+    
+    std::vector<Tensor<2,dim>> old_newton_velocity_gradients(n_quad_points);
 
-    std::vector<double> newton_velocity_divergences(n_quad_points);
+    std::vector<double> old_newton_velocity_divergences(n_quad_points);
 
     typename DoFHandler<dim>::active_cell_iterator
         cell = this->dof_handler.begin_active(),
@@ -176,27 +182,37 @@ void Peclet<dim>::assemble_system()
     /*!
         Set local variables to match notation in Danaila 2014
     */
-    const double gamma = penalty;
+    const double deltat = this->time_step_size;
+    
+    const double gamma = PENALTY;
     
     for (; cell != endc; ++cell) /*! Assemble element-wise */
     {
         fe_values.reinit(cell);
 
         fe_values[velocity].get_function_values(
+            this->old_solution,
+            old_velocity_values);
+
+        fe_values[pressure].get_function_values(
+            this->old_solution,
+            old_pressure_values);
+        
+        fe_values[velocity].get_function_values(
             this->old_newton_solution,
-            newton_velocity_values);
+            old_newton_velocity_values);
 
         fe_values[pressure].get_function_values(
             this->old_newton_solution,
-            newton_pressure_values);
+            old_newton_pressure_values);
 
         fe_values[velocity].get_function_gradients(
             this->old_newton_solution,
-            newton_velocity_gradients);
+            old_newton_velocity_gradients);
 
         fe_values[velocity].get_function_divergences(
             this->old_newton_solution,
-            newton_velocity_divergences);
+            old_newton_velocity_divergences);
             
         local_matrix = 0.;
         
@@ -207,10 +223,11 @@ void Peclet<dim>::assemble_system()
             /*!
             Name local variables to match notation in Danaila 2014
             */
-            const Tensor<1, dim> u_k = newton_velocity_values[quad];
-            const double p_k = newton_pressure_values[quad];
-            const Tensor<2, dim> gradu_k = newton_velocity_gradients[quad];
-            const double divu_k = newton_velocity_divergences[quad];
+            const Tensor<1, dim>  u_n = old_velocity_values[quad];
+            const Tensor<1, dim> u_k = old_newton_velocity_values[quad];
+            const double p_k = old_newton_pressure_values[quad];
+            const Tensor<2, dim> gradu_k = old_newton_velocity_gradients[quad];
+            const double divu_k = old_newton_velocity_divergences[quad];
             
             for (unsigned int i = 0; i < dofs_per_cell; ++i)
             {
@@ -233,14 +250,14 @@ void Peclet<dim>::assemble_system()
 
                     local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
-                        + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
+                        + scalar_product(u_w, v)/deltat + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
                         )*fe_values.JxW(quad);  /*! Map to the reference element */
                     
                 }
                 
                 local_rhs(i) += (
                         b(divu_k, q) - gamma*p_k*q // Mass
-                        + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
+                        + scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
                         )*fe_values.JxW(quad); /*! Map to the reference element */
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
@@ -313,6 +330,32 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             this->newton_residual,
             this->system_rhs);
     }
+
+}
+
+
+/*!
+@brief Solve the linear system.
+
+@author Alexander G. Zimmerman 2016 <zimmerman@aices.rwth-aachen.de>
+*/
+template<int dim>
+void Peclet<dim>::solve_linear_system()
+{
+    if (WRITE_LINEAR_SYSTEM)
+    {
+        Output::write_linear_system(this->system_matrix, this->system_rhs);
+    }
+    
+    SparseDirectUMFPACK A_inv;
+    
+    A_inv.initialize(this->system_matrix);
+    
+    A_inv.vmult(this->newton_residual, this->system_rhs);
+
+    this->constraints.distribute(this->solution);
+
+    std::cout << "Solved linear system" << std::endl;
 
 }
 
