@@ -20,13 +20,13 @@ end
 
 subsection nonlinear_solver
     set max_iterations = 50
-    set tolerance = 1e-8
+    set tolerance = 1.e-5
 end
 
 subsection time
     set end = 1.
-    set min_step_size = 1.e-6
-    set max_step_size = 1.
+    set min_step_size = 1.e-4
+    set max_step_size = 0.1
 end
 
 subsection output
