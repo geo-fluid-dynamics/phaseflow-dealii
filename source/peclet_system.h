@@ -165,7 +165,7 @@ void Peclet<dim>::assemble_system()
      Organize data
     */
 
-    QGauss<dim>   quadrature_formula(SCALAR_DEGREE + 2);
+    QGauss<dim> quadrature_formula(SCALAR_DEGREE + 2);
 
     FEValues<dim> fe_values(
         this->fe,
@@ -185,18 +185,15 @@ void Peclet<dim>::assemble_system()
     const FEValuesExtractors::Vector velocity(0);
     
     const FEValuesExtractors::Scalar pressure(dim);
+    
     const FEValuesExtractors::Scalar temperature(dim + 1);
-
-    std::vector<Tensor<1,dim>> u_k(n_quad_points);
-    
-    std::vector<double> p_k(n_quad_points);
-    
-    std::vector<double> theta_k(n_quad_points);
     
     std::vector<Tensor<1,dim>> old_velocity_values(n_quad_points);
     
     std::vector<double> old_pressure_values(n_quad_points);
 
+    std::vector<double> old_temperature_values(n_quad_points);
+    
     std::vector<Tensor<1,dim>> old_newton_velocity_values(n_quad_points);
     
     std::vector<double> old_newton_pressure_values(n_quad_points);
@@ -232,6 +229,10 @@ void Peclet<dim>::assemble_system()
         fe_values[pressure].get_function_values(
             this->old_solution,
             old_pressure_values);
+        
+        fe_values[temperature].get_function_values(
+            this->old_solution,
+            old_temperature_values);
         
         fe_values[velocity].get_function_values(
             this->old_newton_solution,
@@ -273,7 +274,7 @@ void Peclet<dim>::assemble_system()
             const double p_k = old_newton_pressure_values[quad];
             const double theta_k = old_newton_temperature_values[quad];
             
-            const Tensor<1, dim> gradtheta_k = newton_temperature_gradients[quad];
+            const Tensor<1, dim> gradtheta_k = old_newton_temperature_gradients[quad];
             const Tensor<2, dim> gradu_k = old_newton_velocity_gradients[quad];
             const double divu_k = old_newton_velocity_divergences[quad];
             
