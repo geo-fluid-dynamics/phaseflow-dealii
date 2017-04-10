@@ -1,89 +1,12 @@
-#ifndef _peclet_step_time_h_
-#define _peclet_step_time_h_
+#ifndef _peclet_solve_nonlinear_problem_h_
+#define _peclet_solve_nonlinear_problem_h_
 
-
-/*!
-@brief Solve the linear system.
-
-@author Alexander G. Zimmerman 2016 <zimmerman@aices.rwth-aachen.de>
-*/
-template<int dim>
-SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
-{
-    if (WRITE_LINEAR_SYSTEM)
-    {
-        Output::write_linear_system(this->system_matrix, this->system_rhs);
-    }
-    
-    double tolerance = this->params.linear_solver.tolerance;
-    if (this->params.linear_solver.normalize_tolerance)
-    {
-        double norm = this->system_rhs.l2_norm(); 
-        tolerance *= norm;
-    }
-    SolverControl solver_control(
-        this->params.linear_solver.max_iterations,
-        tolerance);
-       
-    SolverGMRES<> solver_gmres(solver_control);
-
-    SparseDirectUMFPACK A_inv;
-    
-    PreconditionIdentity preconditioner;
-
-    std::string solver_name;
-    
-    std::string solver_type;
-    
-    if (this->params.linear_solver.method == "LU")
-    {
-        solver_name = "LU";
-        solver_type = "direct";
-        A_inv.initialize(this->system_matrix);
-        A_inv.vmult(this->newton_residual, this->system_rhs);
-    }
-    else if (this->params.linear_solver.method == "GMRES")
-    {
-        solver_name = "GMRES";
-        solver_type = "iterative";
-        solver_gmres.solve(
-            this->system_matrix,
-            this->newton_residual,
-            this->system_rhs,
-            preconditioner);    
-    }
-    else
-    {
-        Assert(false, ExcNotImplemented());
-    }
-
-    this->constraints.distribute(this->solution);
-
-    if (!quiet)
-    {
-        if (solver_type == "iterative")\
-        {
-            std::cout << "     " << solver_control.last_step()
-                << " " << solver_name << " iterations." << std::endl;
-        }
-        else if (solver_type == "direct")
-        {
-            std::cout << "Solved linear system" << std::endl;
-        }
-    }
-    
-    SolverStatus status;
-    status.last_step = solver_control.last_step();
-    
-    return status;
-
-}
 
 /*! Setup and solve a Newton iteration */
 template<int dim>
 void Peclet<dim>::step_newton()
 {
-    this->old_newton_solution = this->solution;
+    this->old_newton_solution = this->newton_solution;
     
     this->assemble_system();
 
@@ -91,17 +14,23 @@ void Peclet<dim>::step_newton()
 
     this->solve_linear_system();
 
-    this->solution -= this->newton_residual;
+    this->newton_solution -= this->newton_residual;
 }
 
 /*! Iterate the Newton method to solve the nonlinear problem */
 template<int dim>
-void Peclet<dim>::solve_nonlinear_problem(bool quiet)
+bool Peclet<dim>::solve_nonlinear_problem()
 {
+    this->newton_solution = this->solution;
+    
     bool converged = false;
 
     unsigned int i;
-
+    
+    double old_norm_residual = 1.e32;
+    
+    double scale = this->newton_solution.l2_norm()/this->newton_solution.size();
+    
     for (i = 0; i < this->params.nonlinear_solver.max_iterations; ++i)
     {
         this->step_newton();
@@ -114,14 +43,32 @@ void Peclet<dim>::solve_nonlinear_problem(bool quiet)
         Output::write_solution_to_vtk( // @todo Debugging
             "newton_solution.vtk",
             this->dof_handler,
-            this->solution);
-            
-        double norm_residual = this->newton_residual.l2_norm();
+            this->newton_solution);
         
-        if (!quiet)
+        double norm_residual = scale*this->newton_residual.l2_norm()/this->newton_residual.size();
+        
+        std::cout << "Newton iteration normalized L2 norm residual = " << norm_residual << std::endl;
+        
+        if (norm_residual > old_norm_residual)
         {
-            std::cout << "Newton iteration L2 norm residual = " << norm_residual << std::endl;
+            converged = false;
+            
+            std::cout << "Newton iteration diverged." << std::endl;
+            
+            Output::write_solution_to_vtk( // @todo Debugging
+                "diverged_newton_solution.vtk",
+                this->dof_handler,
+                this->newton_solution);
+                
+            if (this->time_step_size == this->params.time.min_step_size)
+            {
+                assert(converged);
+            }
+            
+            return converged;
         }
+        
+        old_norm_residual = norm_residual;
         
         if (norm_residual < this->params.nonlinear_solver.tolerance)
         {
@@ -131,13 +78,18 @@ void Peclet<dim>::solve_nonlinear_problem(bool quiet)
 
     }
 
-    assert(converged);
-
-    if (!quiet)
+    if ((this->time_step_size > this->params.time.min_step_size) & !converged)
     {
-        std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
+        return converged;
     }
     
+    assert(converged);
+
+    std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
+    
+    this->solution = this->newton_solution;
+    
+    return converged;
 }
 
 #endif
