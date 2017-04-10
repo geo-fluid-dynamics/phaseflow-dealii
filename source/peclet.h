@@ -218,9 +218,15 @@ namespace Peclet
         
     this->time_step_size = this->params.time.max_step_size;
     
+    this->time_step_counter = 0;
+    
+    this->write_solution();
+    
     do
     {        
         this->step_time();
+        
+        this->time_step_counter++;
         
         this->write_solution();
 
