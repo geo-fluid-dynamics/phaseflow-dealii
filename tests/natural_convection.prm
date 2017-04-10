@@ -15,7 +15,7 @@ subsection initial_values
 end
 
 subsection refinement
-    set initial_global_cycles = 5
+    set initial_global_cycles = 4
 end
 
 subsection nonlinear_solver
