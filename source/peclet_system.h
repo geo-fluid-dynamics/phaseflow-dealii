@@ -353,7 +353,7 @@ void Peclet<dim>::solve_linear_system()
     
     A_inv.vmult(this->newton_residual, this->system_rhs);
 
-    this->constraints.distribute(this->solution);
+    this->constraints.distribute(this->newton_residual);
 
     std::cout << "Solved linear system" << std::endl;
 
