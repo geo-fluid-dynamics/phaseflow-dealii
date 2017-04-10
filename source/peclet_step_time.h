@@ -21,7 +21,7 @@ void Peclet<dim>::set_time_step_size(double new_size)
     
     if ((new_size != this->time_step_size))
     {
-        std::cout << "Set time step to deltat = " << this->time_step_size << std::endl;
+        std::cout << "Set time step to deltat = " << new_size << std::endl;
     }
     
     this->time_step_size = new_size;
