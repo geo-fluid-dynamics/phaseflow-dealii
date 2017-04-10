@@ -1,0 +1,336 @@
+
+===========================================
+Number of active cells: 64
+Number of degrees of freedom: 740
+
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.00013499
+Solved linear system
+Newton iteration normalized L2 norm residual = 6.75004e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.2514e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 5.66372e-06
+Newton method converged after 4 iterations.
+Reached time t = 0.1
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000137543
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000179522
+Newton iteration diverged.
+Set time step to deltat = 0.05
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.00022764
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.00023387
+Newton iteration diverged.
+Set time step to deltat = 0.025
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000262072
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000255298
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000224629
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000179302
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000126712
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.25865e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.15455e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.61843e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.35757e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.1125
+Set time step to deltat = 0.025
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.14139e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 5.28317e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.3179e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.71642e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000102092
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000108821
+Newton iteration diverged.
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000117865
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000116846
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.000108053
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.367e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.56851e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 5.58704e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.58828e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.80823e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.26955e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.44905e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.46755e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.12055e-06
+Newton method converged after 2 iterations.
+Reached time t = 0.114062
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.27057e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.89553e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.55834e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.05895e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00078125
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.52565e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.68818e-05
+Newton iteration diverged.
+Set time step to deltat = 0.000390625
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.85811e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.62491e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.12693e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.47609e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.76032e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.04921e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 4.2074e-06
+Newton method converged after 7 iterations.
+Reached time t = 0.114453
+Set time step to deltat = 0.00078125
+Solved linear system
+Newton iteration normalized L2 norm residual = 4.9589e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.115234
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 6.20942e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.116797
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.46498e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.119922
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.68321e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.126172
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.84223e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.138672
+Set time step to deltat = 0.025
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.09288e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.20197e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.31859e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.42575e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.53936e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.63906e-05
+Newton iteration diverged.
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.7442e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.82692e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.91388e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.9621e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00078125
+Solved linear system
+Newton iteration normalized L2 norm residual = 2.01373e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.9979e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.9209e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.79015e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.61385e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.40065e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.15948e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.99419e-06
+Newton method converged after 8 iterations.
+Reached time t = 0.139453
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.55138e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.141016
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.97176e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.144141
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.39725e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.150391
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.81085e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.162891
+Set time step to deltat = 0.025
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.02019e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.06627e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.11419e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.15779e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.2036e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.24261e-05
+Newton iteration diverged.
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.28418e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.31475e-05
+Newton iteration diverged.
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.3482e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.36319e-05
+Newton iteration diverged.
+Set time step to deltat = 0.00078125
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.38168e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.3689e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.32731e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.25974e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.16937e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 1.05956e-05
+Solved linear system
+Newton iteration normalized L2 norm residual = 9.33817e-06
+Newton method converged after 7 iterations.
+Reached time t = 0.163672
+Set time step to deltat = 0.0015625
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.63014e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.165234
+Set time step to deltat = 0.003125
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.64506e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.168359
+Set time step to deltat = 0.00625
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.64601e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.174609
+Set time step to deltat = 0.0125
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.62508e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.187109
+Set time step to deltat = 0.025
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.57904e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.212109
+Set time step to deltat = 0.05
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.50701e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.262109
+Set time step to deltat = 0.1
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.40942e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.362109
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.28686e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.462109
+Solved linear system
+Newton iteration normalized L2 norm residual = 8.14105e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.562109
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.97384e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.662109
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.78709e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.762109
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.58272e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.862109
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.36266e-06
+Newton method converged after 1 iterations.
+Reached time t = 0.962109
+Set time step to deltat = 0.0378906
+Solved linear system
+Newton iteration normalized L2 norm residual = 7.12745e-06
+Newton method converged after 1 iterations.
+Reached time t = 1
