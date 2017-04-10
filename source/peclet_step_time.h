@@ -14,6 +14,11 @@ void Peclet<dim>::set_time_step_size(double new_size)
         new_size = this->params.time.max_step_size;
     }
     
+    if ((this->time + new_size) > this->params.time.end)
+    {
+        new_size = this->params.time.end - this->time;
+    }
+    
     if ((new_size != this->time_step_size))
     {
         std::cout << "Set time step to deltat = " << this->time_step_size << std::endl;
@@ -33,13 +38,6 @@ assembling and solving a linear system for each substep, until convergence.
 template <int dim>
 void Peclet<dim>::step_time()
 {   
-    if (this->time > this->params.time.end)
-    {
-        this->time_step_size = this->params.time.end - this->time;
-        
-        this->time = this->params.time.end;
-    }
-    
     this->old_solution = this->solution;
     
     bool converged;
@@ -57,7 +55,12 @@ void Peclet<dim>::step_time()
 
     this->time += this->time_step_size;
     
-    std::cout << "Reached time t = " << this->time + this->time_step_size << std::endl;
+    std::cout << "Reached time t = " << this->time << std::endl;
+    
+    if (this->time >= (this->params.time.end - EPSILON))
+    {
+        return;
+    }
     
     if (converged)
     {   
