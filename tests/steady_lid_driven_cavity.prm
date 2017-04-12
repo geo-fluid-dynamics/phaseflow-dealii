@@ -20,7 +20,7 @@ end
 
 subsection nonlinear_solver
     set max_iterations = 50
-    set tolerance = 1.e-5
+    set tolerance = 1.e-8
 end
 
 subsection time
