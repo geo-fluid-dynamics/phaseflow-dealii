@@ -208,6 +208,11 @@ namespace Peclet
     
     this->triangulation.refine_global(this->params.refinement.initial_global_cycles);
     
+    Refinement::refine_mesh_near_boundaries(
+        this->triangulation,
+        this->params.refinement.boundaries_to_refine,
+        this->params.refinement.initial_boundary_cycles);
+    
     // Initialize the linear system
     
     this->setup_system(); 
