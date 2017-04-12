@@ -10,8 +10,8 @@ subsection geometry
 end
 
 subsection initial_values
-    set Function constants = theta_c = -0.5, theta_h = 0.5
-    set Function expression = 0.; 0.; 0.; theta_h + x*(theta_c - theta_h)
+    set Function constants = epsilon=1.e-12, theta_c = -0.5, theta_h = 0.5
+    set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
 end
 
 subsection refinement
@@ -20,13 +20,13 @@ end
 
 subsection nonlinear_solver
     set max_iterations = 50
-    set tolerance = 1.e-5
+    set tolerance = 1.e-2
 end
 
 subsection time
-    set end = 1.
-    set min_step_size = 1.e-4
-    set max_step_size = 0.1
+    set end = 1.e-2
+    set min_step_size = 1.e-3
+    set max_step_size = 1.e-3
 end
 
 subsection output
