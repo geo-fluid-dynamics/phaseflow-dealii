@@ -45,7 +45,7 @@ bool Peclet<dim>::solve_nonlinear_problem()
         
         double norm_residual = this->newton_residual.l2_norm();
         
-        std::cout << "Newton iteration normalized L2 norm residual = " << norm_residual << std::endl;
+        std::cout << "Newton iteration L2 norm residual = " << norm_residual << std::endl;
         
         if (norm_residual > old_norm_residual)
         {
