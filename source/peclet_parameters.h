@@ -162,6 +162,15 @@ namespace Peclet
                     Patterns::Integer(),
                     "Initially globally refine the grid this many times "
                     "without using any error measure");
+                    
+                prm.declare_entry("initial_boundary_cycles", "0",
+                    Patterns::Integer(),
+                    "Initially refine the grid this many times"
+                    "near the boundaries that are listed for refinement");
+                    
+                prm.declare_entry("boundaries_to_refine", "0",
+                    Patterns::List(Patterns::Integer()),
+                    "Refine cells that contain these boundaries");
                 
             }
             prm.leave_subsection();
@@ -310,6 +319,9 @@ namespace Peclet
             {
                 
                 params.refinement.initial_global_cycles = prm.get_integer("initial_global_cycles");
+                params.refinement.initial_boundary_cycles = prm.get_integer("initial_boundary_cycles");
+                params.refinement.boundaries_to_refine = 
+                    MyParameterHandler::get_vector<unsigned int>(prm, "boundaries_to_refine");
                 
             }
             prm.leave_subsection();
