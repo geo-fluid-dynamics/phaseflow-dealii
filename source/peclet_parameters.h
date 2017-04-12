@@ -86,7 +86,6 @@ namespace Peclet
             double end;
             double min_step_size;
             double max_step_size;
-            double global_refinement_levels;
         };
 
         struct IterativeSolver
@@ -94,7 +93,6 @@ namespace Peclet
             std::string method;
             unsigned int max_iterations;
             double tolerance;
-            bool normalize_tolerance;
         };
         
         struct Output
@@ -182,8 +180,7 @@ namespace Peclet
                     
                 prm.declare_entry("max_step_size", "1.",
                     Patterns::Double(0.),
-                    "End the time-dependent simulation once this time is reached."
-                    "\nSet to zero to instead use global_refinement_levels");
+                    "Begin with this time step size.");
                     
             }
             prm.leave_subsection();
@@ -200,9 +197,6 @@ namespace Peclet
                 prm.declare_entry("tolerance", "1e-8",
                     Patterns::Double(0.));
                     
-                prm.declare_entry("normalize_tolerance", "false",
-                    Patterns::Bool(),
-                    "@todo: This isn't implemented. How is the residual of a Newton iteration normalized?");
             }
             prm.leave_subsection();
             
@@ -336,7 +330,6 @@ namespace Peclet
                 params.nonlinear_solver.method = prm.get("method");
                 params.nonlinear_solver.max_iterations = prm.get_integer("max_iterations");
                 params.nonlinear_solver.tolerance = prm.get_double("tolerance");
-                params.nonlinear_solver.normalize_tolerance = prm.get_bool("normalize_tolerance");
             }    
             prm.leave_subsection(); 
             
