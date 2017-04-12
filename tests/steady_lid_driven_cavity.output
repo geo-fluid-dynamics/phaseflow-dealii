@@ -1,0 +1,13 @@
+
+===========================================
+Number of active cells: 64
+Number of degrees of freedom: 740
+
+Solved linear system
+Newton iteration normalized L2 norm residual = 18.8461
+Solved linear system
+Newton iteration normalized L2 norm residual = 0.160807
+Solved linear system
+Newton iteration normalized L2 norm residual = 3.92626e-06
+Newton method converged after 3 iterations.
+Reached time t = 1e+16
