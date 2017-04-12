@@ -2,8 +2,9 @@
 #define _peclet_step_time_h_
 
 template<int dim>
-void Peclet<dim>::set_time_step_size(double new_size)
+void Peclet<dim>::set_time_step_size(const double _new_size)
 {
+    double new_size = _new_size;
     
     if (new_size < this->params.time.min_step_size)
     {
