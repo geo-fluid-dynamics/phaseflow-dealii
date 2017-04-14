@@ -43,9 +43,9 @@ bool Peclet<dim>::solve_nonlinear_problem()
             this->dof_handler,
             this->newton_solution);
         
-        double norm_residual = this->newton_residual.l2_norm();
+        double norm_residual = this->newton_residual.l2_norm()/this->newton_solution.l2_norm();
         
-        std::cout << "Newton iteration L2 norm residual = " << norm_residual << std::endl;
+        std::cout << "Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = " << norm_residual << std::endl;
         
         if (norm_residual > old_norm_residual)
         {
@@ -68,7 +68,7 @@ bool Peclet<dim>::solve_nonlinear_problem()
         
         old_norm_residual = norm_residual;
         
-        if (norm_residual < this->newton_solution.l2_norm()*this->params.nonlinear_solver.tolerance)
+        if (norm_residual < this->params.nonlinear_solver.tolerance)
         {
             converged = true;
             break;

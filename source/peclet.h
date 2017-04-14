@@ -109,6 +109,12 @@ namespace Peclet
 
     FESystem<dim,dim> fe;
     
+    const FEValuesExtractors::Vector velocity_extractor;
+    
+    const FEValuesExtractors::Scalar pressure_extractor;
+
+    const FEValuesExtractors::Scalar temperature_extractor;
+    
     DoFHandler<dim> dof_handler;
 
     ConstraintMatrix constraints;
@@ -159,6 +165,9 @@ namespace Peclet
     fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
        FE_Q<dim>(SCALAR_DEGREE), 1, // pressure
        FE_Q<dim>(SCALAR_DEGREE), 1), // temperature
+    velocity_extractor(0),
+    pressure_extractor(dim),
+    temperature_extractor(dim + 1),
     dof_handler(this->triangulation),
     initial_values_function(dim + 1 + ENERGY_ENABLED),
     source_function(dim + 1 + ENERGY_ENABLED),
@@ -221,8 +230,8 @@ namespace Peclet
         this->dof_handler,
         this->initial_values_function,
         this->solution); 
-        
-    this->time_step_size = this->params.time.max_step_size;
+    
+    this->set_time_step_size(this->params.time.initial_step_size);
     
     this->time_step_counter = 0;
     

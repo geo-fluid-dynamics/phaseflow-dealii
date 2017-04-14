@@ -25,6 +25,7 @@ end
 
 subsection time
     set end = 1.e-2
+    set initial_step_size = 0.5e-2
     set min_step_size = 0.5e-2
     set max_step_size = 0.5e-2
 end

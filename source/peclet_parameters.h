@@ -84,6 +84,7 @@ namespace Peclet
         struct Time
         {
             double end;
+            double initial_step_size;
             double min_step_size;
             double max_step_size;
         };
@@ -181,15 +182,18 @@ namespace Peclet
                 prm.declare_entry("end", "1.",
                     Patterns::Double(0.),
                     "End the time-dependent simulation once this time is reached.");
-                    
-                prm.declare_entry("min_step_size", "1.e-8",
+                
+                prm.declare_entry("initial_step_size", "0.1",
                     Patterns::Double(0.),
-                    "If this is less than the max_step_size, then the time step size will"
-                    " automatically be reduced when a Newton iteration diverges.");
+                    "Begin with this time step size.");
+                
+                prm.declare_entry("min_step_size", "1.e-6",
+                    Patterns::Double(0.),
+                    "Minimum step size for adaptive time steppinig.");
                     
                 prm.declare_entry("max_step_size", "1.",
                     Patterns::Double(0.),
-                    "Begin with this time step size.");
+                    "Maximum step size for adaptive time steppinig.");
                     
             }
             prm.leave_subsection();
@@ -330,6 +334,7 @@ namespace Peclet
             prm.enter_subsection("time");
             {
                 params.time.end = prm.get_double("end");
+                params.time.initial_step_size = prm.get_double("initial_step_size");
                 params.time.min_step_size = prm.get_double("min_step_size");
                 params.time.max_step_size = prm.get_double("max_step_size");
             }    
