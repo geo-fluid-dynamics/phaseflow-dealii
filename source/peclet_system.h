@@ -185,12 +185,6 @@ void Peclet<dim>::assemble_system()
     Vector<double> local_rhs(dofs_per_cell);
     
     std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
-
-    const FEValuesExtractors::Vector velocity(0);
-    
-    const FEValuesExtractors::Scalar pressure(dim);
-    
-    const FEValuesExtractors::Scalar temperature(dim + 1);
     
     std::vector<Tensor<1,dim>> old_velocity_values(n_quad_points);
     
@@ -226,39 +220,39 @@ void Peclet<dim>::assemble_system()
     {
         fe_values.reinit(cell);
 
-        fe_values[velocity].get_function_values(
+        fe_values[this->velocity_extractor].get_function_values(
             this->old_solution,
             old_velocity_values);
 
-        fe_values[pressure].get_function_values(
+        fe_values[this->pressure_extractor].get_function_values(
             this->old_solution,
             old_pressure_values);
         
-        fe_values[temperature].get_function_values(
+        fe_values[this->temperature_extractor].get_function_values(
             this->old_solution,
             old_temperature_values);
         
-        fe_values[velocity].get_function_values(
+        fe_values[this->velocity_extractor].get_function_values(
             this->old_newton_solution,
             old_newton_velocity_values);
 
-        fe_values[pressure].get_function_values(
+        fe_values[this->pressure_extractor].get_function_values(
             this->old_newton_solution,
             old_newton_pressure_values);
 
-        fe_values[temperature].get_function_values(
+        fe_values[this->temperature_extractor].get_function_values(
             this->solution,
             old_newton_temperature_values);
 
-        fe_values[temperature].get_function_gradients(
+        fe_values[this->temperature_extractor].get_function_gradients(
             this->solution,
             old_newton_temperature_gradients);
 
-        fe_values[velocity].get_function_gradients(
+        fe_values[this->velocity_extractor].get_function_gradients(
             this->old_newton_solution,
             old_newton_velocity_gradients);
 
-        fe_values[velocity].get_function_divergences(
+        fe_values[this->velocity_extractor].get_function_divergences(
             this->old_newton_solution,
             old_newton_velocity_divergences);
             
@@ -291,21 +285,21 @@ void Peclet<dim>::assemble_system()
                 @todo How did I choose which functions correspond to i or j?
                 */
                     
-                const Tensor<1, dim> v = fe_values[velocity].value(i, quad);
-                const double q = fe_values[pressure].value(i, quad);
-                const double phi = fe_values[temperature].value(i, quad);
-                const Tensor<1, dim> gradphi = fe_values[temperature].gradient(i, quad);
-                const Tensor<2, dim> gradv = fe_values[velocity].gradient(i, quad);
-                const double divv = fe_values[velocity].divergence(i, quad);
+                const Tensor<1, dim> v = fe_values[this->velocity_extractor].value(i, quad);
+                const double q = fe_values[this->pressure_extractor].value(i, quad);
+                const double phi = fe_values[this->temperature_extractor].value(i, quad);
+                const Tensor<1, dim> gradphi = fe_values[this->temperature_extractor].gradient(i, quad);
+                const Tensor<2, dim> gradv = fe_values[this->velocity_extractor].gradient(i, quad);
+                const double divv = fe_values[this->velocity_extractor].divergence(i, quad);
                 
                 for (unsigned int j = 0; j< dofs_per_cell; ++j)
                 {
-                    const Tensor<1, dim> u_w = fe_values[velocity].value(j, quad);
-                    const double p_w = fe_values[pressure].value(j, quad);
-                    const double theta_w = fe_values[temperature].value(j, quad);
-                    const Tensor<1, dim> gradtheta_w = fe_values[temperature].gradient(j, quad);
-                    const Tensor<2, dim> gradu_w = fe_values[velocity].gradient(j, quad);
-                    const double divu_w = fe_values[velocity].divergence(j, quad);
+                    const Tensor<1, dim> u_w = fe_values[this->velocity_extractor].value(j, quad);
+                    const double p_w = fe_values[this->pressure_extractor].value(j, quad);
+                    const double theta_w = fe_values[this->temperature_extractor].value(j, quad);
+                    const Tensor<1, dim> gradtheta_w = fe_values[this->temperature_extractor].gradient(j, quad);
+                    const Tensor<2, dim> gradu_w = fe_values[this->velocity_extractor].gradient(j, quad);
+                    const double divu_w = fe_values[this->velocity_extractor].divergence(j, quad);
 
                     local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
@@ -378,13 +372,33 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
 
         std::map<types::global_dof_index, double> boundary_values;
 
-        for (unsigned int b = 0; b < this->boundary_count; ++b) /* For each boundary */
-        {                    
+        for (types::boundary_id b = 0; b < this->boundary_count; ++b) /* For each boundary */
+        {   
+            
             VectorTools::interpolate_boundary_values(
                 this->dof_handler,
                 b,
-                ZeroFunction<dim>(dim + 1 + ENERGY_ENABLED),
-                boundary_values);      
+                ZeroFunction<dim>(dim + 2),
+                boundary_values,
+                this->fe.component_mask(this->velocity_extractor));
+            
+            bool adiabatic = false;
+            
+            if (ADIABATIC_WALLS.find(b) != ADIABATIC_WALLS.end())
+            {
+                adiabatic = true;
+            }
+            
+            if (!adiabatic)
+            {
+                VectorTools::interpolate_boundary_values(
+                    this->dof_handler,
+                    b,
+                    ZeroFunction<dim>(dim + 2),
+                    boundary_values,
+                    this->fe.component_mask(this->temperature_extractor));
+            }
+            
         }
 
         MatrixTools::apply_boundary_values(
