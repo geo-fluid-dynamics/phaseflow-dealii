@@ -12,8 +12,8 @@ notifications:
   slack: aices-pcm-cfd:ShncJAFCJzx48zt8hrXpRwGw
 
 before_install:
-- docker pull zimmerman/nsb-pcm
+- docker pull zimmerman/nsb-pcm:latest
 
 script:
-- docker run -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git pull; cd build; cmake ..; make -j2"
+- docker run -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git pull; cd build; cmake ..; make"
 - docker run -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm/build; ctest -j2"
