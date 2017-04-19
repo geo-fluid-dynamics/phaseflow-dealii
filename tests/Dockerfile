@@ -1,6 +1,4 @@
-FROM dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release
-
-MAINTAINER zimmerman.alex.g@gmail.com
+FROM dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease
 
 RUN git clone https://github.com/alexanderzimmerman/nsb-pcm.git && \
     cd nsb-pcm && \
