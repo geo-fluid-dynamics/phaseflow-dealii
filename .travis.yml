@@ -5,7 +5,7 @@ services:
 
 branches:
     only:
-        -master
+        - master
   
 notifications:
   email: false
