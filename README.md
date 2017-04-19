@@ -23,6 +23,7 @@ Pull the image from https://hub.docker.com/r/zimmerman/nsb-pcm/
 ## Versions
 
 This is currently being tested with the following builds of deal.II:
+- deal.II v8.5.0 manually built (with default settings) from clone of https://github.com/dealii/dealii/tree/dealii-8.5
 - deal.II v8.4.2 built by candi (https://github.com/koecher/candi) on Ubuntu 14.04
 - deal.II v8.4.2 from docker image dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release (as shown in nsb-pcm/tests/Dockerfile)
 
