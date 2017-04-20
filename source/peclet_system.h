@@ -118,20 +118,18 @@ void Peclet<dim>::assemble_system()
 
     const double mu_l = LIQUID_DYNAMIC_VISOCITY;
 
-    const double Ra_over_PrRe2(Ra/(Pr*Re*Re));
-
     /*!
      lambda function for classical (linear) Boussinesq bouyancy
     */
-    auto f_B = [Ra_over_PrRe2, g](const double _theta) 
+    auto f_B = [Ra, Pr, Re, g](const double _theta) 
     {
-        return _theta*Ra_over_PrRe2*g;
+        return _theta*Ra/(Pr*Re*Re)*g;
     };
 
     /*!
      Analytical derivative of classical (linear) Boussinesq bouyancy
     */
-    const Tensor<1, dim> df_B_over_dtheta(Ra_over_PrRe2*g);
+    const Tensor<1, dim> df_B_over_dtheta(Ra/(Pr*Re*Re)*g);
 
     /*!
      lambda functions for linear, bilinear, and trilinear operator
