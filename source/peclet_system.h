@@ -303,8 +303,8 @@ void Peclet<dim>::assemble_system()
 
                     local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
-                        + + scalar_product(u_w, v)/deltat + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
-                        + scalar_product(df_B_over_dtheta*theta_w, v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
+                        + scalar_product(u_w, v)/deltat + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
+                        + scalar_product(theta_w*df_B_over_dtheta, v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
                         + theta_w*phi/deltat - scalar_product(u_k, gradphi)*theta_w - scalar_product(u_w, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_w, gradphi) // Energy
                         )*fe_values.JxW(quad); /* Map to the reference element */                        
 
@@ -315,11 +315,15 @@ void Peclet<dim>::assemble_system()
                         + scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
                         + scalar_product(f_B(theta_k), v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
                         + (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + K/Pr*scalar_product(gradtheta_k, gradphi) // Energy
-                        )*fe_values.JxW(quad); /* Map to the reference element */
+                        )*fe_values.JxW(quad); 
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
 
             }
+            
+            /* Map to the reference element */
+            
+            
         }
             
         // Export local contributions to the global system
