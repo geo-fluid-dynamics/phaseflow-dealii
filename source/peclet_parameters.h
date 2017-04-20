@@ -245,7 +245,7 @@ namespace Peclet
             
             if (parameter_file != "")
             {
-                prm.read_input(parameter_file);    
+                prm.parse_input(parameter_file);    
             }
             
             prm.enter_subsection("meta");
@@ -272,8 +272,7 @@ namespace Peclet
 
             if (parameter_file != "")
             {
-                bool read_successful = prm.read_input(parameter_file);
-                assert(read_successful);
+                prm.parse_input(parameter_file);
             }
             
             // Print a log file of all the ParameterHandler parameters
