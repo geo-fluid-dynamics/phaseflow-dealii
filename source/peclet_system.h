@@ -160,7 +160,7 @@ void Peclet<dim>::assemble_system()
         const Tensor<2, dim> _gradz,
         const Tensor<1, dim> _v)
     {
-        return _v*_gradz*_w;
+        return (_v*_gradz)*_w;
     };
 
     /*!
@@ -253,16 +253,21 @@ void Peclet<dim>::assemble_system()
         fe_values[this->velocity_extractor].get_function_divergences(
             this->old_newton_solution,
             old_newton_velocity_divergences);
-            
+                    
+        std::vector<Tensor<1, dim>> velocity_fe_values(dofs_per_cell);       
+        std::vector<double> pressure_fe_values(dofs_per_cell);
+        std::vector<double> temperature_fe_values(dofs_per_cell);
+        std::vector<Tensor<1, dim>> grad_temperature_fe_values(dofs_per_cell);
+        std::vector<Tensor<2, dim>> grad_velocity_fe_values(dofs_per_cell);
+        std::vector<double> div_velocity_fe_values(dofs_per_cell);
+        
         local_matrix = 0.;
         
         local_rhs = 0.;
 
         for (unsigned int quad = 0; quad< n_quad_points; ++quad)
         {
-            /*!
-            Name local variables to match notation in Danaila 2014
-            */
+            /* Name local variables to match notation in Danaila 2014 */
             const Tensor<1, dim>  u_n = old_velocity_values[quad];
             const double theta_n = old_temperature_values[quad];
             
@@ -274,30 +279,34 @@ void Peclet<dim>::assemble_system()
             const Tensor<2, dim> gradu_k = old_newton_velocity_gradients[quad];
             const double divu_k = old_newton_velocity_divergences[quad];
             
-            
+            for (unsigned int dof = 0; dof < dofs_per_cell; ++dof)
+            {
+                velocity_fe_values[dof] = fe_values[this->velocity_extractor].value(dof, quad);
+                pressure_fe_values[dof] = fe_values[this->pressure_extractor].value(dof, quad);
+                temperature_fe_values[dof] = fe_values[this->temperature_extractor].value(dof, quad);
+                grad_temperature_fe_values[dof] = fe_values[this->temperature_extractor].gradient(dof, quad);
+                grad_velocity_fe_values[dof] = fe_values[this->velocity_extractor].gradient(dof, quad);
+                div_velocity_fe_values[dof] = fe_values[this->velocity_extractor].divergence(dof, quad);
+            }
 
             for (unsigned int i = 0; i < dofs_per_cell; ++i)
             {
-                
-                /* 
-                @todo How did I choose which functions correspond to i or j?
-                */
-                    
-                const Tensor<1, dim> v = fe_values[this->velocity_extractor].value(i, quad);
-                const double q = fe_values[this->pressure_extractor].value(i, quad);
-                const double phi = fe_values[this->temperature_extractor].value(i, quad);
-                const Tensor<1, dim> gradphi = fe_values[this->temperature_extractor].gradient(i, quad);
-                const Tensor<2, dim> gradv = fe_values[this->velocity_extractor].gradient(i, quad);
-                const double divv = fe_values[this->velocity_extractor].divergence(i, quad);
+                /* Name local variables to match notation in Danaila 2014 */
+                const Tensor<1, dim> v = velocity_fe_values[i];
+                const double q = pressure_fe_values[i];
+                const double phi = temperature_fe_values[i];
+                const Tensor<1, dim> gradphi = grad_temperature_fe_values[i];
+                const Tensor<2, dim> gradv = grad_velocity_fe_values[i];
+                const double divv = div_velocity_fe_values[i];
                 
                 for (unsigned int j = 0; j< dofs_per_cell; ++j)
                 {
-                    const Tensor<1, dim> u_w = fe_values[this->velocity_extractor].value(j, quad);
-                    const double p_w = fe_values[this->pressure_extractor].value(j, quad);
-                    const double theta_w = fe_values[this->temperature_extractor].value(j, quad);
-                    const Tensor<1, dim> gradtheta_w = fe_values[this->temperature_extractor].gradient(j, quad);
-                    const Tensor<2, dim> gradu_w = fe_values[this->velocity_extractor].gradient(j, quad);
-                    const double divu_w = fe_values[this->velocity_extractor].divergence(j, quad);
+                    const Tensor<1, dim> u_w = velocity_fe_values[j];
+                    const double p_w = pressure_fe_values[j];
+                    const double theta_w = temperature_fe_values[j];
+                    const Tensor<1, dim> gradtheta_w = grad_temperature_fe_values[j];
+                    const Tensor<2, dim> gradu_w = grad_velocity_fe_values[j];
+                    const double divu_w = div_velocity_fe_values[j];
 
                     local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
