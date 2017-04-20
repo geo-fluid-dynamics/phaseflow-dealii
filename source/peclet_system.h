@@ -314,7 +314,7 @@ void Peclet<dim>::assemble_system()
                         b(divu_k, q) - gamma*p_k*q // Mass
                         + scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
                         + scalar_product(f_B(theta_k), v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        + (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + K/Pr*scalar_product(gradtheta_k, gradphi) // Energy
+                        + (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_k, gradphi) // Energy
                         )*fe_values.JxW(quad); 
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
