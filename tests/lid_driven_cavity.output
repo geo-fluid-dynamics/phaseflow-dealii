@@ -3,59 +3,20 @@
 Number of active cells: 64
 Number of degrees of freedom: 740
 
+Set time step to deltat = 0.005
 Solved linear system
-Newton iteration normalized L2 norm residual = 17.9283
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.998642
 Solved linear system
-Newton iteration normalized L2 norm residual = 0.123522
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.00136057
 Solved linear system
-Newton iteration normalized L2 norm residual = 2.11552e-06
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.41409e-09
 Newton method converged after 3 iterations.
-Reached time t = 0.1
+Reached time t = 0.005
 Solved linear system
-Newton iteration normalized L2 norm residual = 0.916421
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.127204
 Solved linear system
-Newton iteration normalized L2 norm residual = 0.00198078
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.00024568
 Solved linear system
-Newton iteration normalized L2 norm residual = 2.0873e-10
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 5.25757e-11
 Newton method converged after 3 iterations.
-Reached time t = 0.2
-Solved linear system
-Newton iteration normalized L2 norm residual = 0.0653886
-Solved linear system
-Newton iteration normalized L2 norm residual = 4.52439e-05
-Newton method converged after 2 iterations.
-Reached time t = 0.3
-Solved linear system
-Newton iteration normalized L2 norm residual = 0.00811011
-Solved linear system
-Newton iteration normalized L2 norm residual = 1.15731e-06
-Newton method converged after 2 iterations.
-Reached time t = 0.4
-Solved linear system
-Newton iteration normalized L2 norm residual = 0.00129947
-Solved linear system
-Newton iteration normalized L2 norm residual = 3.03541e-08
-Newton method converged after 2 iterations.
-Reached time t = 0.5
-Solved linear system
-Newton iteration normalized L2 norm residual = 0.000212172
-Solved linear system
-Newton iteration normalized L2 norm residual = 8.0117e-10
-Newton method converged after 2 iterations.
-Reached time t = 0.6
-Solved linear system
-Newton iteration normalized L2 norm residual = 3.44023e-05
-Newton method converged after 1 iterations.
-Reached time t = 0.7
-Solved linear system
-Newton iteration normalized L2 norm residual = 5.56505e-06
-Newton method converged after 1 iterations.
-Reached time t = 0.8
-Solved linear system
-Newton iteration normalized L2 norm residual = 9.00955e-07
-Newton method converged after 1 iterations.
-Reached time t = 0.9
-Solved linear system
-Newton iteration normalized L2 norm residual = 1.46091e-07
-Newton method converged after 1 iterations.
-Reached time t = 1
+Reached time t = 0.01
