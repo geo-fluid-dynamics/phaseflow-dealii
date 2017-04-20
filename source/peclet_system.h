@@ -319,10 +319,7 @@ void Peclet<dim>::assemble_system()
 
                 /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
 
-            }
-            
-            /* Map to the reference element */
-            
+            }            
             
         }
             
