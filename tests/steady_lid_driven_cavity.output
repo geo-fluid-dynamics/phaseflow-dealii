@@ -3,11 +3,14 @@
 Number of active cells: 64
 Number of degrees of freedom: 740
 
+Set time step to deltat = 1e+16
 Solved linear system
-Newton iteration normalized L2 norm residual = 18.8461
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.998185
 Solved linear system
-Newton iteration normalized L2 norm residual = 0.160807
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.00563485
 Solved linear system
-Newton iteration normalized L2 norm residual = 3.92626e-06
-Newton method converged after 3 iterations.
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 7.73056e-08
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.59533e-11
+Newton method converged after 4 iterations.
 Reached time t = 1e+16
