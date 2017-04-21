@@ -27,8 +27,6 @@ const double EPSILON = 1.e-14; /*! @todo: Expose to ParameterHandler */
 
 const bool WRITE_LINEAR_SYSTEM = true; /*! @todo: Expose to ParameterHandler */
 
-const double STEADY_TOLERANCE = 1.e-4; /*! @todo: Expose to ParameterHandler */
-
 const double TIME_GROWTH_RATE = 2.; /*! @todo: Expose to ParameterHandler */
 
 const std::set<dealii::types::boundary_id> ADIABATIC_WALLS = {2, 3}; /*! @todo: Generalize boundary conditions */

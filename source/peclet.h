@@ -249,6 +249,23 @@ namespace Peclet
         {
             this->append_verification_table();
         }
+        
+        if (this->params.time.stop_when_steady)
+        {
+            Vector<double> time_residual = this->solution; // There is evidently no Vector<Number> - Vector<Number> method.
+            time_residual -= this->old_solution;
+            
+            double unsteadiness = time_residual.l2_norm()/this->solution.l2_norm();
+            
+            std::cout << "Unsteadiness, || w_{n+1} - w_n || / || w_{n+1} || = " << unsteadiness << std::endl;
+            
+            if (unsteadiness < this->params.time.steady_tolerance)
+            {
+                std::cout << "Reached steady state." << std::endl;
+                break;
+            }
+            
+        }
     
     } while (this->time < (this->params.time.end - EPSILON));
     

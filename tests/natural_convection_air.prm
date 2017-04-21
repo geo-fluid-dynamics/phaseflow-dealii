@@ -28,6 +28,7 @@ subsection time
     set initial_step_size = 1.e-3
     set min_step_size = 1.e-3
     set max_step_size = 1.e-3
+    set stop_when_steady = true
 end
 
 subsection output
