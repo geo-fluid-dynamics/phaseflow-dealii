@@ -1,0 +1,36 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+    set dim = 2
+end
+
+subsection geometry
+    set grid_name = hyper_rectangle
+    set sizes = 0., 0., 1., 1.
+end
+
+subsection initial_values
+    set Function constants = epsilon=1.e-12, theta_c = -0.5, theta_h = 0.5
+    set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
+end
+
+subsection refinement
+    set initial_global_cycles = 3
+end
+
+subsection nonlinear_solver
+    set max_iterations = 10
+    set tolerance = 1.e-9
+end
+
+subsection time
+    set end = 1.e-3
+    set initial_step_size = 1.e-3
+    set min_step_size = 1.e-3
+    set max_step_size = 1.e-3
+    set stop_when_steady = true
+end
+
+subsection output
+    set write_solution_vtk = true
+end

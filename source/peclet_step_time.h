@@ -1,127 +1,71 @@
 #ifndef _peclet_step_time_h_
 #define _peclet_step_time_h_
 
-
-/*!
-@brief Solve the linear system.
-
-@author Alexander G. Zimmerman 2016 <zimmerman@aices.rwth-aachen.de>
-*/
 template<int dim>
-SolverStatus Peclet<dim>::solve_linear_system(bool quiet)
+void Peclet<dim>::set_time_step_size(const double _new_size)
 {
-    double tolerance = this->params.solver.tolerance;
-    if (this->params.solver.normalize_tolerance)
-    {
-        tolerance *= this->system_rhs.l2_norm();
-    }
-    SolverControl solver_control(
-        this->params.solver.max_iterations,
-        tolerance);
-       
-    SolverGMRES<> solver_gmres(solver_control);
-
-    PreconditionIdentity preconditioner;
-
-    std::string solver_name;
+    double new_size = _new_size;
     
-    if (this->params.solver.method == "GMRES")
+    if (new_size < this->params.time.min_step_size)
     {
-        solver_name = "GMRES";
-        solver_gmres.solve(
-            this->system_matrix,
-            this->newton_solution,
-            this->system_rhs,
-            preconditioner);    
+        new_size = this->params.time.min_step_size;
     }
-    else
+    else if(new_size > this->params.time.max_step_size)
     {
-        Assert(false, ExcNotImplemented());
-    }
-
-    this->constraints.distribute(this->solution);
-
-    if (!quiet)
-    {
-        std::cout << "     " << solver_control.last_step()
-              << " " << solver_name << " iterations." << std::endl;
+        new_size = this->params.time.max_step_size;
     }
     
-    SolverStatus status;
-    status.last_step = solver_control.last_step();
+    if ((this->time + new_size) > this->params.time.end)
+    {
+        new_size = this->params.time.end - this->time;
+    }
     
-    return status;
-
+    if ((new_size != this->time_step_size))
+    {
+        std::cout << "Set time step to deltat = " << new_size << std::endl;
+    }
+    
+    this->time_step_size = new_size;
+    
 }
 
-/*!
-@brief Step the simulation from the current time step to the next time step.
 
-@detail
+/*! Step the simulation from the current time step to the next time step.
 
-    This requires iterating through each Newton substep of the timestep, 
-    assembling and solving a linear system for each substep, until convergence.
+This requires iterating through each Newton substep of the timestep, 
+assembling and solving a linear system for each substep, until convergence.
 
-@author Alexander G. Zimmerman 2017 <zimmerman@aices.rwth-aachen.de>
 */
-template<int dim>
-void Peclet<dim>::step_time(bool quiet)
-{
-    if (!quiet & output_this_step)
-    {
-        std::cout << "Time step " << this->time_step_counter 
-            << " at t=" << this->time << std::endl;    
-    }
-
-    bool converged = false;
-    double residual = 1.e32; // Initialize to an arbitrarily large number
-
-    unsigned int i;
-
+template <int dim>
+void Peclet<dim>::step_time()
+{   
     this->old_solution = this->solution;
+    
+    bool converged;
 
-    Vector<double> diff(this->solution.size());
-
-    for (i = 0; i < MAX_NEWTON_ITERATIONS; ++i)
+    do 
     {
-        this->assemble_system();
-
-        this->apply_boundary_values_and_constraints();
-
-        this->old_newton_solution = this->newton_solution;
-
-        this->solve_linear_system();
-
-        diff = this->newton_solution;
-        diff -= this->old_newton_solution;
-
-        residual = diff.l2_norm();
-
-        if (residual < NEWTON_TOLERANCE)
-        {
-            converged = true;
-            this->solution = this->newton_solution;
-            break;
-        }
-
-    }
-
-    assert(converged);
-
-    if (!quiet)
-    {
-        std::cout << "Newton method converged after " << i + 1 << " iterations." << std::endl;
-    }
+        converged = this->solve_nonlinear_problem();
         
-    if (this->output_this_step)
-    {
-        this->write_solution();
-        
-        if (this->params.verification.enabled)
+        if (!converged)
         {
-            this->append_verification_table();
+            this->set_time_step_size(this->time_step_size/TIME_GROWTH_RATE);
         }
         
+    } while (!converged);
+
+    this->time += this->time_step_size;
+    
+    std::cout << "Reached time t = " << this->time << std::endl;
+    
+    if (this->time >= (this->params.time.end - EPSILON))
+    {
+        return;
+    }
+    
+    if (converged)
+    {   
+        this->set_time_step_size(TIME_GROWTH_RATE*this->time_step_size);        
     }
 
 }
