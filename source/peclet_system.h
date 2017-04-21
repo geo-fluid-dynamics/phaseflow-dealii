@@ -113,7 +113,7 @@ void Peclet<dim>::assemble_system()
     Tensor<1, dim> g; // @todo: Make this const.
     for (unsigned int i = 0; i < dim; ++i)
     {
-        g[i] = GRAVITY[i];
+        g[i] = this->params.physics.gravity[i];
     }
 
     const double mu_l = LIQUID_DYNAMIC_VISOCITY;
