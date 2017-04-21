@@ -87,6 +87,8 @@ namespace Peclet
             double initial_step_size;
             double min_step_size;
             double max_step_size;
+            bool stop_when_steady;
+            double steady_tolerance;
         };
 
         struct IterativeSolver
@@ -202,6 +204,10 @@ namespace Peclet
                 prm.declare_entry("max_step_size", "1.",
                     Patterns::Double(0.),
                     "Maximum step size for adaptive time steppinig.");
+                    
+                prm.declare_entry("stop_when_steady", "false", Patterns::Bool());
+                
+                prm.declare_entry("steady_tolerance", "1.e-8", Patterns::Double(0.));
                     
             }
             prm.leave_subsection();
@@ -351,6 +357,8 @@ namespace Peclet
                 params.time.initial_step_size = prm.get_double("initial_step_size");
                 params.time.min_step_size = prm.get_double("min_step_size");
                 params.time.max_step_size = prm.get_double("max_step_size");
+                params.time.stop_when_steady = prm.get_bool("stop_when_steady");
+                params.time.steady_tolerance = prm.get_double("steady_tolerance");
             }    
             prm.leave_subsection();
             
