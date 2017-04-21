@@ -109,6 +109,7 @@ namespace Peclet
         struct StructuredParameters
         {
             Meta meta;
+            PhysicalModel physics;
             Geometry geometry;
             Refinement refinement;
             Time time;
@@ -127,6 +128,13 @@ namespace Peclet
             }
             prm.leave_subsection();
 
+            
+            prm.enter_subsection("physics");
+            {
+                prm.declare_entry("gravity", "0., -1, 0.", Patterns::List(Patterns::Double()));
+            }
+            prm.leave_subsection();
+            
             
             prm.enter_subsection("source_function");
             {
@@ -279,6 +287,12 @@ namespace Peclet
             std::ofstream parameter_log_file("used_parameters.prm");
             assert(parameter_log_file.good());
             prm.print_parameters(parameter_log_file, ParameterHandler::Text);
+            
+            prm.enter_subsection("physics");
+            {
+                params.physics.gravity = MyParameterHandler::get_vector<double>(prm, "gravity");
+            }
+            prm.leave_subsection();
             
             prm.enter_subsection("geometry");
             {

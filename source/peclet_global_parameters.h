@@ -21,8 +21,6 @@ const double SOLID_CONDUCTIVITY = 1.; /*! @todo: Expose to ParameterHandler */
 
 const double LIQUID_CONDUCTIVITY = 2.; /*! @todo: Expose to ParameterHandler */
 
-const dealii::Tensor<1, 3> GRAVITY({0., -1., 0.}); /*! @todo: Expose to ParameterHandler */
-
 const unsigned int SCALAR_DEGREE = 1; /*! @todo: Expose to ParameterHandler */
 
 const unsigned int VECTOR_DEGREE = 2; /*! @todo: Expose to ParameterHandler */
