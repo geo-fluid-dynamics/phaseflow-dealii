@@ -23,8 +23,6 @@ const double LIQUID_CONDUCTIVITY = 2.; /*! @todo: Expose to ParameterHandler */
 
 const unsigned int SCALAR_DEGREE = 1; /*! @todo: Expose to ParameterHandler */
 
-const unsigned int VECTOR_DEGREE = 2; /*! @todo: Expose to ParameterHandler */
-
 const double EPSILON = 1.e-14; /*! @todo: Expose to ParameterHandler */
 
 const bool WRITE_LINEAR_SYSTEM = true; /*! @todo: Expose to ParameterHandler */

@@ -162,7 +162,7 @@ namespace Peclet
   template<int dim>
   Peclet<dim>::Peclet()
     :
-    fe(FE_Q<dim>(VECTOR_DEGREE), dim, // velocity
+    fe(FE_Q<dim>(SCALAR_DEGREE + 1), dim, // velocity
        FE_Q<dim>(SCALAR_DEGREE), 1, // pressure
        FE_Q<dim>(SCALAR_DEGREE), 1), // temperature
     velocity_extractor(0),
