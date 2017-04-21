@@ -19,7 +19,7 @@ subsection initial_values
 end
 
 subsection refinement
-    set initial_global_cycles = 3
+    set initial_global_cycles = 4
 end
 
 subsection nonlinear_solver
@@ -28,9 +28,9 @@ subsection nonlinear_solver
 end
 
 subsection time
-    set end = 10.
-    set initial_step_size = 1.
-    set min_step_size = 1.
+    set end = 1.
+    set initial_step_size = 1.e-3
+    set min_step_size = 1.e-3
     set max_step_size = 1.
 end
 

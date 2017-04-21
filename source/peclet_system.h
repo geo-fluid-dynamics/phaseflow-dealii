@@ -239,11 +239,11 @@ void Peclet<dim>::assemble_system()
             old_newton_pressure_values);
 
         fe_values[this->temperature_extractor].get_function_values(
-            this->solution,
+            this->old_newton_solution,
             old_newton_temperature_values);
 
         fe_values[this->temperature_extractor].get_function_gradients(
-            this->solution,
+            this->old_newton_solution,
             old_newton_temperature_gradients);
 
         fe_values[this->velocity_extractor].get_function_gradients(
