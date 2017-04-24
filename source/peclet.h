@@ -231,6 +231,8 @@ namespace Peclet
         this->initial_values_function,
         this->solution); 
     
+    this->time = 0.;
+    
     this->set_time_step_size(this->params.time.initial_step_size);
     
     this->time_step_counter = 0;
