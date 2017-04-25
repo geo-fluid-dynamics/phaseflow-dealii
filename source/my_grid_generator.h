@@ -14,17 +14,6 @@ namespace MyGridGenerator
     using namespace dealii;
     
     template<int dim>
-    void set_all_manifold_ids(Triangulation<dim> &tria, unsigned int id=0)
-    {
-        auto cell = tria.begin_active();
-        auto endc = tria.end();
-        for (; cell!=endc; ++cell)
-        {
-            cell->set_all_manifold_ids(id);
-        }
-    }
-    
-    template<int dim>
     void create_coarse_grid(
         Triangulation<dim> &triangulation,
         std::vector<unsigned int> &manifold_ids,
@@ -47,7 +36,7 @@ namespace MyGridGenerator
         {
             GridGenerator::hyper_ball(triangulation);
             
-            MyGridGenerator::set_all_manifold_ids(triangulation, 0);
+            triangulation.set_all_manifold_ids(0);
             
             manifold_ids.push_back(0);
             
