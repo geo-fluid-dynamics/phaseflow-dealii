@@ -143,6 +143,12 @@ namespace Peclet
 
     unsigned int boundary_count;
     
+    /*! These ID's label manifolds used for exact geometry */
+    std::vector<unsigned int> manifold_ids;
+        
+    /*! These strings label types of manifolds used for exact geometry */
+    std::vector<std::string> manifold_descriptors;
+    
     Functions::ParsedFunction<dim> initial_values_function;
     
     Functions::ParsedFunction<dim> source_function;
@@ -213,6 +219,21 @@ namespace Peclet
     
     this->create_coarse_grid();
     
+    /* Attach manifolds for exact geometry 
+    
+    For now this only supports a single spherical manifold centered at the origin.
+    
+    */
+    SphericalManifold<dim> spherical_manifold;
+    
+    for (unsigned int i = 0; i < manifold_ids.size(); i++)
+    {
+        if (manifold_descriptors[i] == "spherical")
+        {
+            this->triangulation.set_manifold(manifold_ids[i], spherical_manifold);      
+        }
+    }
+    
     // Run initial refinement cycles
     
     this->triangulation.refine_global(this->params.refinement.initial_global_cycles);
@@ -239,8 +260,13 @@ namespace Peclet
     
     this->write_solution();
     
-    do
-    {        
+    for (unsigned int it = 0; it < this->params.time.max_steps; ++it)
+    { 
+        if (this->time > (this->params.time.end - EPSILON))
+        {
+            break;
+        }
+        
         this->step_time();
         
         this->time_step_counter++;
@@ -269,7 +295,14 @@ namespace Peclet
             
         }
     
-    } while (this->time < (this->params.time.end - EPSILON));
+    } 
+    
+    /* Clean up. 
+    
+    Manifolds must be detached from Triangulations before leaving this scope.
+    
+    */
+    this->triangulation.set_manifold(0);
     
   }
   
