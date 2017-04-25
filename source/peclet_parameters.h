@@ -362,7 +362,7 @@ namespace Peclet
                 params.time.initial_step_size = prm.get_double("initial_step_size");
                 params.time.min_step_size = prm.get_double("min_step_size");
                 params.time.max_step_size = prm.get_double("max_step_size");
-                params.time.max_step_size = prm.get_integer("max_steps");
+                params.time.max_steps = prm.get_integer("max_steps");
                 params.time.stop_when_steady = prm.get_bool("stop_when_steady");
                 params.time.steady_tolerance = prm.get_double("steady_tolerance");
             }    
