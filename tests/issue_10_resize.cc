@@ -25,7 +25,9 @@ int main(int /*argc*/, char** /*argv*/)
 
     for (unsigned int f = 0; f < function_count; ++f)
     {
-        function_pointers[f] = new dealii::Functions::ParsedFunction<dim>();
+        function_pointers[f] = 
+            std::shared_ptr<dealii::Functions::ParsedFunction<dim>>(
+                new dealii::Functions::ParsedFunction<dim>()); 
         
         prm.enter_subsection("parsed_function_"+std::to_string(f));
         {
