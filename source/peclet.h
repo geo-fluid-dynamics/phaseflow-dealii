@@ -247,18 +247,20 @@ namespace Peclet
     
     this->setup_system(); 
 
+    this->time = 0.;
+    
+    this->set_time_step_size(this->params.time.initial_step_size);
+    
+    this->time_step_counter = 0;
+    
     VectorTools::interpolate(
         this->dof_handler,
         this->initial_values_function,
         this->solution); 
     
-    this->time = 0.;
-    
-    this->set_time_step_size(this->params.time.initial_step_size);
-    
     this->write_solution();
     
-    for (this->time_step_counter = 0; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
+    for (; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
     { 
         if (this->time > (this->params.time.end - EPSILON))
         {

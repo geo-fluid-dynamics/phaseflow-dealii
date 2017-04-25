@@ -150,7 +150,7 @@ namespace Peclet
             {
                     
                 prm.declare_entry("grid_name", "hyper_rectangle",
-                     Patterns::Selection("hyper_rectangle | hyper_ball"),
+                     Patterns::Selection("hyper_rectangle | hyper_shell"),
                      "Select the name of the geometry and grid to generate.");
                      
                 prm.declare_entry("sizes", "0., 1.",
