@@ -10,8 +10,8 @@ subsection geometry
 end
 
 subsection initial_values
-    #set Function expression = -y^3; x^3; 0.; 0.
-    set Function expression = 0.; 0.; 0.; 0.
+    set Function constants = r0 = 0.1
+    set Function expression = -(sqrt(x^2 + y^2) - r0)*sin(atan2(y, x)); (sqrt(x^2 + y^2) - r0)*cos(atan2(y, x)); 0.; 0.
 end
 
 subsection refinement
