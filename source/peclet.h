@@ -256,13 +256,11 @@ namespace Peclet
     
     this->set_time_step_size(this->params.time.initial_step_size);
     
-    this->time_step_counter = 0;
-    
     this->write_solution();
     
-    for (; this->time_step_counter < MAX_TIME_STEP; ++this->time_step_counter)
-    {
-        if (this->time > (this->params.time.end*(1. - EPSILON) - EPSILON))
+    for (this->time_step_counter = 0; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
+    { 
+        if (this->time > (this->params.time.end - EPSILON))
         {
             break;
         }
