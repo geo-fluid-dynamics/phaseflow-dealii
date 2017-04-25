@@ -5,7 +5,8 @@ subsection meta
 end
 
 subsection geometry
-    set grid_name = hyper_ball
+    set grid_name = hyper_shell
+    set sizes = 0.1, 0.5
 end
 
 subsection initial_values

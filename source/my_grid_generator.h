@@ -32,9 +32,9 @@ namespace MyGridGenerator
 
             boundary_count = pow(2, dim);
         }
-        else if (grid_name == "hyper_ball")
+        else if (grid_name == "hyper_shell")
         {
-            GridGenerator::hyper_ball(triangulation);
+            GridGenerator::hyper_shell(triangulation, Point<dim>(), sizes[0], sizes[1], 0, true);
             
             triangulation.set_all_manifold_ids(0);
             
@@ -42,7 +42,7 @@ namespace MyGridGenerator
             
             manifold_descriptors.push_back("spherical");
             
-            boundary_count = 1;
+            boundary_count = 2;
         }
         else
         {
