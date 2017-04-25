@@ -87,6 +87,7 @@ namespace Peclet
             double initial_step_size;
             double min_step_size;
             double max_step_size;
+            unsigned int max_steps;
             bool stop_when_steady;
             double steady_tolerance;
         };
@@ -149,7 +150,7 @@ namespace Peclet
             {
                     
                 prm.declare_entry("grid_name", "hyper_rectangle",
-                     Patterns::Selection("hyper_rectangle"),
+                     Patterns::Selection("hyper_rectangle | hyper_ball"),
                      "Select the name of the geometry and grid to generate.");
                      
                 prm.declare_entry("sizes", "0., 0., 1., 1.",
@@ -204,6 +205,10 @@ namespace Peclet
                 prm.declare_entry("max_step_size", "1.",
                     Patterns::Double(0.),
                     "Maximum step size for adaptive time steppinig.");
+                    
+                prm.declare_entry("max_steps", "1000000",
+                    Patterns::Integer(0),
+                    "Maximum number of time steps.");
                     
                 prm.declare_entry("stop_when_steady", "false", Patterns::Bool());
                 
@@ -357,6 +362,7 @@ namespace Peclet
                 params.time.initial_step_size = prm.get_double("initial_step_size");
                 params.time.min_step_size = prm.get_double("min_step_size");
                 params.time.max_step_size = prm.get_double("max_step_size");
+                params.time.max_step_size = prm.get_integer("max_steps");
                 params.time.stop_when_steady = prm.get_bool("stop_when_steady");
                 params.time.steady_tolerance = prm.get_double("steady_tolerance");
             }    
