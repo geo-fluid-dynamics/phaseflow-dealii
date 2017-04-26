@@ -201,7 +201,11 @@ void Peclet<dim>::assemble_system()
     std::vector<Tensor<1,dim>> old_newton_temperature_gradients(n_quad_points);
 
     std::vector<double> old_newton_velocity_divergences(n_quad_points);
-
+    
+    std::vector<Vector<double>> source_values(n_quad_points, Vector<double>(dim + 2));
+    
+    this->source_function.set_time(this->new_time);
+    
     typename DoFHandler<dim>::active_cell_iterator
         cell = this->dof_handler.begin_active(),
         endc = this->dof_handler.end();
@@ -264,7 +268,11 @@ void Peclet<dim>::assemble_system()
         local_matrix = 0.;
         
         local_rhs = 0.;
-
+        
+        this->source_function.vector_value_list(
+            fe_values.get_quadrature_points(),
+            source_values);
+        
         for (unsigned int quad = 0; quad< n_quad_points; ++quad)
         {
             /* Name local variables to match notation in Danaila 2014 */
@@ -278,6 +286,17 @@ void Peclet<dim>::assemble_system()
             const Tensor<1, dim> gradtheta_k = old_newton_temperature_gradients[quad];
             const Tensor<2, dim> gradu_k = old_newton_velocity_gradients[quad];
             const double divu_k = old_newton_velocity_divergences[quad];
+            
+            Tensor<1, dim> s_u;
+            
+            for (unsigned int d = 0; d < dim; ++d)
+            {
+                s_u[d] = source_values[quad][d];
+            }
+             
+            const double s_p = source_values[quad][dim];
+            
+            const double s_theta = source_values[quad][dim+1];
             
             for (unsigned int dof = 0; dof < dofs_per_cell; ++dof)
             {
@@ -299,6 +318,11 @@ void Peclet<dim>::assemble_system()
                 const Tensor<2, dim> gradv = grad_velocity_fe_values[i];
                 const double divv = div_velocity_fe_values[i];
                 
+                /* @todo Here I implemented the form derived in danaila2014newton, where they
+                multiplied by test functions from the right. deal.II's tutorials recommend to get
+                in the habit of instead multiplying from the left, to avoid a common class of errors.
+                If verification fails, then I should try deriving my own form, with the left multiplication, and see if this helps.
+                */
                 for (unsigned int j = 0; j< dofs_per_cell; ++j)
                 {
                     const Tensor<1, dim> u_w = velocity_fe_values[j];
@@ -322,9 +346,8 @@ void Peclet<dim>::assemble_system()
                         + scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
                         + scalar_product(f_B(theta_k), v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
                         + (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_k, gradphi) // Energy
+                        + s_p*q + scalar_product(s_u, v) + s_theta*phi // Source (MMS)
                         )*fe_values.JxW(quad); 
-
-                /*! @todo: Add forcing function to RHS, e.g. for method of manufactured solution */
 
             }            
             
@@ -341,83 +364,90 @@ void Peclet<dim>::assemble_system()
 
 }
 
-/*!
- @brief Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes).
- 
- @author Alexander Zimmerman 2016
-*/
+template<int dim>
+void Peclet<dim>::interpolate_boundary_values(
+    const std::string field_name,
+    std::map<types::global_dof_index, double> &boundary_values) const
+{    
+    /* @todo                
+    Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
+    Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas. */
+            
+    if (field_name == "velocity")
+    {
+        VectorTools::interpolate_boundary_values(
+            this->dof_handler, 0, this->boundary_function, boundary_values,
+            this->fe.component_mask(this->velocity_extractor));
+    }
+    else if (field_name == "pressure")
+    {
+        VectorTools::interpolate_boundary_values(
+            this->dof_handler, 0, this->boundary_function, boundary_values,
+            this->fe.component_mask(this->pressure_extractor));
+    }
+    else if (field_name == "temperature")
+    {
+        VectorTools::interpolate_boundary_values(
+            this->dof_handler, 0, this->boundary_function, boundary_values,
+            this->fe.component_mask(this->temperature_extractor));
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+/*! Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes */
 template<int dim>
 void Peclet<dim>::apply_boundary_values_and_constraints()
 {
 
-    std::map<types::global_dof_index, double> boundary_values;
+    std::map<types::global_dof_index, double> residual_boundary_values;
 
     {
-        /*!
-        @todo Apply natural boundary conditions
-        */    
-
-        /*! Homogeneous Neumann boundary conditions on the adiabatic walls are implied */
+        /* Apply non-homogeneous natural boundary conditions */    
     }
     
     {
-        /*!
-         Apply strong boundary conditions
+        /* Apply strong boundary conditions */
+        std::vector<std::string> mask = this->params.boundary_conditions.strong_mask;
+        
+        std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
 
-         To reproduce results in Danaila 2014, use homogeneous Dirichlet BC's on every boundary
-        */
+        std::map<types::global_dof_index, double> residual_boundary_values;
+        
+        for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
+        {
+            std::string field_name = field_names[f];
 
-        std::map<types::global_dof_index, double> boundary_values;
-
-        for (types::boundary_id b = 0; b < this->boundary_count; ++b) /* For each boundary */
-        {   
-            std::vector<std::string> mask = this->params.boundary_conditions.strong_masks[b];
-            
-            std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
-
-            for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
+            if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
             {
-                std::string field_name = field_names[f];
-
-                if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
-                {
-                    continue;
-                }
-
-                /* @todo                
-                Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
-                Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas.
-                */
-
-                if (field_name == "velocity")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_function, boundary_values,
-                        this->fe.component_mask(this->velocity_extractor));
-                }
-                else if (field_name == "pressure")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_function, boundary_values,
-                        this->fe.component_mask(this->pressure_extractor));
-                }
-                else if (field_name == "temperature")
-                {
-                    VectorTools::interpolate_boundary_values(
-                        this->dof_handler, b, this->boundary_function, boundary_values,
-                        this->fe.component_mask(this->temperature_extractor));
-                }
-                else
-                {
-                    assert(false);
-                }
-
+                continue;
             }
+
+            /* Since we are applying boundary conditions to the Newton linearized system
+            to compute a residual, we want to apply the boundary conditions residual, rather
+            than the user supplied boundary conditions.
             
+            To do this, we evaluate the BC's both at the new time and the current time,
+            and we apply the difference. */
+            std::map<types::global_dof_index, double> boundary_values, new_boundary_values;
+            
+            this->boundary_function.set_time(this->time);
+            
+            this->interpolate_boundary_values(field_name, boundary_values);
+            
+            this->boundary_function.set_time(this->new_time);
+            
+            this->interpolate_boundary_values(field_name, new_boundary_values);
+            
+            residual_boundary_values += new_boundary_values;
+
+            residual_boundary_values -= boundary_values;
         }
 
         MatrixTools::apply_boundary_values(
-            boundary_values,
+            residual_boundary_values,
             this->system_matrix,
             this->newton_residual,
             this->system_rhs);

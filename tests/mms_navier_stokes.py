@@ -22,10 +22,6 @@ u[1] = (sp.exp(-beta*t**2) - 1)*(sp.sqrt(x**2 + y**2) - r0)*sp.cos(sp.atan2(y, x
 
 p = -(sp.exp(-beta*t**2) - 1)*(sp.sqrt(x**2 + y**2) - r0)**2
 
-# The exact solution only enforces that the integral of pressure over the domain is zero.
-# How exactly did step-55 account for this? How do I handle my pressure solution?
-p = p - sp.integrate(p, );
-
 
 # Print in muparser format
 print("\nManufactured solution:")
@@ -52,6 +48,3 @@ f2 = sppv.divergence(u[0]*R.x + u[1]*R.y, R) + gamma*p
 print("\nDerived manufactured source:")
 
 print(("Function expression = "+str(f0)+"; "+str(f1)+"; "+str(f2)).replace('**', '^').replace('R_', ''))
-
-
-
