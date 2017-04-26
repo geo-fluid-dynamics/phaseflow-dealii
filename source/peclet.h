@@ -149,9 +149,11 @@ namespace Peclet
     /*! These strings label types of manifolds used for exact geometry */
     std::vector<std::string> manifold_descriptors;
     
+    Functions::ParsedFunction<dim> source_function;
+    
     Functions::ParsedFunction<dim> initial_values_function;
     
-    Functions::ParsedFunction<dim> source_function;
+    Functions::ParsedFunction<dim> boundary_function;
     
     Functions::ParsedFunction<dim> exact_solution_function;
 

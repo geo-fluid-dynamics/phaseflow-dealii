@@ -62,6 +62,11 @@ namespace Peclet
             std::vector<double> transformations;
         };
         
+        struct BoundaryConditions
+        {
+            std::vector<std::vector<std::string>> strong_masks;
+        };
+        
         struct AdaptiveRefinement
         {
             unsigned int initial_cycles;
@@ -164,6 +169,24 @@ namespace Peclet
             prm.enter_subsection ("initial_values");
             {
                 Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
+            }
+            prm.leave_subsection ();
+            
+            
+            prm.enter_subsection ("boundary_conditions");
+            {
+                /* It was originally attempted to make this parameter a list of lists,
+                but Patterns::List does not appear to allow for that.
+                So instead we have one string that we'll parse manually.
+                */
+                prm.declare_entry(
+                    "strong_mask",
+                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
+                    Patterns::Anything(),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
+                        "\nSemi-colons separate components, while commas separate boundaries."
+                        "Masks are required for every boundary ID in the coarse grid.");
+
             }
             prm.leave_subsection ();
             
@@ -343,7 +366,23 @@ namespace Peclet
             }    
             prm.leave_subsection();
             
+            
+            prm.enter_subsection ("boundary_conditions");
+            {
+                std::string strong_mask_string = prm.get("strong_mask");
 
+                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_mask_string, ',');
+
+                for (unsigned int m = 0; m < mask_strings.size(); ++m)
+                {
+                    std::vector<std::string> mask = Utilities::split_string_list(mask_strings[m], ',');
+                    params.boundary_conditions.strong_masks.push_back(mask);
+                }
+
+            }
+            prm.leave_subsection ();
+            
+            
             prm.enter_subsection("refinement");
             {
                 

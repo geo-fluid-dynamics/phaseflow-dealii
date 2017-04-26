@@ -371,29 +371,47 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
 
         for (types::boundary_id b = 0; b < this->boundary_count; ++b) /* For each boundary */
         {   
+            std::vector<std::string> mask = this->params.boundary_conditions.strong_masks[b];
             
-            VectorTools::interpolate_boundary_values(
-                this->dof_handler,
-                b,
-                ZeroFunction<dim>(dim + 2),
-                boundary_values,
-                this->fe.component_mask(this->velocity_extractor));
-            
-            bool adiabatic = false;
-            
-            if (ADIABATIC_WALLS.find(b) != ADIABATIC_WALLS.end())
+            std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
+
+            for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
             {
-                adiabatic = true;
-            }
-            
-            if (!adiabatic)
-            {
-                VectorTools::interpolate_boundary_values(
-                    this->dof_handler,
-                    b,
-                    ZeroFunction<dim>(dim + 2),
-                    boundary_values,
-                    this->fe.component_mask(this->temperature_extractor));
+                std::string field_name = field_names[f];
+
+                if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
+                {
+                    continue;
+                }
+
+                /* @todo                
+                Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
+                Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas.
+                */
+
+                if (field_name == "velocity")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, this->boundary_function, boundary_values,
+                        this->fe.component_mask(this->velocity_extractor));
+                }
+                else if (field_name == "pressure")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, this->boundary_function, boundary_values,
+                        this->fe.component_mask(this->pressure_extractor));
+                }
+                else if (field_name == "temperature")
+                {
+                    VectorTools::interpolate_boundary_values(
+                        this->dof_handler, b, this->boundary_function, boundary_values,
+                        this->fe.component_mask(this->temperature_extractor));
+                }
+                else
+                {
+                    assert(false);
+                }
+
             }
             
         }
