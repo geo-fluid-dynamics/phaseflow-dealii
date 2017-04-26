@@ -64,7 +64,7 @@ namespace Peclet
         
         struct BoundaryConditions
         {
-            std::vector<std::vector<std::string>> strong_masks;
+            std::vector<std::string> strong_mask;
         };
         
         struct AdaptiveRefinement
@@ -118,6 +118,7 @@ namespace Peclet
         {
             Meta meta;
             PhysicalModel physics;
+            BoundaryConditions boundary_conditions;
             Geometry geometry;
             Refinement refinement;
             Time time;
@@ -181,11 +182,9 @@ namespace Peclet
                 */
                 prm.declare_entry(
                     "strong_mask",
-                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
-                    Patterns::Anything(),
-                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
-                        "\nSemi-colons separate components, while commas separate boundaries."
-                        "Masks are required for every boundary ID in the coarse grid.");
+                    "velocity",
+                    Patterns::List(Patterns::Selection("velocity | pressure | temperature")),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask.");
 
             }
             prm.leave_subsection ();
@@ -369,16 +368,8 @@ namespace Peclet
             
             prm.enter_subsection ("boundary_conditions");
             {
-                std::string strong_mask_string = prm.get("strong_mask");
-
-                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_mask_string, ',');
-
-                for (unsigned int m = 0; m < mask_strings.size(); ++m)
-                {
-                    std::vector<std::string> mask = Utilities::split_string_list(mask_strings[m], ',');
-                    params.boundary_conditions.strong_masks.push_back(mask);
-                }
-
+                params.boundary_conditions.strong_mask = 
+                    MyParameterHandler::get_vector<std::string>(prm, "strong_mask");
             }
             prm.leave_subsection ();
             

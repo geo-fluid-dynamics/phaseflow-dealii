@@ -91,6 +91,9 @@ namespace Peclet
     
     void assemble_system();
     
+    void interpolate_boundary_values(const std::string field_name,
+        std::map<types::global_dof_index, double> &boundary_values) const;
+    
     void apply_boundary_values_and_constraints();
     
     void solve_linear_system();
@@ -136,6 +139,8 @@ namespace Peclet
     Vector<double> system_rhs;
     
     double time;
+    
+    double new_time;
     
     double time_step_size;
     

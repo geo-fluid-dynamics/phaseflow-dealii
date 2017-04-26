@@ -28,13 +28,13 @@ namespace MyGridGenerator
                 triangulation,
                 {sizes[0], sizes[1]},
                 {sizes[2], sizes[3]},
-                true);
+                false);
 
-            boundary_count = pow(2, dim);
+            boundary_count = 1;
         }
         else if (grid_name == "hyper_shell")
         {
-            GridGenerator::hyper_shell(triangulation, Point<dim>(), sizes[0], sizes[1], 0, true);
+            GridGenerator::hyper_shell(triangulation, Point<dim>(), sizes[0], sizes[1], 0, 0);
             
             triangulation.set_all_manifold_ids(0);
             
@@ -42,7 +42,7 @@ namespace MyGridGenerator
             
             manifold_descriptors.push_back("spherical");
             
-            boundary_count = 2;
+            boundary_count = 1;
         }
         else
         {
