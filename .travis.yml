@@ -15,4 +15,5 @@ before_install:
 - docker pull zimmerman/nsb-pcm:latest
 
 script:
+- printenv
 - docker run -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git checkout master; git pull; cd build; cmake ..; make; ctest -j2"
