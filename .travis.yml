@@ -12,7 +12,8 @@ notifications:
   slack: aices-pcm-cfd:ShncJAFCJzx48zt8hrXpRwGw
 
 before_install:
-- docker pull zimmerman/nsb-pcm:latest
+- docker pull dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease
 
 script:
-- docker run -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git checkout master; git pull; cd build; cmake ..; make; ctest -j2"
+- ls
+- docker run -P -v `pwd`:/home/dealii/nsb-pcm:rw dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease /bin/sh -c "cd nsb-pcm; mkdir build; cd build; cmake ..; make; ctest -j2"
