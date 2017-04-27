@@ -20,7 +20,7 @@ void Peclet<dim>::set_time_step_size(const double _new_size)
         new_size = this->params.time.end - this->time;
     }
     
-    if ((new_size != this->time_step_size))
+    if (numbers::NumberTraits<double>::abs(new_size - this->time_step_size) > EPSILON)
     {
         std::cout << "Set time step to deltat = " << new_size << std::endl;
     }

@@ -31,4 +31,6 @@ const double TIME_GROWTH_RATE = 2.; /*! @todo: Expose to ParameterHandler */
 
 const std::set<dealii::types::boundary_id> ADIABATIC_WALLS = {2, 3}; /*! @todo: Generalize boundary conditions */
 
+const unsigned int MAX_TIME_STEP = 1000000; /*! @todo: Expose to ParameterHandler */
+
 #endif

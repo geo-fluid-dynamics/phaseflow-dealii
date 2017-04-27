@@ -140,7 +140,7 @@ namespace Peclet
             
             prm.enter_subsection("source_function");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
             }
             prm.leave_subsection();  
 
@@ -152,7 +152,7 @@ namespace Peclet
                      Patterns::Selection("hyper_rectangle"),
                      "Select the name of the geometry and grid to generate.");
                      
-                prm.declare_entry("sizes", "0., 1.",
+                prm.declare_entry("sizes", "0., 0., 1., 1.",
                     Patterns::List(Patterns::Double(0.)),
                     "Set the sizes for the grid's geometry.");
                               
@@ -162,14 +162,14 @@ namespace Peclet
 
             prm.enter_subsection ("initial_values");
             {
-                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED); 
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
             }
             prm.leave_subsection ();
             
             
             prm.enter_subsection ("refinement");
             {
-                prm.declare_entry("initial_global_cycles", "4",
+                prm.declare_entry("initial_global_cycles", "2",
                     Patterns::Integer(),
                     "Initially globally refine the grid this many times "
                     "without using any error measure");
@@ -189,15 +189,15 @@ namespace Peclet
             
             prm.enter_subsection ("time");
             {
-                prm.declare_entry("end", "1.",
+                prm.declare_entry("end", "0.",
                     Patterns::Double(0.),
                     "End the time-dependent simulation once this time is reached.");
                 
-                prm.declare_entry("initial_step_size", "0.1",
+                prm.declare_entry("initial_step_size", "1.",
                     Patterns::Double(0.),
                     "Begin with this time step size.");
                 
-                prm.declare_entry("min_step_size", "1.e-6",
+                prm.declare_entry("min_step_size", "1.",
                     Patterns::Double(0.),
                     "Minimum step size for adaptive time steppinig.");
                     
@@ -221,7 +221,7 @@ namespace Peclet
                 prm.declare_entry("max_iterations", "50",
                     Patterns::Integer(0));
                     
-                prm.declare_entry("tolerance", "1e-8",
+                prm.declare_entry("tolerance", "1e-9",
                     Patterns::Double(0.));
                     
             }
@@ -241,7 +241,7 @@ namespace Peclet
 
                 prm.enter_subsection("exact_solution_function");
                 {
-                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 1 + ENERGY_ENABLED);    
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
                 }
                 prm.leave_subsection();
             }
@@ -255,7 +255,7 @@ namespace Peclet
             Meta mp;
             
             ParameterHandler prm;
-            declare<1>(prm);
+            declare<2>(prm);
             
             if (parameter_file != "")
             {
