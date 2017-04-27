@@ -239,11 +239,14 @@ namespace Peclet
     
     this->write_solution();
     
-    do
-    {        
-        this->step_time();
+    for (; this->time_step_counter < MAX_TIME_STEP; ++this->time_step_counter)
+    {
+        if (this->time > (this->params.time.end*(1. - EPSILON) - EPSILON))
+        {
+            break;
+        }
         
-        this->time_step_counter++;
+        this->step_time();
         
         this->write_solution();
 
@@ -251,7 +254,7 @@ namespace Peclet
         {
             this->append_verification_table();
         }
-        
+     
         if (this->params.time.stop_when_steady)
         {
             Vector<double> time_residual = this->solution; // There is evidently no Vector<Number> - Vector<Number> method.
@@ -269,7 +272,7 @@ namespace Peclet
             
         }
     
-    } while (this->time < (this->params.time.end - EPSILON));
+    }
     
   }
   
