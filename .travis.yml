@@ -16,4 +16,4 @@ before_install:
 
 script:
 - echo $TRAVIS_COMMIT
-- docker run -e commit=$TRAVIS_COMMIT -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git checkout master; git pull; cd build; cmake ..; make; ctest -j2"
+- docker run -e TRAVIS_COMMIT=$TRAVIS_COMMIT -P -v `pwd`:/home/nsb-pcm:rw zimmerman/nsb-pcm /bin/sh -c "cd nsb-pcm; git pull; git checkout $TRAVIS_COMMIT; cd build; cmake ..; make; ctest -j2"
