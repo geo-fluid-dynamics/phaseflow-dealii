@@ -34,7 +34,7 @@ namespace MyGridGenerator
         }
         else if (grid_name == "hyper_shell")
         {
-            GridGenerator::hyper_shell(triangulation, Point<dim>(), sizes[0], sizes[1], 0, 0);
+            GridGenerator::hyper_shell(triangulation, Point<dim>(), sizes[0], sizes[1], 0, false);
             
             triangulation.set_all_manifold_ids(0);
             
