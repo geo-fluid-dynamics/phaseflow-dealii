@@ -269,7 +269,7 @@ namespace Peclet
     
     for (; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
     { 
-        if (this->time > (this->params.time.end - EPSILON))
+        if (this->time > (this->params.time.end*(1. - EPSILON) - EPSILON))
         {
             break;
         }
