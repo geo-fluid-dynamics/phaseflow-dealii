@@ -267,7 +267,7 @@ namespace Peclet
     
     this->write_solution();
     
-    for (; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
+    for (this->time_step_counter = 1; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
     { 
         if (this->time > (this->params.time.end*(1. - EPSILON) - EPSILON))
         {
