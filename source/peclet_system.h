@@ -365,7 +365,9 @@ void Peclet<dim>::assemble_system()
 }
 
 template<int dim>
-void Peclet<dim>::interpolate_boundary_values(std::map<types::global_dof_index, double> &boundary_values) const
+void Peclet<dim>::interpolate_boundary_values(
+    Function<dim>* function,
+    std::map<types::global_dof_index, double> &boundary_values) const
 {    
     for (unsigned int ib = 0; ib < this->params.boundary_conditions.strong_boundaries.size(); ++ib) /* For each boundary */
     {    
@@ -386,19 +388,19 @@ void Peclet<dim>::interpolate_boundary_values(std::map<types::global_dof_index, 
             if (field_name == "velocity")
             {
                 VectorTools::interpolate_boundary_values(
-                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->dof_handler, b, *function, boundary_values,
                     this->fe.component_mask(this->velocity_extractor));
             }
             else if (field_name == "pressure")
             {
                 VectorTools::interpolate_boundary_values(
-                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->dof_handler, b, *function, boundary_values,
                     this->fe.component_mask(this->pressure_extractor));
             }
             else if (field_name == "temperature")
             {
                 VectorTools::interpolate_boundary_values(
-                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->dof_handler, b, *function, boundary_values,
                     this->fe.component_mask(this->temperature_extractor));
             }
             else
@@ -424,13 +426,19 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
     and we apply the difference. */
     std::map<types::global_dof_index, double> residual_boundary_values, boundary_values, new_boundary_values;
     
-    this->boundary_function.set_time(this->time);
-        
-    this->interpolate_boundary_values(boundary_values);
+    /* @todo Using a FEFieldFunction to interpolate the solution values seems like a terrible idea, 
+    since FEFieldFunction is designed to interpolate within the domain. Is there another method when I really just
+    need the solution values on boundary nodes?
+    
+    Another reason this is a terrible approach: I am essentially interpolating all of the finite element functions
+    to get velocity, pressure, and temperature values, and then these have to be decomposed onto the finite element functions again with interpolate_boundary_values. There should be an easy way to just use the map<global_dof_index, double> to do this directly. */
+    Functions::FEFieldFunction<dim> solution_field_function(this->dof_handler, this->solution);
+    
+    this->interpolate_boundary_values(&solution_field_function, boundary_values);
     
     this->boundary_function.set_time(this->new_time);
-    
-    this->interpolate_boundary_values(new_boundary_values);
+        
+    this->interpolate_boundary_values(&this->boundary_function, new_boundary_values);
     
     for (auto m: new_boundary_values)
     {

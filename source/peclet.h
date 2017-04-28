@@ -49,6 +49,7 @@
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/solution_transfer.h>
 #include <deal.II/numerics/error_estimator.h>
+#include <deal.II/numerics/fe_field_function.h>
 #include <deal.II/base/table_handler.h>
 
 #include <iostream>
@@ -60,9 +61,7 @@
 #include <deal.II/base/parsed_function.h>
 #include <deal.II/lac/sparse_direct.h>
 
-#include "extrapolated_field.h"
 #include "my_grid_generator.h"
-#include "fe_field_tools.h"
 #include "output.h"
 
 #include "peclet_parameters.h"
@@ -91,7 +90,9 @@ namespace Peclet
     
     void assemble_system();
     
-    void interpolate_boundary_values(std::map<types::global_dof_index, double> &boundary_values) const;
+    void interpolate_boundary_values(
+        Function<dim>* function,
+        std::map<types::global_dof_index, double> &boundary_values) const;
     
     void apply_boundary_values_and_constraints();
     
