@@ -1,0 +1,96 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+
+    set dim = 2
+    
+end
+
+subsection geometry
+
+    set grid_name = hyper_rectangle
+    
+    set sizes = -0.1, 0.2, 0.7, 0.8
+    
+end
+
+
+subsection source_function
+
+    set Function constants = u0=1., v0=1., p0=1., mu=1., epsilon=0.001, gamma=1.e-7
+    
+    set Function expression = 4*x^2*mu*u0*sin(x^2 + y^2) + 2*x*p0*cos(x^2 + y^2) + 2*x*u0^2*(epsilon + sin(x^2 + y^2))*cos(x^2 + y^2) + 4*y^2*mu*u0*sin(x^2 + y^2) + 2*y*u0*v0*(epsilon + cos(x^2 + y^2))*cos(x^2 + y^2) - 4*mu*u0*cos(x^2 + y^2); 4*x^2*mu*v0*cos(x^2 + y^2) - 2*x*u0*v0*(epsilon + sin(x^2 + y^2))*sin(x^2 + y^2) + 4*y^2*mu*v0*cos(x^2 + y^2) + 2*y*p0*cos(x^2 + y^2) - 2*y*v0^2*(epsilon + cos(x^2 + y^2))*sin(x^2 + y^2) + 4*mu*v0*sin(x^2 + y^2); 2*x*u0*cos(x^2 + y^2) - 2*y*v0*sin(x^2 + y^2) + gamma*p0*(sin(x^2 + y^2) + 2); 0
+    
+end
+
+subsection initial_values
+
+    set Function constants = u0=1., v0=1., p0=1., epsilon=0.001, iv=0.01
+        
+    set Function expression = iv*u0*(epsilon + sin(x^2 + y^2)); iv*v0*(epsilon + cos(x^2 + y^2)); iv*p0*(sin(x^2 + y^2) + 2); 0.
+    
+end
+
+
+subsection boundary_conditions
+
+    set strong_boundaries = 0, 1, 2, 3
+
+    set strong_masks = velocity; pressure,  velocity; pressure,  velocity; pressure,  velocity; pressure
+    
+    set Function constants = u0=1., v0=1., p0=1., epsilon=0.001
+        
+    set Function expression = u0*(epsilon + sin(x^2 + y^2)); v0*(epsilon + cos(x^2 + y^2)); p0*(sin(x^2 + y^2) + 2); 0.
+    
+end
+
+
+subsection verification
+    
+    set enabled = true
+    
+    subsection exact_solution_function
+    
+        set Function constants = u0=1., v0=1., p0=1., epsilon=0.001
+        
+        set Function expression = u0*(epsilon + sin(x^2 + y^2)); v0*(epsilon + cos(x^2 + y^2)); p0*(sin(x^2 + y^2) + 2); 0.
+        
+    end
+    
+end
+
+
+subsection refinement
+
+    set initial_global_cycles = 3
+    
+end
+
+
+subsection nonlinear_solver
+
+    set max_iterations = 10
+    
+    set tolerance = 1.e-9
+    
+end
+
+
+subsection time
+
+    set end = 1.e12
+    
+    set initial_step_size = 1.e12
+    
+    set min_step_size = 1.e12
+    
+    set max_step_size = 1.e12
+    
+end
+
+
+subsection output
+
+    set write_solution_vtk = true
+    
+end
