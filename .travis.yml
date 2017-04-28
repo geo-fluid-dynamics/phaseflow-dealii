@@ -15,5 +15,4 @@ before_install:
 - docker pull dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease
 
 script:
-- ls
 - docker run -P -v `pwd`:/home/dealii/nsb-pcm:rw dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease /bin/sh -c "cd nsb-pcm; mkdir build; cd build; cmake ..; make; ctest -j2"
