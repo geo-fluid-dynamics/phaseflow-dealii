@@ -392,6 +392,13 @@ namespace Peclet
                 for (auto mask_string : mask_strings)
                 {
                     std::vector<std::string> mask = Utilities::split_string_list(mask_string, ';');
+                    
+                    /* Validate the entries, since we could not use the Parameter::Selection validation here */
+                    for (auto name : mask)
+                    {
+                        assert(std::find(FIELD_NAMES.begin(), FIELD_NAMES.end(), name) != FIELD_NAMES.end());
+                    }
+                    
                     params.boundary_conditions.strong_masks.push_back(mask);
                 }
                     

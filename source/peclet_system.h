@@ -373,9 +373,7 @@ void Peclet<dim>::interpolate_boundary_values(std::map<types::global_dof_index, 
         
         auto mask = this->params.boundary_conditions.strong_masks[b];
         
-        std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
-        
-        for (auto field_name : field_names) /* For each field variable */
+        for (auto field_name : FIELD_NAMES) /* For each field variable */
         {
             if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
             {
