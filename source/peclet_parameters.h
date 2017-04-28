@@ -190,6 +190,22 @@ namespace Peclet
             prm.leave_subsection ();
             
             
+            prm.enter_subsection ("boundary_conditions");
+            {
+                /* It was originally attempted to make this parameter a list of lists,
+                but Patterns::List does not appear to allow for that.
+                So instead we have one string that we'll parse manually.
+                */
+                prm.declare_entry(
+                    "strong_mask",
+                    "velocity",
+                    Patterns::List(Patterns::Selection("velocity | pressure | temperature")),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask.");
+
+            }
+            prm.leave_subsection ();
+            
+            
             prm.enter_subsection ("refinement");
             {
                 prm.declare_entry("initial_global_cycles", "2",
