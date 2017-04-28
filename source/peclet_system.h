@@ -413,8 +413,15 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
         std::vector<std::string> mask = this->params.boundary_conditions.strong_mask;
         
         std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
-
-        std::map<types::global_dof_index, double> residual_boundary_values;
+        
+        
+        /* Since we are applying boundary conditions to the Newton linearized system
+        to compute a residual, we want to apply the boundary conditions residual, rather
+        than the user supplied boundary conditions.
+        
+        To do this, we evaluate the BC's both at the new time and the current time,
+        and we apply the difference. */
+        std::map<types::global_dof_index, double> residual_boundary_values, boundary_values, new_boundary_values;
         
         for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
         {
@@ -424,14 +431,6 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             {
                 continue;
             }
-
-            /* Since we are applying boundary conditions to the Newton linearized system
-            to compute a residual, we want to apply the boundary conditions residual, rather
-            than the user supplied boundary conditions.
-            
-            To do this, we evaluate the BC's both at the new time and the current time,
-            and we apply the difference. */
-            std::map<types::global_dof_index, double> boundary_values, new_boundary_values;
             
             this->boundary_function.set_time(this->time);
             
@@ -441,9 +440,13 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
             
             this->interpolate_boundary_values(field_name, new_boundary_values);
             
-            residual_boundary_values += new_boundary_values;
-
-            residual_boundary_values -= boundary_values;
+        }
+        
+        for (auto m: new_boundary_values)
+        {
+            residual_boundary_values.insert(m);
+            
+            residual_boundary_values[m.first] -= boundary_values[m.first];
         }
 
         MatrixTools::apply_boundary_values(

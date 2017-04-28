@@ -182,9 +182,10 @@ namespace Peclet
     pressure_extractor(dim),
     temperature_extractor(dim + 1),
     dof_handler(this->triangulation),
-    initial_values_function(dim + 1 + ENERGY_ENABLED),
-    source_function(dim + 1 + ENERGY_ENABLED),
-    exact_solution_function(dim + 1 + ENERGY_ENABLED)
+    source_function(dim + 2),
+    initial_values_function(dim + 2),
+    boundary_function(dim + 2),
+    exact_solution_function(dim + 2)
   {}
   
   #include "peclet_grid.h"
@@ -222,6 +223,7 @@ namespace Peclet
         parameter_file,
         this->source_function,
         this->initial_values_function,
+        this->boundary_function,
         this->exact_solution_function);
     
     this->create_coarse_grid();

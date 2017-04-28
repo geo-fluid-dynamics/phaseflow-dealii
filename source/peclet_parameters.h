@@ -185,22 +185,8 @@ namespace Peclet
                     "velocity",
                     Patterns::List(Patterns::Selection("velocity | pressure | temperature")),
                     "The parsed functions will only be applied as strong boundary conditions to components included in the mask.");
-
-            }
-            prm.leave_subsection ();
-            
-            
-            prm.enter_subsection ("boundary_conditions");
-            {
-                /* It was originally attempted to make this parameter a list of lists,
-                but Patterns::List does not appear to allow for that.
-                So instead we have one string that we'll parse manually.
-                */
-                prm.declare_entry(
-                    "strong_mask",
-                    "velocity",
-                    Patterns::List(Patterns::Selection("velocity | pressure | temperature")),
-                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask.");
+                    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
 
             }
             prm.leave_subsection ();
@@ -319,6 +305,7 @@ namespace Peclet
                 const std::string parameter_file,
                 Functions::ParsedFunction<dim> &source_function,
                 Functions::ParsedFunction<dim> &initial_values_function,
+                Functions::ParsedFunction<dim> &boundary_function,
                 Functions::ParsedFunction<dim> &exact_solution_function)
         {
 
@@ -386,6 +373,8 @@ namespace Peclet
             {
                 params.boundary_conditions.strong_mask = 
                     MyParameterHandler::get_vector<std::string>(prm, "strong_mask");
+                    
+                boundary_function.parse_parameters(prm);
             }
             prm.leave_subsection ();
             
