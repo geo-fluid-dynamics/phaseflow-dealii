@@ -6,6 +6,8 @@ from sympy.physics import vector as sppv
 # Set manufactured solution
 u0, v0, p0, epsilon = sp.symbols('u0, v0, p0, epsilon')
 
+t = sp.symbols('t')
+
 R = sppv.ReferenceFrame('R')
 
 x = R[0]
@@ -35,9 +37,9 @@ gamma = sp.symbols('gamma')
 
 grad_p = sppv.gradient(p, R).to_matrix(R)
 
-f0 = sppv.dot(u[0]*R.x + u[1]*R.y, sppv.gradient(u[0], R)) - sppv.divergence(mu*sppv.gradient(u[0], R), R) + grad_p[0]
+f0 = sp.diff(u[0], t) + sppv.dot(u[0]*R.x + u[1]*R.y, sppv.gradient(u[0], R)) - sppv.divergence(mu*sppv.gradient(u[0], R), R) + grad_p[0]
 
-f1 = sppv.dot(u[0]*R.x + u[1]*R.y, sppv.gradient(u[1], R)) - sppv.divergence(mu*sppv.gradient(u[1], R), R) + grad_p[1]
+f1 = sp.diff(u[0], t) + sppv.dot(u[0]*R.x + u[1]*R.y, sppv.gradient(u[1], R)) - sppv.divergence(mu*sppv.gradient(u[1], R), R) + grad_p[1]
 
 f2 = sppv.divergence(u[0]*R.x + u[1]*R.y, R) + gamma*p
 
