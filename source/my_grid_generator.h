@@ -28,9 +28,9 @@ namespace MyGridGenerator
                 triangulation,
                 {sizes[0], sizes[1]},
                 {sizes[2], sizes[3]},
-                false);
+                true);
 
-            boundary_count = 1;
+            boundary_count = 4;
         }
         else if (grid_name == "hyper_shell")
         {

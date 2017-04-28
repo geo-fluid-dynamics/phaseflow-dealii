@@ -64,7 +64,8 @@ namespace Peclet
         
         struct BoundaryConditions
         {
-            std::vector<std::string> strong_mask;
+            std::vector<unsigned int> strong_boundaries;
+            std::vector<std::vector<std::string>> strong_masks;
         };
         
         struct AdaptiveRefinement
@@ -176,15 +177,23 @@ namespace Peclet
             
             prm.enter_subsection ("boundary_conditions");
             {
-                /* It was originally attempted to make this parameter a list of lists,
+                prm.declare_entry(
+                    "strong_boundaries",
+                    "0, 1, 2, 3",
+                    Patterns::List(Patterns::Integer(0)),
+                    "Strong boundary conditions will be applied to boundaries with these boundary ID's.");
+                /*!
+                It was originally attempted to make this parameter a list of lists,
                 but Patterns::List does not appear to allow for that.
                 So instead we have one string that we'll parse manually.
                 */
                 prm.declare_entry(
-                    "strong_mask",
-                    "velocity",
-                    Patterns::List(Patterns::Selection("velocity | pressure | temperature")),
-                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask.");
+                    "strong_masks",
+                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
+                    Patterns::Anything(),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
+                        "\nSemi-colons separate components, while commas separate boundaries."
+                        "Masks are required for every boundary ID in strong_boundaries.");
                     
                 Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
 
@@ -371,8 +380,20 @@ namespace Peclet
             
             prm.enter_subsection ("boundary_conditions");
             {
-                params.boundary_conditions.strong_mask = 
-                    MyParameterHandler::get_vector<std::string>(prm, "strong_mask");
+                params.boundary_conditions.strong_boundaries = 
+                    MyParameterHandler::get_vector<unsigned int>(prm, "strong_boundaries");
+                    
+                std::string strong_masks_string = prm.get("strong_masks");
+
+                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_masks_string, ',');
+
+                assert(mask_strings.size() == params.boundary_conditions.strong_boundaries.size());
+                
+                for (auto mask_string : mask_strings)
+                {
+                    std::vector<std::string> mask = Utilities::split_string_list(mask_string, ';');
+                    params.boundary_conditions.strong_masks.push_back(mask);
+                }
                     
                 boundary_function.parse_parameters(prm);
             }

@@ -91,8 +91,7 @@ namespace Peclet
     
     void assemble_system();
     
-    void interpolate_boundary_values(const std::string field_name,
-        std::map<types::global_dof_index, double> &boundary_values) const;
+    void interpolate_boundary_values(std::map<types::global_dof_index, double> &boundary_values) const;
     
     void apply_boundary_values_and_constraints();
     
@@ -187,8 +186,6 @@ namespace Peclet
     boundary_function(dim + 2),
     exact_solution_function(dim + 2)
   {}
-  
-  #include "peclet_grid.h"
 
   #include "peclet_system.h"
 
@@ -226,7 +223,13 @@ namespace Peclet
         this->boundary_function,
         this->exact_solution_function);
     
-    this->create_coarse_grid();
+    MyGridGenerator::create_coarse_grid(
+        this->triangulation,
+        this->manifold_ids,
+        this->manifold_descriptors,
+        this->boundary_count,
+        this->params.geometry.grid_name,
+        params.geometry.sizes);
     
     /* Attach manifolds for exact geometry 
     
@@ -246,11 +249,6 @@ namespace Peclet
     // Run initial refinement cycles
     
     this->triangulation.refine_global(this->params.refinement.initial_global_cycles);
-    
-    Refinement::refine_mesh_near_boundaries(
-        this->triangulation,
-        this->params.refinement.boundaries_to_refine,
-        this->params.refinement.initial_boundary_cycles);
     
     // Initialize the linear system
     

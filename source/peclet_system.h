@@ -365,97 +365,87 @@ void Peclet<dim>::assemble_system()
 }
 
 template<int dim>
-void Peclet<dim>::interpolate_boundary_values(
-    const std::string field_name,
-    std::map<types::global_dof_index, double> &boundary_values) const
+void Peclet<dim>::interpolate_boundary_values(std::map<types::global_dof_index, double> &boundary_values) const
 {    
-    /* @todo                
-    Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
-    Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas. */
-            
-    if (field_name == "velocity")
-    {
-        VectorTools::interpolate_boundary_values(
-            this->dof_handler, 0, this->boundary_function, boundary_values,
-            this->fe.component_mask(this->velocity_extractor));
-    }
-    else if (field_name == "pressure")
-    {
-        VectorTools::interpolate_boundary_values(
-            this->dof_handler, 0, this->boundary_function, boundary_values,
-            this->fe.component_mask(this->pressure_extractor));
-    }
-    else if (field_name == "temperature")
-    {
-        VectorTools::interpolate_boundary_values(
-            this->dof_handler, 0, this->boundary_function, boundary_values,
-            this->fe.component_mask(this->temperature_extractor));
-    }
-    else
-    {
-        assert(false);
-    }
-}
-
-/*! Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes */
-template<int dim>
-void Peclet<dim>::apply_boundary_values_and_constraints()
-{
-
-    std::map<types::global_dof_index, double> residual_boundary_values;
-
-    {
-        /* Apply non-homogeneous natural boundary conditions */    
-    }
-    
-    {
-        /* Apply strong boundary conditions */
-        std::vector<std::string> mask = this->params.boundary_conditions.strong_mask;
+    for (unsigned int ib = 0; ib < this->params.boundary_conditions.strong_boundaries.size(); ++ib) /* For each boundary */
+    {    
+        unsigned int b = this->params.boundary_conditions.strong_boundaries[ib];
+        
+        auto mask = this->params.boundary_conditions.strong_masks[b];
         
         std::vector<std::string> field_names({"velocity", "pressure", "temperature"});
         
-        
-        /* Since we are applying boundary conditions to the Newton linearized system
-        to compute a residual, we want to apply the boundary conditions residual, rather
-        than the user supplied boundary conditions.
-        
-        To do this, we evaluate the BC's both at the new time and the current time,
-        and we apply the difference. */
-        std::map<types::global_dof_index, double> residual_boundary_values, boundary_values, new_boundary_values;
-        
-        for (unsigned int f = 0; f < field_names.size(); ++f) /* For each field variable */
+        for (auto field_name : field_names) /* For each field variable */
         {
-            std::string field_name = field_names[f];
-
             if (std::find(mask.begin(), mask.end(), field_name) == mask.end()) /* Skip if the field name is not in the mask */
             {
                 continue;
             }
             
-            this->boundary_function.set_time(this->time);
-            
-            this->interpolate_boundary_values(field_name, boundary_values);
-            
-            this->boundary_function.set_time(this->new_time);
-            
-            this->interpolate_boundary_values(field_name, new_boundary_values);
-            
-        }
-        
-        for (auto m: new_boundary_values)
-        {
-            residual_boundary_values.insert(m);
-            
-            residual_boundary_values[m.first] -= boundary_values[m.first];
+            /* @todo                
+            Is there some way to contain the extractors (or pointers to them) in a single object that can be indexed?
+            Neither std::vector<void*> nor tuple (because the tuple could not be indexed with a variable) worked, and I'm out of ideas. */
+            if (field_name == "velocity")
+            {
+                VectorTools::interpolate_boundary_values(
+                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->fe.component_mask(this->velocity_extractor));
+            }
+            else if (field_name == "pressure")
+            {
+                VectorTools::interpolate_boundary_values(
+                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->fe.component_mask(this->pressure_extractor));
+            }
+            else if (field_name == "temperature")
+            {
+                VectorTools::interpolate_boundary_values(
+                    this->dof_handler, b, this->boundary_function, boundary_values,
+                    this->fe.component_mask(this->temperature_extractor));
+            }
+            else
+            {
+                assert(false);
+            }
+                        
         }
 
-        MatrixTools::apply_boundary_values(
-            residual_boundary_values,
-            this->system_matrix,
-            this->newton_residual,
-            this->system_rhs);
+    }
+    
+}
+
+/*! Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes */
+template<int dim>
+void Peclet<dim>::apply_boundary_values_and_constraints()
+{       
+    /* Since we are applying boundary conditions to the Newton linearized system
+    to compute a residual, we want to apply the boundary conditions residual, rather
+    than the user supplied boundary conditions.
+    
+    To do this, we evaluate the BC's both at the new time and the current time,
+    and we apply the difference. */
+    std::map<types::global_dof_index, double> residual_boundary_values, boundary_values, new_boundary_values;
+    
+    this->boundary_function.set_time(this->time);
+        
+    this->interpolate_boundary_values(boundary_values);
+    
+    this->boundary_function.set_time(this->new_time);
+    
+    this->interpolate_boundary_values(new_boundary_values);
+    
+    for (auto m: new_boundary_values)
+    {
+        residual_boundary_values.insert(m);
+        
+        residual_boundary_values[m.first] -= boundary_values[m.first];
     }
 
+    MatrixTools::apply_boundary_values(
+        residual_boundary_values,
+        this->system_matrix,
+        this->newton_residual,
+        this->system_rhs);
 }
 
 
