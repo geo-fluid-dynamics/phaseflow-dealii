@@ -1,0 +1,67 @@
+
+===========================================
+Number of active cells: 80
+Number of degrees of freedom: 920
+
+Set time step to deltat = 1
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.798331
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.012654
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 4.8342e-11
+Newton method converged after 3 iterations.
+Reached time t = 1
+Set time step to deltat = 2
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 0.00720295
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 2.70184e-06
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 2.55456e-10
+Newton method converged after 3 iterations.
+Reached time t = 3
+Set time step to deltat = 4
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 4.97063e-05
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.14213e-09
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.39091e-09
+Newton iteration diverged.
+Set time step to deltat = 2
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 4.95368e-05
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 2.0342e-10
+Newton method converged after 2 iterations.
+Reached time t = 5
+Set time step to deltat = 4
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 3.39108e-07
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.1172e-10
+Newton method converged after 2 iterations.
+Reached time t = 9
+Set time step to deltat = 8
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 1.21255e-09
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 3.3215e-10
+Newton method converged after 2 iterations.
+Reached time t = 17
+Set time step to deltat = 16
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 7.0825e-10
+Newton method converged after 1 iterations.
+Reached time t = 33
+Set time step to deltat = 32
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 2.63265e-10
+Newton method converged after 1 iterations.
+Reached time t = 65
+Set time step to deltat = 35
+Solved linear system
+Newton iteration: L2 norm of relative residual, || w_w || / || w_k || = 2.76865e-10
+Newton method converged after 1 iterations.
+Reached time t = 100

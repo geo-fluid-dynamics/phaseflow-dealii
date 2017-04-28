@@ -1,0 +1,96 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+
+    set dim = 2
+    
+end
+
+subsection geometry
+
+    set grid_name = hyper_shell
+    
+    set sizes = 0.1, 0.5
+    
+end
+
+
+subsection source_function
+
+    set Function constants =  Re=1., mu=1., r0=0.1, gamma=1.e-7
+    
+    set Function expression = x*(-r0 + sqrt(x^2 + y^2))*(-y^2/(x^2 + y^2) - y^2*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2) + (r0 - sqrt(x^2 + y^2))/sqrt(x^2 + y^2))/sqrt(x^2 + y^2) - 2*x*(-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2) + y*(r0 - sqrt(x^2 + y^2))*(-x*y/(x^2 + y^2) - x*y*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2))/sqrt(x^2 + y^2) - mu*(3*y^3/(x^2 + y^2)^2 + 3*y^3*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(5/2) - 3*y/(x^2 + y^2) - 3*y*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2)) - mu*(3*x^2*y/(x^2 + y^2)^2 + 3*x^2*y*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(5/2) - y/(x^2 + y^2) - y*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2)); x*(-r0 + sqrt(x^2 + y^2))*(x*y/(x^2 + y^2) - x*y*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2))/sqrt(x^2 + y^2) - 2*y*(-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2) + y*(r0 - sqrt(x^2 + y^2))*(x^2/(x^2 + y^2) - x^2*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2) + (-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2))/sqrt(x^2 + y^2) - mu*(-3*x^3/(x^2 + y^2)^2 + 3*x^3*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(5/2) + 3*x/(x^2 + y^2) - 3*x*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2)) - mu*(-3*x*y^2/(x^2 + y^2)^2 + 3*x*y^2*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(5/2) + x/(x^2 + y^2) - x*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2)); -x*y*(-r0 + sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2) - x*y*(r0 - sqrt(x^2 + y^2))/(x^2 + y^2)^(3/2) - gamma*(-r0 + sqrt(x^2 + y^2))^2; 0
+    
+end
+
+subsection initial_values
+
+    set Function constants = r0=0.1, r1=0.5, epsilon=1.e-6
+        
+    set Function expression = if(sqrt(x^2 + y^2) > (r1 - epsilon), y*(r0 - sqrt(x^2 + y^2))/sqrt(x^2 + y^2), 0.); if(sqrt(x^2 + y^2) > (r1 - epsilon), x*(-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2), 0.); if(sqrt(x^2 + y^2) > (r1 - epsilon), -(-r0 + sqrt(x^2 + y^2))^2, 0.); 0
+    
+end
+
+
+subsection boundary_conditions
+
+    set strong_boundaries = 0
+
+    set strong_masks = velocity
+    
+    set Function constants = r0=0.1
+        
+    set Function expression = y*(r0 - sqrt(x^2 + y^2))/sqrt(x^2 + y^2); x*(-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2); -(-r0 + sqrt(x^2 + y^2))^2; 0
+    
+end
+
+
+subsection verification
+    
+    set enabled = true
+    
+    subsection exact_solution_function
+    
+        set Function constants = r0=0.1
+        
+        set Function expression = y*(r0 - sqrt(x^2 + y^2))/sqrt(x^2 + y^2); x*(-r0 + sqrt(x^2 + y^2))/sqrt(x^2 + y^2); -(-r0 + sqrt(x^2 + y^2))^2; 0
+        
+    end
+    
+end
+
+
+subsection refinement
+
+    set initial_global_cycles = 2
+    
+end
+
+
+subsection nonlinear_solver
+
+    set max_iterations = 10
+    
+    set tolerance = 1.e-9
+    
+end
+
+
+subsection time
+
+    set end = 100.
+    
+    set initial_step_size = 1.
+    
+    set min_step_size = 1.
+    
+    set max_step_size = 100.
+    
+end
+
+
+subsection output
+
+    set write_solution_vtk = true
+    
+end
