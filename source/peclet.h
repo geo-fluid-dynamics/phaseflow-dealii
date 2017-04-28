@@ -238,11 +238,11 @@ namespace Peclet
     */
     SphericalManifold<dim> spherical_manifold;
     
-    for (unsigned int i = 0; i < manifold_ids.size(); i++)
+    for (unsigned int i = 0; i < this->manifold_ids.size(); i++)
     {
-        if (manifold_descriptors[i] == "spherical")
+        if (this->manifold_descriptors[i] == "spherical")
         {
-            this->triangulation.set_manifold(manifold_ids[i], spherical_manifold);      
+            this->triangulation.set_manifold(this->manifold_ids[i], spherical_manifold);      
         }
     }
     
