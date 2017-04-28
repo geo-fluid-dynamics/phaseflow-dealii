@@ -33,6 +33,11 @@ bool Peclet<dim>::solve_nonlinear_problem()
     {
         this->step_newton();
         
+        if (this->params.verification.enabled)
+        {
+            this->append_verification_table();
+        }
+        
         Output::write_solution_to_vtk( // @todo Debugging
             "newton_residual.vtk",
             this->dof_handler,

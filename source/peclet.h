@@ -160,14 +160,18 @@ namespace Peclet
     Functions::ParsedFunction<dim> boundary_function;
     
     Functions::ParsedFunction<dim> exact_solution_function;
+    
+    /*! A deal.II TableHandler for tabulating convergence/verification data */
+    TableHandler verification_table;
+    
+    /*! The path where to write the table containing convergence/verification data 
+    
+    Also see Peclet::verification_table.*/
+    std::string verification_table_file_name = "verification_table.txt";
 
     void append_verification_table();
     
     void write_verification_table();
-    
-    TableHandler verification_table;
-    
-    std::string verification_table_file_name = "verification_table.txt";
     
   };
   
@@ -277,11 +281,6 @@ namespace Peclet
         this->step_time();
         
         this->write_solution();
-
-        if (this->params.verification.enabled)
-        {
-            this->append_verification_table();
-        }
      
         if (this->params.time.stop_when_steady)
         {
@@ -301,6 +300,12 @@ namespace Peclet
         }
 
     } 
+    
+    /* Write the convergence/verification table. */
+    if (this->params.verification.enabled)
+    {
+        this->write_verification_table();
+    }
     
     /* Clean up. 
     

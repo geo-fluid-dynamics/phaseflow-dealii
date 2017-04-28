@@ -78,13 +78,13 @@ end
 
 subsection time
 
-    set end = 100.
+    set end = 1.e12
     
-    set initial_step_size = 1.
+    set initial_step_size = 1.e12
     
-    set min_step_size = 1.
+    set min_step_size = 1.e12
     
-    set max_step_size = 100.
+    set max_step_size = 1.e12
     
 end
 
