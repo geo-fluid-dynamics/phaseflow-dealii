@@ -18,8 +18,16 @@ subsection initial_values
     set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
 end
 
+subsection boundary_conditions
+    set strong_boundaries = 0, 1
+    set strong_masks = temperature, temperature
+
+    set Function constants = epsilon=1.e-12, theta_c = -0.5, theta_h = 0.5
+    set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
+end
+
 subsection refinement
-    set initial_global_cycles = 4
+    set initial_global_cycles = 3
 end
 
 subsection nonlinear_solver
@@ -29,8 +37,8 @@ end
 
 subsection time
     set end = 1.
-    set initial_step_size = 1.e-3
-    set min_step_size = 1.e-3
+    set initial_step_size = 0.1
+    set min_step_size = 0.1
     set max_step_size = 1.
 end
 

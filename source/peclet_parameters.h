@@ -62,6 +62,12 @@ namespace Peclet
             std::vector<double> transformations;
         };
         
+        struct BoundaryConditions
+        {
+            std::vector<unsigned int> strong_boundaries;
+            std::vector<std::vector<std::string>> strong_masks;
+        };
+        
         struct AdaptiveRefinement
         {
             unsigned int initial_cycles;
@@ -87,6 +93,7 @@ namespace Peclet
             double initial_step_size;
             double min_step_size;
             double max_step_size;
+            unsigned int max_steps;
             bool stop_when_steady;
             double steady_tolerance;
         };
@@ -112,6 +119,7 @@ namespace Peclet
         {
             Meta meta;
             PhysicalModel physics;
+            BoundaryConditions boundary_conditions;
             Geometry geometry;
             Refinement refinement;
             Time time;
@@ -149,7 +157,7 @@ namespace Peclet
             {
                     
                 prm.declare_entry("grid_name", "hyper_rectangle",
-                     Patterns::Selection("hyper_rectangle"),
+                     Patterns::Selection("hyper_rectangle | hyper_shell"),
                      "Select the name of the geometry and grid to generate.");
                      
                 prm.declare_entry("sizes", "0., 0., 1., 1.",
@@ -163,6 +171,32 @@ namespace Peclet
             prm.enter_subsection ("initial_values");
             {
                 Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
+            }
+            prm.leave_subsection ();
+            
+            
+            prm.enter_subsection ("boundary_conditions");
+            {
+                prm.declare_entry(
+                    "strong_boundaries",
+                    "0, 1, 2, 3",
+                    Patterns::List(Patterns::Integer(0)),
+                    "Strong boundary conditions will be applied to boundaries with these boundary ID's.");
+                /*!
+                It was originally attempted to make this parameter a list of lists,
+                but Patterns::List does not appear to allow for that.
+                So instead we have one string that we'll parse manually.
+                */
+                prm.declare_entry(
+                    "strong_masks",
+                    "velocity; pressure; temperature,    velocity; pressure; temperature,    velocity; pressure,    velocity; pressure",
+                    Patterns::Anything(),
+                    "The parsed functions will only be applied as strong boundary conditions to components included in the mask."
+                        "\nSemi-colons separate components, while commas separate boundaries."
+                        "Masks are required for every boundary ID in strong_boundaries.");
+                    
+                Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2); 
+
             }
             prm.leave_subsection ();
             
@@ -204,6 +238,10 @@ namespace Peclet
                 prm.declare_entry("max_step_size", "1.",
                     Patterns::Double(0.),
                     "Maximum step size for adaptive time steppinig.");
+                    
+                prm.declare_entry("max_steps", "1000000",
+                    Patterns::Integer(0),
+                    "Maximum number of time steps.");
                     
                 prm.declare_entry("stop_when_steady", "false", Patterns::Bool());
                 
@@ -276,6 +314,7 @@ namespace Peclet
                 const std::string parameter_file,
                 Functions::ParsedFunction<dim> &source_function,
                 Functions::ParsedFunction<dim> &initial_values_function,
+                Functions::ParsedFunction<dim> &boundary_function,
                 Functions::ParsedFunction<dim> &exact_solution_function)
         {
 
@@ -338,7 +377,36 @@ namespace Peclet
             }    
             prm.leave_subsection();
             
+            
+            prm.enter_subsection ("boundary_conditions");
+            {
+                params.boundary_conditions.strong_boundaries = 
+                    MyParameterHandler::get_vector<unsigned int>(prm, "strong_boundaries");
+                    
+                std::string strong_masks_string = prm.get("strong_masks");
 
+                std::vector<std::string> mask_strings = Utilities::split_string_list(strong_masks_string, ',');
+
+                assert(mask_strings.size() == params.boundary_conditions.strong_boundaries.size());
+                
+                for (auto mask_string : mask_strings)
+                {
+                    std::vector<std::string> mask = Utilities::split_string_list(mask_string, ';');
+                    
+                    /* Validate the entries, since we could not use the Parameter::Selection validation here */
+                    for (auto name : mask)
+                    {
+                        assert(std::find(FIELD_NAMES.begin(), FIELD_NAMES.end(), name) != FIELD_NAMES.end());
+                    }
+                    
+                    params.boundary_conditions.strong_masks.push_back(mask);
+                }
+                    
+                boundary_function.parse_parameters(prm);
+            }
+            prm.leave_subsection ();
+            
+            
             prm.enter_subsection("refinement");
             {
                 
@@ -357,6 +425,7 @@ namespace Peclet
                 params.time.initial_step_size = prm.get_double("initial_step_size");
                 params.time.min_step_size = prm.get_double("min_step_size");
                 params.time.max_step_size = prm.get_double("max_step_size");
+                params.time.max_steps = prm.get_integer("max_steps");
                 params.time.stop_when_steady = prm.get_bool("stop_when_steady");
                 params.time.steady_tolerance = prm.get_double("steady_tolerance");
             }    

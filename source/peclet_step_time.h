@@ -45,6 +45,8 @@ void Peclet<dim>::step_time()
 
     do 
     {
+        this->new_time = this->time + this->time_step_size;
+        
         converged = this->solve_nonlinear_problem();
         
         if (!converged)
@@ -54,7 +56,7 @@ void Peclet<dim>::step_time()
         
     } while (!converged);
 
-    this->time += this->time_step_size;
+    this->time = this->new_time;
     
     std::cout << "Reached time t = " << this->time << std::endl;
     

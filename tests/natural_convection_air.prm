@@ -14,6 +14,13 @@ subsection initial_values
     set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
 end
 
+subsection boundary_conditions
+    set strong_boundaries = 0, 1, 2, 3
+    set strong_masks = velocity; temperature,  velocity; temperature,  velocity,  velocity
+    set Function constants = epsilon=1.e-12, theta_c = -0.5, theta_h = 0.5
+    set Function expression = 0.; 0.; 0.; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
+end
+
 subsection refinement
     set initial_global_cycles = 3
 end

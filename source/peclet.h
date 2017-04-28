@@ -91,6 +91,8 @@ namespace Peclet
     
     void assemble_system();
     
+    void interpolate_boundary_values(std::map<types::global_dof_index, double> &boundary_values) const;
+    
     void apply_boundary_values_and_constraints();
     
     void solve_linear_system();
@@ -137,15 +139,25 @@ namespace Peclet
     
     double time;
     
+    double new_time;
+    
     double time_step_size;
     
     unsigned int time_step_counter;
 
     unsigned int boundary_count;
     
-    Functions::ParsedFunction<dim> initial_values_function;
+    /*! These ID's label manifolds used for exact geometry */
+    std::vector<unsigned int> manifold_ids;
+        
+    /*! These strings label types of manifolds used for exact geometry */
+    std::vector<std::string> manifold_descriptors;
     
     Functions::ParsedFunction<dim> source_function;
+    
+    Functions::ParsedFunction<dim> initial_values_function;
+    
+    Functions::ParsedFunction<dim> boundary_function;
     
     Functions::ParsedFunction<dim> exact_solution_function;
 
@@ -169,12 +181,11 @@ namespace Peclet
     pressure_extractor(dim),
     temperature_extractor(dim + 1),
     dof_handler(this->triangulation),
-    initial_values_function(dim + 1 + ENERGY_ENABLED),
-    source_function(dim + 1 + ENERGY_ENABLED),
-    exact_solution_function(dim + 1 + ENERGY_ENABLED)
+    source_function(dim + 2),
+    initial_values_function(dim + 2),
+    boundary_function(dim + 2),
+    exact_solution_function(dim + 2)
   {}
-  
-  #include "peclet_grid.h"
 
   #include "peclet_system.h"
 
@@ -209,38 +220,55 @@ namespace Peclet
         parameter_file,
         this->source_function,
         this->initial_values_function,
+        this->boundary_function,
         this->exact_solution_function);
     
-    this->create_coarse_grid();
+    MyGridGenerator::create_coarse_grid(
+        this->triangulation,
+        this->manifold_ids,
+        this->manifold_descriptors,
+        this->boundary_count,
+        this->params.geometry.grid_name,
+        params.geometry.sizes);
+    
+    /* Attach manifolds for exact geometry 
+    
+    For now this only supports a single spherical manifold centered at the origin.
+    
+    */
+    SphericalManifold<dim> spherical_manifold;
+    
+    for (unsigned int i = 0; i < this->manifold_ids.size(); i++)
+    {
+        if (this->manifold_descriptors[i] == "spherical")
+        {
+            this->triangulation.set_manifold(this->manifold_ids[i], spherical_manifold);      
+        }
+    }
     
     // Run initial refinement cycles
     
     this->triangulation.refine_global(this->params.refinement.initial_global_cycles);
     
-    Refinement::refine_mesh_near_boundaries(
-        this->triangulation,
-        this->params.refinement.boundaries_to_refine,
-        this->params.refinement.initial_boundary_cycles);
-    
     // Initialize the linear system
     
     this->setup_system(); 
 
-    VectorTools::interpolate(
-        this->dof_handler,
-        this->initial_values_function,
-        this->solution); 
-    
     this->time = 0.;
     
     this->set_time_step_size(this->params.time.initial_step_size);
     
     this->time_step_counter = 0;
     
+    VectorTools::interpolate(
+        this->dof_handler,
+        this->initial_values_function,
+        this->solution); 
+    
     this->write_solution();
     
-    for (; this->time_step_counter < MAX_TIME_STEP; ++this->time_step_counter)
-    {
+    for (this->time_step_counter = 1; this->time_step_counter < this->params.time.max_steps; ++this->time_step_counter)
+    { 
         if (this->time > (this->params.time.end*(1. - EPSILON) - EPSILON))
         {
             break;
@@ -271,8 +299,15 @@ namespace Peclet
             }
             
         }
+
+    } 
     
-    }
+    /* Clean up. 
+    
+    Manifolds must be detached from Triangulations before leaving this scope.
+    
+    */
+    this->triangulation.set_manifold(0);
     
   }
   

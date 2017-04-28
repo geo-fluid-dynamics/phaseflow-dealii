@@ -33,4 +33,6 @@ const std::set<dealii::types::boundary_id> ADIABATIC_WALLS = {2, 3}; /*! @todo: 
 
 const unsigned int MAX_TIME_STEP = 1000000; /*! @todo: Expose to ParameterHandler */
 
+std::vector<std::string> FIELD_NAMES({"velocity", "pressure", "temperature"});
+
 #endif
