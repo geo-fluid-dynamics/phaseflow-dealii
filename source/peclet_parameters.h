@@ -161,7 +161,7 @@ namespace Peclet
                      "Select the name of the geometry and grid to generate.");
                      
                 prm.declare_entry("sizes", "0., 0., 1., 1.",
-                    Patterns::List(Patterns::Double(0.)),
+                    Patterns::List(Patterns::Double()),
                     "Set the sizes for the grid's geometry.");
                               
             }
