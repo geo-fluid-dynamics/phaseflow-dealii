@@ -15,8 +15,6 @@ const double PRANDTL_NUMBER = 0.71; /*! @todo: Expose to ParameterHandler */
 
 const double REYNOLDS_NUMBER = 1.;
 
-const double LIQUID_DYNAMIC_VISOCITY = 1.; /*! @todo: Expose to ParameterHandler */
-
 const double SOLID_CONDUCTIVITY = 1.; /*! @todo: Expose to ParameterHandler */
 
 const double LIQUID_CONDUCTIVITY = 2.; /*! @todo: Expose to ParameterHandler */

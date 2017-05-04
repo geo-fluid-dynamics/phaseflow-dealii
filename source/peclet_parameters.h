@@ -52,6 +52,7 @@ namespace Peclet
         struct PhysicalModel
         {
             std::vector<double> gravity;
+            double liquid_dynamic_viscosity;
         };
         
         struct Geometry
@@ -142,6 +143,7 @@ namespace Peclet
             prm.enter_subsection("physics");
             {
                 prm.declare_entry("gravity", "0., -1, 0.", Patterns::List(Patterns::Double()));
+                prm.declare_entry("liquid_dynamic_viscosity", "1.", Patterns::Double(0.));
             }
             prm.leave_subsection();
             
@@ -336,6 +338,7 @@ namespace Peclet
             prm.enter_subsection("physics");
             {
                 params.physics.gravity = MyParameterHandler::get_vector<double>(prm, "gravity");
+                params.physics.liquid_dynamic_viscosity = prm.get_double("liquid_dynamic_viscosity");
             }
             prm.leave_subsection();
             

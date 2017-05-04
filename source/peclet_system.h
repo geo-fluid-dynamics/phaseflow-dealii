@@ -116,7 +116,7 @@ void Peclet<dim>::assemble_system()
         g[i] = this->params.physics.gravity[i];
     }
 
-    const double mu_l = LIQUID_DYNAMIC_VISOCITY;
+    const double mu_l = this->params.physics.liquid_dynamic_viscosity;
 
     /*!
      lambda function for classical (linear) Boussinesq bouyancy
