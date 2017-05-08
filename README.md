@@ -74,11 +74,11 @@ The procedure for keeping the HTML docs updated is rough. To initially create th
 
     cd phaseflow
     
-    mkdir doc
+    mkdir doxygen_output
     
-    mkdir doc/html
+    mkdir doxygen_output/html
     
-    cd doc/html
+    cd doxygen_output/html
     
     git clone git@github.com:alexanderzimmerman/phaseflow.git .
     
@@ -96,7 +96,7 @@ The procedure for keeping the HTML docs updated is rough. To initially create th
     
     doxygen
     
-    cd html/doc
+    cd doxygen_output/html
     
     git checkout gh-pages
     
@@ -110,11 +110,11 @@ You can skip many of those steps for initial set up with your local clone. Simpl
 
     cd phaseflow
 
-    mkdir doc
+    mkdir doxygen_output
     
-    mkdir doc/html
+    mkdir doxygen_output/html
     
-    cd doc/html
+    cd doxygen_output/html
     
     git clone git@github.com:alexanderzimmerman/phaseflow.git .
     
@@ -126,7 +126,7 @@ Then whenever commiting to the master branch, update the gh-pages branch as foll
 
     doxygen
 
-    cd doc/html
+    cd doxygen_output/html
 
     git add *
 
