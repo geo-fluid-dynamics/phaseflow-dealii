@@ -369,7 +369,7 @@ void Phaseflow<dim>::interpolate_boundary_values(
     {    
         unsigned int b = this->params.boundary_conditions.strong_boundaries[ib];
         
-        auto mask = this->params.boundary_conditions.strong_masks[b];
+        auto mask = this->params.boundary_conditions.strong_masks[ib];
         
         for (auto field_name : FIELD_NAMES) /* For each field variable */
         {
