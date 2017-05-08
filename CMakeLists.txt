@@ -3,7 +3,7 @@
 ##
 
 # Set the name of the project and target:
-SET(TARGET "nsb-pcm")
+SET(TARGET "phaseflow")
 
 # Declare all source files the target consists of. Here, this is only
 # the one step-X.cc file, but as you expand your project you may wish
@@ -39,7 +39,7 @@ PROJECT(${TARGET})
 DEAL_II_INVOKE_AUTOPILOT()
 
 
-set_property(TARGET "nsb-pcm" PROPERTY CXX_STANDARD 11)
+set_property(TARGET ${TARGET} PROPERTY CXX_STANDARD 11)
 
 
 enable_testing()

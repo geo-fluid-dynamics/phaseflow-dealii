@@ -1,5 +1,5 @@
-#ifndef peclet_parameters_h
-#define peclet_parameters_h
+#ifndef pf_parameters_h
+#define pf_parameters_h
 
 #include <vector>
 #include <iostream>
@@ -8,7 +8,7 @@
 
 #include "my_parameter_handler.h"
 
-#include "peclet_global_parameters.h"
+#include "pf_global_parameters.h"
 
 /*
     
@@ -37,7 +37,7 @@
     
 */
 
-namespace Peclet
+namespace Phaseflow
 {
     namespace Parameters
     {   

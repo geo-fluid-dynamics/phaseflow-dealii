@@ -1,5 +1,5 @@
-#ifndef peclet_global_parameters_h
-#define peclet_global_parameters_h
+#ifndef pf_global_parameters_h
+#define pf_global_parameters_h
 
 /*! Set global parameters.
 

@@ -1,13 +1,9 @@
-#ifndef _peclet_system_h_
-#define _peclet_system_h_
+#ifndef _pf_system_h_
+#define _pf_system_h_
 
-/*!
-    @brief Setup the linear system objects.
- 
-    @author Alexander Zimmerman 2016
-*/
+/*! Setup the linear system objects. */
 template<int dim>
-void Peclet<dim>::setup_system()
+void Phaseflow<dim>::setup_system()
 {
     
     this->dof_handler.distribute_dofs(this->fe);
@@ -92,7 +88,7 @@ void Peclet<dim>::setup_system()
  @author Alexander Zimmerman 2016
 */
 template<int dim>
-void Peclet<dim>::assemble_system()
+void Phaseflow<dim>::assemble_system()
 {
     this->system_matrix = 0.;
     
@@ -365,7 +361,7 @@ void Peclet<dim>::assemble_system()
 }
 
 template<int dim>
-void Peclet<dim>::interpolate_boundary_values(
+void Phaseflow<dim>::interpolate_boundary_values(
     Function<dim>* function,
     std::map<types::global_dof_index, double> &boundary_values) const
 {    
@@ -416,7 +412,7 @@ void Peclet<dim>::interpolate_boundary_values(
 
 /*! Apply the boundary conditions (strong and natural) and apply constraints (including those for hanging nodes */
 template<int dim>
-void Peclet<dim>::apply_boundary_values_and_constraints()
+void Phaseflow<dim>::apply_boundary_values_and_constraints()
 {       
     /* Since we are applying boundary conditions to the Newton linearized system
     to compute a residual, we want to apply the boundary conditions residual, rather
@@ -461,7 +457,7 @@ void Peclet<dim>::apply_boundary_values_and_constraints()
 @author Alexander G. Zimmerman 2016 <zimmerman@aices.rwth-aachen.de>
 */
 template<int dim>
-void Peclet<dim>::solve_linear_system()
+void Phaseflow<dim>::solve_linear_system()
 {
     if (WRITE_LINEAR_SYSTEM)
     {

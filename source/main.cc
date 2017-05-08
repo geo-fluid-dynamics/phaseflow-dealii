@@ -1,4 +1,4 @@
-#include "peclet.h"
+#include "phaseflow.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,25 +11,25 @@ int main(int argc, char* argv[])
             parameter_input_file_path = argv[1];
         }
         
-        Peclet::Parameters::Meta mp = 
-            Peclet::Parameters::read_meta_parameters(parameter_input_file_path);
+        Phaseflow::Parameters::Meta mp = 
+            Phaseflow::Parameters::read_meta_parameters(parameter_input_file_path);
         
          /*
         Only a compile time constant can be used as the template arguments to insantiate the model,
         so we must instantiate each possible dimensionality. This is virtually free, since of course
         data will only be generated for one of these models.
         */
-        Peclet::Peclet<2> peclet_2D;
-        Peclet::Peclet<3> peclet_3D;
+        Phaseflow::Phaseflow<2> pf_2D;
+        Phaseflow::Phaseflow<3> pf_3D;
 
         switch (mp.dim)
         {
             case 2:
-                peclet_2D.run(parameter_input_file_path);
+                pf_2D.run(parameter_input_file_path);
                 break;
             
             case 3:
-                peclet_3D.run(parameter_input_file_path);
+                pf_3D.run(parameter_input_file_path);
                 break;
             
             default:
