@@ -7,6 +7,11 @@ template<int dim>
 void Phaseflow<dim>::step_newton()
 {
     this->old_newton_solution = this->newton_solution;
+
+    Output::write_solution_to_vtk( // @todo Debugging
+        "old_newton_solution.vtk",
+        this->dof_handler,
+        this->newton_solution);
     
     this->assemble_system();
 

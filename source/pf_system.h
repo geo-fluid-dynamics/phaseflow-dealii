@@ -187,7 +187,7 @@ void Phaseflow<dim>::assemble_system()
     std::vector<double> old_temperature_values(n_quad_points);
     
     std::vector<Tensor<1,dim>> old_newton_velocity_values(n_quad_points);
-    
+        
     std::vector<double> old_newton_pressure_values(n_quad_points);
     
     std::vector<double> old_newton_temperature_values(n_quad_points);
@@ -268,14 +268,14 @@ void Phaseflow<dim>::assemble_system()
         this->source_function.vector_value_list(
             fe_values.get_quadrature_points(),
             source_values);
-        
+
         for (unsigned int quad = 0; quad< n_quad_points; ++quad)
         {
             /* Name local variables to match notation in Danaila 2014 */
-            const Tensor<1, dim>  u_n = old_velocity_values[quad];
+            const Tensor<1, dim> u_n = old_velocity_values[quad];
             const double theta_n = old_temperature_values[quad];
             
-            const Tensor<1, dim> u_k = old_newton_velocity_values[quad];
+            Tensor<1, dim> u_k = old_newton_velocity_values[quad];
             const double p_k = old_newton_pressure_values[quad];
             const double theta_k = old_newton_temperature_values[quad];
             
@@ -303,7 +303,7 @@ void Phaseflow<dim>::assemble_system()
                 grad_velocity_fe_values[dof] = fe_values[this->velocity_extractor].gradient(dof, quad);
                 div_velocity_fe_values[dof] = fe_values[this->velocity_extractor].divergence(dof, quad);
             }
-
+            
             for (unsigned int i = 0; i < dofs_per_cell; ++i)
             {
                 /* Name local variables to match notation in Danaila 2014 */
@@ -328,22 +328,36 @@ void Phaseflow<dim>::assemble_system()
                     const Tensor<2, dim> gradu_w = grad_velocity_fe_values[j];
                     const double divu_w = div_velocity_fe_values[j];
 
-                    local_matrix(i,j) += (
+                    if (!this->params.physics.prescribe_convection_velocity)
+                    {
+                        local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
                         + scalar_product(u_w, v)/deltat + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
                         + scalar_product(theta_w*df_B_over_dtheta, v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        + theta_w*phi/deltat - scalar_product(u_k, gradphi)*theta_w - scalar_product(u_w, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_w, gradphi) // Energy
+                        - scalar_product(u_w, gradphi)*theta_k // Energy
+                        )*fe_values.JxW(quad); /* Map to the reference element */                        
+                    }
+                    
+                    local_matrix(i,j) += (
+                        theta_w*phi/deltat - scalar_product(u_k, gradphi)*theta_w + scalar_product(K/Pr*gradtheta_w, gradphi) // Energy
                         )*fe_values.JxW(quad); /* Map to the reference element */                        
 
                 }
                 
-                local_rhs(i) += (
+                if (!this->params.physics.prescribe_convection_velocity)
+                {
+                    local_rhs(i) += (
                         b(divu_k, q) - gamma*p_k*q // Mass
                         + scalar_product(u_k - u_n, v)/deltat + c(u_k, gradu_k, v) + a(mu_l, gradu_k, gradv) + b(divv, p_k) // Momentum: Incompressible Navier-Stokes
                         + scalar_product(f_B(theta_k), v) // Momentum: Bouyancy (Classical linear Boussinesq approximation)
-                        + (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_k, gradphi) // Energy
-                        + s_p*q + scalar_product(s_u, v) + s_theta*phi // Source (MMS)
+                        + s_p*q + scalar_product(s_u, v) // Source (MMS)
                         )*fe_values.JxW(quad); 
+                }
+                
+                local_rhs(i) += (
+                    (theta_k - theta_n)*phi/deltat - scalar_product(u_k, gradphi)*theta_k + scalar_product(K/Pr*gradtheta_k, gradphi) // Energy
+                    + s_theta*phi // Source (MMS)
+                    )*fe_values.JxW(quad); 
 
             }            
             
@@ -369,7 +383,7 @@ void Phaseflow<dim>::interpolate_boundary_values(
     {    
         unsigned int b = this->params.boundary_conditions.strong_boundaries[ib];
         
-        auto mask = this->params.boundary_conditions.strong_masks[b];
+        auto mask = this->params.boundary_conditions.strong_masks[ib];
         
         for (auto field_name : FIELD_NAMES) /* For each field variable */
         {

@@ -113,6 +113,12 @@ namespace Phaseflow
 
     const FEValuesExtractors::Scalar temperature_extractor;
     
+    const ComponentMask velocity_mask;
+    
+    const ComponentMask pressure_mask;
+    
+    const ComponentMask temperature_mask;
+    
     DoFHandler<dim> dof_handler;
 
     ConstraintMatrix constraints;
@@ -156,6 +162,15 @@ namespace Phaseflow
     Functions::ParsedFunction<dim> boundary_function;
     
     Functions::ParsedFunction<dim> exact_solution_function;
+    
+    /*! A parsed function for prescribing the convection velocity
+    
+    This will be used instead of solving the mass and momentum equations if prescribe_convection_velocity is true.
+    
+    VectorTools::Interpolate asserts dof.get_fe().n_components() == function.n_components,
+    so we have to have dim + 2 instead of dim components.
+    Only the first dim components will be used. */
+    Functions::ParsedFunction<dim> prescribed_convection_velocity_function;
 
     void append_verification_table();
     
@@ -176,11 +191,15 @@ namespace Phaseflow
     velocity_extractor(0),
     pressure_extractor(dim),
     temperature_extractor(dim + 1),
+    velocity_mask(fe.component_mask(velocity_extractor)),
+    pressure_mask(fe.component_mask(pressure_extractor)),
+    temperature_mask(fe.component_mask(temperature_extractor)),
     dof_handler(this->triangulation),
     source_function(dim + 2),
     initial_values_function(dim + 2),
     boundary_function(dim + 2),
-    exact_solution_function(dim + 2)
+    exact_solution_function(dim + 2),
+    prescribed_convection_velocity_function(dim + 2)
   {}
 
   #include "pf_system.h"
@@ -217,7 +236,8 @@ namespace Phaseflow
         this->source_function,
         this->initial_values_function,
         this->boundary_function,
-        this->exact_solution_function);
+        this->exact_solution_function,
+        this->prescribed_convection_velocity_function);
     
     MyGridGenerator::create_coarse_grid(
         this->triangulation,
@@ -256,6 +276,8 @@ namespace Phaseflow
     
     this->time_step_counter = 0;
     
+    this->initial_values_function.set_time(this->time);
+    
     VectorTools::interpolate(
         this->dof_handler,
         this->initial_values_function,
@@ -282,6 +304,7 @@ namespace Phaseflow
         if (this->params.time.stop_when_steady)
         {
             Vector<double> time_residual = this->solution; // There is evidently no Vector<Number> - Vector<Number> method.
+            
             time_residual -= this->old_solution;
             
             double unsteadiness = time_residual.l2_norm()/this->solution.l2_norm();

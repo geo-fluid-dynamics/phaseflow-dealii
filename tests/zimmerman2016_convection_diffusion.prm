@@ -1,0 +1,82 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+    set dim = 2
+end
+
+subsection physics
+    
+    set gravity = 0., 0.
+    
+    set prescribe_convection_velocity = true
+    
+    subsection prescribed_convection_velocity_function
+        set Function constants = vmax=-5, epsilon=1.e-8
+        set Function expression = vmax*y; 0.; 1.e16; 1.e16
+    end
+    
+end
+
+subsection geometry
+    set grid_name = hyper_rectangle
+    set sizes = 0., 0., 1., 1.
+end
+
+subsection verification
+    
+    set enabled = true
+    
+    subsection exact_solution_function
+        set Function constants = epsilon=1.e-8, alpha=1, vmax=-5, g=-2, beta=10, vmax=-5
+        
+        set Function expression = vmax*y; 0.; 0.; if(y < epsilon,g + (g - g*x)*(exp(-beta*t^2) - 1),g + (g - (g*(exp((vmax*x*y)/alpha) - 1))/(exp((vmax*y)/alpha) - 1))*(exp(-beta*t^2) - 1))
+    end
+    
+end
+
+subsection source_function
+
+    set Function constants = epsilon=1.e-8, alpha=1, vmax=-5, g=-2, beta=10
+
+    set Function expression = 0.; 0.; 0.; if(y<epsilon,(g*exp(-beta*t^2)*(x - 1)*(2*vmax^2*x^2 - vmax^2*x - 2*vmax^2*x^2*exp(beta*t^2) + 12*alpha*beta*t + vmax^2*x*exp(beta*t^2)))/(6*alpha),- alpha*((exp(-beta*t^2) - 1)*((g*vmax^2*exp((vmax*y)/alpha)*(exp((vmax*x*y)/alpha) - 1))/(alpha^2*(exp((vmax*y)/alpha) - 1)^2) - (2*g*vmax^2*exp((2*vmax*y)/alpha)*(exp((vmax*x*y)/alpha) - 1))/(alpha^2*(exp((vmax*y)/alpha) - 1)^3) - (g*vmax^2*x^2*exp((vmax*x*y)/alpha))/(alpha^2*(exp((vmax*y)/alpha) - 1)) + (2*g*vmax^2*x*exp((vmax*y)/alpha)*exp((vmax*x*y)/alpha))/(alpha^2*(exp((vmax*y)/alpha) - 1)^2)) - (g*vmax^2*y^2*exp((vmax*x*y)/alpha)*(exp(-beta*t^2) - 1))/(alpha^2*(exp((vmax*y)/alpha) - 1))) - 2*beta*t*exp(-beta*t^2)*(g - (g*(exp((vmax*x*y)/alpha) - 1))/(exp((vmax*y)/alpha) - 1)) - (g*vmax^2*y^2*exp((vmax*x*y)/alpha)*(exp(-beta*t^2) - 1))/(alpha*(exp((vmax*y)/alpha) - 1)))
+
+    
+end
+
+subsection initial_values
+    set Function constants = epsilon=1.e-8, alpha=1, vmax=-5, g=-2, beta=10, vmax=-5, perturb=1.001
+    
+    set Function expression = vmax*y; 0.; 0.; perturb*if(y < epsilon,g + (g - g*x)*(exp(-beta*t^2) - 1),g + (g - (g*(exp((vmax*x*y)/alpha) - 1))/(exp((vmax*y)/alpha) - 1))*(exp(-beta*t^2) - 1))
+end
+
+subsection boundary_conditions
+    
+    set strong_boundaries = 0, 1, 2, 3
+    
+    set strong_masks = velocity; pressure,  velocity; pressure; temperature,  velocity; pressure,  velocity; pressure
+    
+    set Function constants = epsilon=1.e-8, alpha=2, vmax=-5, g=-2, beta=10
+    
+    set Function expression = vmax*y; 0.; 0.; if(x<epsilon,(g*vmax*y*(exp(-beta*t^2) - 1))/(exp((vmax*y)/alpha) - 1),if(y<epsilon,-alpha*(exp(-beta*t^2) - 1)*((g*vmax*x)/(2*alpha) - (g*vmax*x^2)/(2*alpha)),alpha*(exp(-beta*t^2) - 1)*((g*vmax*exp(vmax/alpha)*(exp((vmax*x)/alpha) - 1))/(alpha*(exp(vmax/alpha) - 1)^2) - (g*vmax*x*exp((vmax*x)/alpha))/(alpha*(exp(vmax/alpha) - 1)))))
+    
+end
+
+subsection refinement
+    set initial_global_cycles = 2
+end
+
+subsection nonlinear_solver
+    set max_iterations = 50
+    set tolerance = 1.e-9
+end
+
+subsection time
+    set end = 1.
+    set initial_step_size = 0.125
+    set min_step_size = 0.125
+    set max_step_size = 0.125
+end
+
+subsection output
+    set write_solution_vtk = true
+end

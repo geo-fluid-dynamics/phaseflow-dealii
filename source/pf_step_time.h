@@ -47,6 +47,17 @@ void Phaseflow<dim>::step_time()
     {
         this->new_time = this->time + this->time_step_size;
         
+        if (this->params.physics.prescribe_convection_velocity)
+        {
+            this->prescribed_convection_velocity_function.set_time(this->new_time);
+            
+            VectorTools::interpolate(
+                this->dof_handler,
+                this->prescribed_convection_velocity_function,
+                this->solution,
+                this->velocity_mask);
+        }
+        
         converged = this->solve_nonlinear_problem();
         
         if (!converged)

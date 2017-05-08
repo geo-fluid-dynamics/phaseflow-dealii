@@ -53,6 +53,7 @@ namespace Phaseflow
         {
             std::vector<double> gravity;
             double liquid_dynamic_viscosity;
+            bool prescribe_convection_velocity;
         };
         
         struct Geometry
@@ -143,7 +144,16 @@ namespace Phaseflow
             prm.enter_subsection("physics");
             {
                 prm.declare_entry("gravity", "0., -1, 0.", Patterns::List(Patterns::Double()));
+
                 prm.declare_entry("liquid_dynamic_viscosity", "1.", Patterns::Double(0.));
+
+                prm.declare_entry("prescribe_convection_velocity", "false", Patterns::Bool());
+
+                prm.enter_subsection("prescribed_convection_velocity_function");
+                {
+                    Functions::ParsedFunction<dim>::declare_parameters(prm, dim + 2);    
+                }
+                prm.leave_subsection();  
             }
             prm.leave_subsection();
             
@@ -317,7 +327,8 @@ namespace Phaseflow
                 Functions::ParsedFunction<dim> &source_function,
                 Functions::ParsedFunction<dim> &initial_values_function,
                 Functions::ParsedFunction<dim> &boundary_function,
-                Functions::ParsedFunction<dim> &exact_solution_function)
+                Functions::ParsedFunction<dim> &exact_solution_function,
+                Functions::ParsedFunction<dim> &prescribed_convection_velocity_function)
         {
 
             StructuredParameters params;
@@ -338,7 +349,18 @@ namespace Phaseflow
             prm.enter_subsection("physics");
             {
                 params.physics.gravity = MyParameterHandler::get_vector<double>(prm, "gravity");
+                
                 params.physics.liquid_dynamic_viscosity = prm.get_double("liquid_dynamic_viscosity");
+                
+                params.physics.prescribe_convection_velocity = prm.get_bool("prescribe_convection_velocity");
+                
+                prm.enter_subsection("prescribed_convection_velocity_function");
+                if (params.physics.prescribe_convection_velocity)
+                {
+                    prescribed_convection_velocity_function.parse_parameters(prm);
+                }
+                prm.leave_subsection();
+                
             }
             prm.leave_subsection();
             
