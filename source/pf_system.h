@@ -330,6 +330,8 @@ void Phaseflow<dim>::assemble_system()
 
                     if (!this->params.physics.prescribe_convection_velocity)
                     {
+                        /* @todo Derive the Newton linearized form of the convection-diffusion equation.
+                        So far the separation of the mass and momentum equations is based on an educated guess. */
                         local_matrix(i,j) += (
                         b(divu_w, q) - gamma*p_w*q // Mass
                         + scalar_product(u_w, v)/deltat + c(u_w, gradu_k, v) + c(u_k, gradu_w, v) + a(mu_l, gradu_w, gradv) + b(divv, p_w) // Momentum: Incompressible Navier-Stokes
@@ -444,6 +446,8 @@ void Phaseflow<dim>::apply_boundary_values_and_constraints()
     to get velocity, pressure, and temperature values, and then these have to be decomposed onto the finite element functions again with interpolate_boundary_values. There should be an easy way to just use the map<global_dof_index, double> to do this directly. */
     Functions::FEFieldFunction<dim> solution_field_function(this->dof_handler, this->solution);
     
+    this->boundary_function.set_time(this->time);
+    
     this->interpolate_boundary_values(&solution_field_function, boundary_values);
     
     this->boundary_function.set_time(this->new_time);
@@ -462,6 +466,11 @@ void Phaseflow<dim>::apply_boundary_values_and_constraints()
         this->system_matrix,
         this->newton_residual,
         this->system_rhs);
+        
+    /* @todo Add natural BC's to the RHS 
+    This could be difficult for time varying natural BC's if we have to sample the solution as we did with the strong BC's.
+    */
+    
 }
 
 

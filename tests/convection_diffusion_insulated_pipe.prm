@@ -22,7 +22,7 @@ subsection geometry
 end
 
 subsection initial_values
-    set Function constants = epsilon=1.e-8, alpha=1, vmax=-5, g=-2, beta=10, vmax=-5, perturb=1.001
+    set Function constants = epsilon=1.e-8
     
     set Function expression = if(x<epsilon, 1., 0); 0.; 0.; if(x<epsilon, 1., 0)
 end
@@ -33,12 +33,14 @@ subsection boundary_conditions
     
     set strong_masks = velocity; temperature,  velocity,  velocity
     
-    set Function expression = if(x<epsilon, 1., 0); 0.; 0.; if(x<epsilon, 1., 0)
+    set Function constants = epsilon=1.e-8
+    
+    set Function expression = 1.; 0.; 0.; if(x<epsilon, 1., 0)
     
 end
 
 subsection refinement
-    set initial_global_cycles = 3
+    set initial_global_cycles = 2
 end
 
 subsection nonlinear_solver
