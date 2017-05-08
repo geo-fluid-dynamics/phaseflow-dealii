@@ -44,11 +44,15 @@ For initial set up with your local clone, follow the procedure found in https://
 
 Then whenever commiting to the master branch, update the gh-pages branch as follows:
 
-    git push origin master
+    cd phaseflow
+    
+    git checkout master
 
     doxygen
 
     cd doc/html
+
+    git checkout gh-pages
 
     git add *
 
