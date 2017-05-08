@@ -26,7 +26,7 @@ Or run the container with access to a shared folder (shared between the host and
     
 If you plan to use this container repeatedly, then instead use this command to also give it a name
 
-    docker run -ti -v $(pwd):/home/dealii/shared --name peclet zimmerman/phaseflow:latest
+    docker run -ti -v $(pwd):/home/dealii/shared --name phaseflow zimmerman/phaseflow:latest
 
 After exiting the container, you can start it again with
 
