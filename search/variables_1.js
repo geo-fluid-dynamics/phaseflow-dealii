@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['boundaries_5fto_5frefine',['boundaries_to_refine',['../structPeclet_1_1Parameters_1_1Refinement.html#a6418eda25ea4265a54a9760234abb821',1,'Peclet::Parameters::Refinement']]],
-  ['boundary_5fconditions',['boundary_conditions',['../structPeclet_1_1Parameters_1_1StructuredParameters.html#aa9a98503a740331f3fbc948eb2ed212e',1,'Peclet::Parameters::StructuredParameters']]],
-  ['boundary_5fcount',['BOUNDARY_COUNT',['../peclet__parameters_8h.html#a0bc949225c8c012da5256e8c92f4aaae',1,'peclet_parameters.h']]],
-  ['boundary_5ffunctions',['boundary_functions',['../classPeclet_1_1Peclet.html#a4067053613df5346b97a4c3196beba78',1,'Peclet::Peclet']]]
+  ['boundaries_5fto_5frefine',['boundaries_to_refine',['../structPhaseflow_1_1Parameters_1_1Refinement.html#a79d7c436f4db1c21893492b93f258a1f',1,'Phaseflow::Parameters::Refinement']]],
+  ['boundary_5fconditions',['boundary_conditions',['../structPhaseflow_1_1Parameters_1_1StructuredParameters.html#a05cc13aeabcc6522ff6ec458f309c31e',1,'Phaseflow::Parameters::StructuredParameters']]],
+  ['boundary_5fcount',['boundary_count',['../classPhaseflow_1_1Phaseflow.html#ab49fd6d65c531962b57df6bdfccbc262',1,'Phaseflow::Phaseflow']]],
+  ['boundary_5ffunction',['boundary_function',['../classPhaseflow_1_1Phaseflow.html#a2e193751a1b4a0ed8052c6c36415be9f',1,'Phaseflow::Phaseflow']]]
 ];

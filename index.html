@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>nsb-pcm: Main Page</title>
+<title>phaseflow: Main Page</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">nsb-pcm
+   <div id="projectname">phaseflow
    </div>
    <div id="projectbrief">FEM solver for the Navier-Stokes-Boussinesq equations coupled with enthalpy-based phase change</div>
   </td>
@@ -77,44 +77,102 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">nsb-pcm Documentation</div>  </div>
+<div class="title">phaseflow Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>The development of this code has just begun, starting from a copy of the author's convection-diffusion code at <a href="https://github.com/alexanderzimmerman/peclet">https://github.com/alexanderzimmerman/peclet</a></p>
-<p>nsb-pcm (Navier-Stokes-Boussinesq with phase-change material) will solve the incompressible NSB equations coupled with an enthalpy-based energy equation allowing for melting and solidification of the phase-change material medium.</p>
+<p><a class="el" href="namespacePhaseflow.html">Phaseflow</a> will solve the incompressible NSB equations coupled with an enthalpy-based energy equation allowing for melting and solidification of the phase-change material medium.</p>
 <p>This is written in C++ and based on the deal.II finite element method library.</p>
 <p>Author: Alexander G. Zimmerman <a href="#" onclick="location.href='mai'+'lto:'+'zim'+'me'+'rma'+'n@'+'aic'+'es'+'.rw'+'th'+'-aa'+'ch'+'en.'+'de'; return false;">zimme<span style="display: none;">.nosp@m.</span>rman<span style="display: none;">.nosp@m.</span>@aice<span style="display: none;">.nosp@m.</span>s.rw<span style="display: none;">.nosp@m.</span>th-aa<span style="display: none;">.nosp@m.</span>chen<span style="display: none;">.nosp@m.</span>.de</a></p>
-<p>Doxygen generated HTML documentation: <a href="https://alexanderzimmerman.github.io/nsb-pcm/">https://alexanderzimmerman.github.io/nsb-pcm/</a></p>
-<div class="image">
-<img src="https://travis-ci.org/alexanderzimmerman/nsb-pcm.svg?branch=master"  style="float: left;"/>
-</div>
-<p> (<b>Continuous integration status</b>; click the button to go to Travis-CI)</p>
+<p>Doxygen generated HTML documentation: <a href="https://alexanderzimmerman.github.io/phaseflow/">https://alexanderzimmerman.github.io/phaseflow/</a></p>
+<p><a href="https://travis-ci.org/alexanderzimmerman/phaseflow">![Build Status](https://travis-ci.org/alexanderzimmerman/phaseflow.svg?branch=master)</a> (<b>Continuous integration status</b>; click the button to go to Travis-CI)</p>
 <h1>For users:</h1>
 <h2>Run pre-built version on docker image</h2>
-<p>Pull the image from <a href="https://hub.docker.com/r/zimmerman/nsb-pcm/">https://hub.docker.com/r/zimmerman/nsb-pcm/</a> </p>
-<pre class="fragment">docker pull zimmerman/nsb-pcm
+<p>Get the free community edition of Docker here: <a href="https://www.docker.com/community-edition">https://www.docker.com/community-edition</a></p>
+<p>Pull the image from <a href="https://hub.docker.com/r/zimmerman/phaseflow/">https://hub.docker.com/r/zimmerman/phaseflow/</a> and run the container with docker </p>
+<pre class="fragment">docker run -ti zimmerman/phaseflow:latest
+</pre><p>Or run the container with access to a shared folder (shared between the host and the container) </p>
+<pre class="fragment">docker run -ti -v $(pwd):/home/dealii/shared zimmerman/phaseflow:latest
+</pre><p>If you plan to use this container repeatedly, then instead use this command to also give it a name </p>
+<pre class="fragment">docker run -ti -v $(pwd):/home/dealii/shared --name phaseflow zimmerman/phaseflow:latest
+</pre><p>After exiting the container, you can start it again with </p>
+<pre class="fragment">docker start phaseflow
+</pre><p>You can confirm that the container is running with </p>
+<pre class="fragment">docker ps
+</pre><p>or list all containers (running or not) with </p>
+<pre class="fragment">docker ps -a
+</pre><p>To enter a bash terminal inside of the running container </p>
+<pre class="fragment">docker start phaseflow
+
+docker exec -ti -u dealii phaseflow /bin/bash -l
 </pre><h1>For developers:</h1>
 <h2>Versions</h2>
 <p>This is currently being tested with the following builds of deal.II:</p>
 <ul>
-<li>deal.II v8.4.2 built by candi (<a href="https://github.com/koecher/candi">https://github.com/koecher/candi</a>) on Ubuntu 14.04</li>
-<li>deal.II v8.4.2 from docker image dealii/dealii:v8.4.2-gcc-mpi-fulldepsmanual-release (as shown in nsb-pcm/tests/Dockerfile)</li>
+<li>deal.II v8.5.0 from docker image dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease</li>
 </ul>
 <h2>Build</h2>
-<pre class="fragment">git clone git@github.com:alexanderzimmerman/nsb-pcm.git
+<pre class="fragment">git clone git@github.com:alexanderzimmerman/phaseflow.git
 
 mkdir build
 
 cd build
 
-cmake ../nsb-pcm
+cmake ../phaseflow
 
 make test
-</pre><h2>Documentation</h2>
+</pre><h2>Design notes</h2>
+<p>The <a class="el" href="namespacePhaseflow.html">Phaseflow</a> class is implemented entirely with header files. This reduces the structural complexity of the code and can increase programming productivity, but it leads to longer compile times. A header-only approach would be impractical for the deal.II library itself; but in this small project's experience, the header-only approach is more than adequate. Most notably, this simplifies working with C++ templates.</p>
+<h2>Documentation</h2>
 <p>The Doxygen generated HTML docs are hosted in the standard GitHub fashion on the gh-pages branch.</p>
-<p>For initial set up with your local clone, follow the procedure found in <a href="https://github.com/m-a-d-n-e-s-s/madness/issues/104">https://github.com/m-a-d-n-e-s-s/madness/issues/104</a></p>
-<p>Then whenever commiting to the master branch, update the gh-pages branch as follows: </p>
-<pre class="fragment">git push origin master
+<p>The procedure for keeping the HTML docs updated is rough. To initially create the gh-pages branch, we followed the outline in an <a href="https://github.com/m-a-d-n-e-s-s/madness/issues/104">issue</a> from another repository, which uses the ideas from <a href="http://rickfoosusa.blogspot.de/2011/10/howto-use-doxygen-with-github.html">here</a> and <a href="https://gist.github.com/chrisjacob/825950">here</a>. Since any of these links may break, in short the procedure was </p>
+<pre class="fragment">cd phaseflow
+
+mkdir doc
+
+mkdir doc/html
+
+cd doc/html
+
+git clone git@github.com:alexanderzimmerman/phaseflow.git .
+
+git checkout -b gh-pages
+
+git branch -d master
+
+git rm -r *
+
+git commit "Removed everything from gh-pages branch"
+
+cd ../..
+
+git checkout master
+
+doxygen
+
+cd html/doc
+
+git checkout gh-pages
+
+git add *
+
+git commit "Added all HTML documentation"
+
+git push origin gh-pages
+</pre><p>You can skip many of those steps for initial set up with your local clone. Simply make the target documents directory and clone the gh-pages branch inside of it. </p>
+<pre class="fragment">cd phaseflow
+
+mkdir doc
+
+mkdir doc/html
+
+cd doc/html
+
+git clone git@github.com:alexanderzimmerman/phaseflow.git .
+
+git checkout gh-pages
+</pre><p>Then whenever commiting to the master branch, update the gh-pages branch as follows: </p>
+<pre class="fragment">cd phaseflow
 
 doxygen
 
@@ -127,7 +185,7 @@ git commit -m "Refreshed HTML doc"
 git push origin gh-pages</pre> </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 22 2017 22:07:08 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 8 2017 14:21:13 for phaseflow by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

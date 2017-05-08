@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['refinement',['Refinement',['../structPeclet_1_1Parameters_1_1Refinement.html',1,'Peclet::Parameters']]]
+  ['refinement',['Refinement',['../structPhaseflow_1_1Parameters_1_1Refinement.html',1,'Phaseflow::Parameters']]]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['last_5fstep',['last_step',['../structPeclet_1_1SolverStatus.html#a47d38c23848cbfe1e9ea1588d7cce603',1,'Peclet::SolverStatus']]],
-  ['liquid_5fconductivity',['LIQUID_CONDUCTIVITY',['../namespacePeclet.html#ab1e8618635b56880b3cdfeea19fddd8d',1,'Peclet']]],
-  ['liquid_5fdynamic_5fvisocity',['LIQUID_DYNAMIC_VISOCITY',['../namespacePeclet.html#a8f0a0a8cc1766a8d22476210b1f8a7b2',1,'Peclet']]]
+  ['liquid_5fconductivity',['LIQUID_CONDUCTIVITY',['../pf__global__parameters_8h.html#acd6363f0eae5004aa7ceffb3de0bc6e5',1,'pf_global_parameters.h']]],
+  ['liquid_5fdynamic_5fviscosity',['liquid_dynamic_viscosity',['../structPhaseflow_1_1Parameters_1_1PhysicalModel.html#a4a67ba5ad9a09673f7e7f69ef8b6cd89',1,'Phaseflow::Parameters::PhysicalModel']]]
 ];

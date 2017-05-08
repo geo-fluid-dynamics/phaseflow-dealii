@@ -1,15 +1,14 @@
 var searchData=
 [
-  ['parameters',['Parameters',['../namespacePeclet_1_1Parameters.html',1,'Peclet']]],
-  ['params',['params',['../classPeclet_1_1Peclet.html#ac6f1f7fb4b9a922a1be741eb9614e6d0',1,'Peclet::Peclet']]],
-  ['peclet',['Peclet',['../classPeclet_1_1Peclet.html',1,'Peclet']]],
-  ['peclet',['Peclet',['../namespacePeclet.html',1,'Peclet'],['../classPeclet_1_1Peclet.html#a023be1faf427eb33ac0c45680d98813a',1,'Peclet::Peclet::Peclet()']]],
-  ['peclet_2eh',['peclet.h',['../peclet_8h.html',1,'']]],
-  ['peclet_5fgrid_2eh',['peclet_grid.h',['../peclet__grid_8h.html',1,'']]],
-  ['peclet_5fparameters_2eh',['peclet_parameters.h',['../peclet__parameters_8h.html',1,'']]],
-  ['peclet_5fstep_5ftime_2eh',['peclet_step_time.h',['../peclet__step__time_8h.html',1,'']]],
-  ['peclet_5fsystem_2eh',['peclet_system.h',['../peclet__system_8h.html',1,'']]],
-  ['physicalmodel',['PhysicalModel',['../structPeclet_1_1Parameters_1_1PhysicalModel.html',1,'Peclet::Parameters']]],
-  ['prandtl_5fnumber',['PRANDTL_NUMBER',['../namespacePeclet.html#a08f38f1db75405a172ed14e5971c6bb2',1,'Peclet']]],
-  ['refinement',['Refinement',['../namespacePeclet_1_1Refinement.html',1,'Peclet']]]
+  ['rayleigh_5fnumber',['RAYLEIGH_NUMBER',['../pf__global__parameters_8h.html#ad5d2bd70e3cb0bf090348ae4a48e10e2',1,'pf_global_parameters.h']]],
+  ['read',['read',['../namespacePhaseflow_1_1Parameters.html#aeee23654c887e2824c918cdd9a271612',1,'Phaseflow::Parameters']]],
+  ['read_5fmeta_5fparameters',['read_meta_parameters',['../namespacePhaseflow_1_1Parameters.html#aa5152b7f62fc260f037b98bb93ad8a18',1,'Phaseflow::Parameters']]],
+  ['readme_2emd',['README.md',['../README_8md.html',1,'']]],
+  ['refine_5ffraction',['refine_fraction',['../structPhaseflow_1_1Parameters_1_1AdaptiveRefinement.html#a5b78a593a722f3ae3ae27a4a44fdec2d',1,'Phaseflow::Parameters::AdaptiveRefinement']]],
+  ['refine_5fmesh_5fnear_5fboundaries',['refine_mesh_near_boundaries',['../namespaceRefinement.html#a1ad0a552bf0eb365e462a87213fff1f0',1,'Refinement']]],
+  ['refinement',['Refinement',['../namespaceRefinement.html',1,'Refinement'],['../structPhaseflow_1_1Parameters_1_1StructuredParameters.html#a67dfbf36b015e0d689ba7ff4e189dd82',1,'Phaseflow::Parameters::StructuredParameters::refinement()']]],
+  ['refinement',['Refinement',['../structPhaseflow_1_1Parameters_1_1Refinement.html',1,'Phaseflow::Parameters']]],
+  ['refinement_2eh',['refinement.h',['../refinement_8h.html',1,'']]],
+  ['reynolds_5fnumber',['REYNOLDS_NUMBER',['../pf__global__parameters_8h.html#a204652e9fa48645814d2ac7cc501ace4',1,'pf_global_parameters.h']]],
+  ['run',['run',['../classPhaseflow_1_1Phaseflow.html#aea9f2a5bef80f60f6bf55cd58bb2ac50',1,'Phaseflow::Phaseflow']]]
 ];

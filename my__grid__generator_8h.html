@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>nsb-pcm: source/my_grid_generator.h File Reference</title>
+<title>phaseflow: source/my_grid_generator.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">nsb-pcm
+   <div id="projectname">phaseflow
    </div>
    <div id="projectbrief">FEM solver for the Navier-Stokes-Boussinesq equations coupled with enthalpy-based phase change</div>
   </td>
@@ -109,33 +109,14 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a623c9165a573e1c24d07b1b2e3168e31"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
-<tr class="memitem:a623c9165a573e1c24d07b1b2e3168e31"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#a623c9165a573e1c24d07b1b2e3168e31">MyGridGenerator::set_all_manifold_ids</a> (Triangulation&lt; dim &gt; &amp;tria, unsigned int id=0)</td></tr>
-<tr class="separator:a623c9165a573e1c24d07b1b2e3168e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7351533be9e5f4b59959643e9a138da"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
-<tr class="memitem:ab7351533be9e5f4b59959643e9a138da"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#ab7351533be9e5f4b59959643e9a138da">MyGridGenerator::cylinder_with_split_boundaries</a> (Triangulation&lt; dim &gt; &amp;tria, const double L0, const double L1, const double L2)</td></tr>
-<tr class="separator:ab7351533be9e5f4b59959643e9a138da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e0176fc7d39bf646b8f5beb87720731"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
-<tr class="memitem:a4e0176fc7d39bf646b8f5beb87720731"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#a4e0176fc7d39bf646b8f5beb87720731">MyGridGenerator::hemisphere_cylinder_shell</a> (Triangulation&lt; dim &gt; &amp;tria, const double inner_radius=0.25, const double outer_radius=0.5, const double inner_length=1.0, const double outer_length=1.25)</td></tr>
-<tr class="memdesc:a4e0176fc7d39bf646b8f5beb87720731"><td class="mdescLeft">&#160;</td><td class="mdescRight">Produce a domain that is the space between two hemisphere-cylinders.  Based on hyper_cube_with_cylindrical_hole Boundary ID's follow the vertex numbering, with 0 -&gt; right side of outer spherical boundary ... counter-clockwise 4 -&gt; left side of outer spherical boundary 5 -&gt; right side of inner spherical boundary ... counter-clockwise 9 -&gt; left side of inner spherical boundary Manifold ID's: 0 -&gt; Hemi-spherical manifold radially centered at the origin 1 -&gt; Cyldrincal manifoldd The origin of the coordinate system is at the radial center of the spherical manifold.  <a href="#a4e0176fc7d39bf646b8f5beb87720731">More...</a><br/></td></tr>
-<tr class="separator:a4e0176fc7d39bf646b8f5beb87720731"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af86d1aed21db4f3329c8044cd9919ff8"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:af86d1aed21db4f3329c8044cd9919ff8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#af86d1aed21db4f3329c8044cd9919ff8">MyGridGenerator::hemisphere_cylinder_shell</a> (Triangulation&lt; 1 &gt; &amp;, const double, const double, const double, const double)</td></tr>
-<tr class="separator:af86d1aed21db4f3329c8044cd9919ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf40faaad9fd07cb87c0f457ef94debc"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:adf40faaad9fd07cb87c0f457ef94debc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#adf40faaad9fd07cb87c0f457ef94debc">MyGridGenerator::hemisphere_cylinder_shell</a> (Triangulation&lt; 2 &gt; &amp;tria, const double inner_radius, const double outer_radius, const double inner_length, const double outer_length)</td></tr>
-<tr class="separator:adf40faaad9fd07cb87c0f457ef94debc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ca324d18c259173a2d05cf623624a4e"><td class="memTemplParams" colspan="2">template&lt;&gt; </td></tr>
-<tr class="memitem:a8ca324d18c259173a2d05cf623624a4e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#a8ca324d18c259173a2d05cf623624a4e">MyGridGenerator::hemisphere_cylinder_shell</a> (Triangulation&lt; 3 &gt; &amp;, const double, const double, const double, const double)</td></tr>
-<tr class="separator:a8ca324d18c259173a2d05cf623624a4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66c51285c3e64fd2f85f238308597477"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
-<tr class="memitem:a66c51285c3e64fd2f85f238308597477"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#a66c51285c3e64fd2f85f238308597477">MyGridGenerator::create_coarse_grid</a> (Triangulation&lt; dim &gt; &amp;triangulation, unsigned int &amp;boundary_count, std::vector&lt; unsigned int &gt; &amp;manifold_ids, std::vector&lt; std::string &gt; &amp;manifold_descriptors, const std::string grid_name, const std::vector&lt; double &gt; sizes)</td></tr>
-<tr class="separator:a66c51285c3e64fd2f85f238308597477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8fb9c5d3d1108797fd77d19855c56b8"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
+<tr class="memitem:ad8fb9c5d3d1108797fd77d19855c56b8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceMyGridGenerator.html#ad8fb9c5d3d1108797fd77d19855c56b8">MyGridGenerator::create_coarse_grid</a> (Triangulation&lt; dim &gt; &amp;triangulation, std::vector&lt; unsigned int &gt; &amp;manifold_ids, std::vector&lt; std::string &gt; &amp;manifold_descriptors, unsigned int &amp;boundary_count, const std::string grid_name, const std::vector&lt; double &gt; sizes)</td></tr>
+<tr class="separator:ad8fb9c5d3d1108797fd77d19855c56b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 22 2017 22:07:06 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 8 2017 14:21:12 for phaseflow by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

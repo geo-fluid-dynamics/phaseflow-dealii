@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['_5fpeclet_5fstep_5ftime_5fh_5f',['_peclet_step_time_h_',['../peclet_8h.html#ac1094730528508286d034851fd76d39b',1,'peclet.h']]],
-  ['_5fpeclet_5fsystem_5fh_5f',['_peclet_system_h_',['../peclet_8h.html#a654b791dfdaae02b9ff836d805c3e2d2',1,'peclet.h']]],
-  ['_5frefinement_5fh_5f',['_refinement_h_',['../peclet_8h.html#a439fa58bc6605f86bb1f72f6f6b06870',1,'peclet.h']]]
+  ['_5fpf_5fsolve_5fnonlinear_5fproblem_5fh_5f',['_pf_solve_nonlinear_problem_h_',['../phaseflow_8h.html#abebc8d8b02c977cce956b37f2172269b',1,'phaseflow.h']]],
+  ['_5fpf_5fstep_5ftime_5fh_5f',['_pf_step_time_h_',['../phaseflow_8h.html#ac3be800a64f65e3c3ec39b60aef96515',1,'phaseflow.h']]],
+  ['_5fpf_5fsystem_5fh_5f',['_pf_system_h_',['../phaseflow_8h.html#ac7144b9e0fa46413cfc43747298f6620',1,'phaseflow.h']]],
+  ['_5fpf_5fverification_5fh_5f',['_pf_verification_h_',['../phaseflow_8h.html#a6a382bda2a198d236ba2af4064f9a963',1,'phaseflow.h']]]
 ];

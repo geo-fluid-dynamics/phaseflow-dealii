@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>nsb-pcm: Output Namespace Reference</title>
+<title>phaseflow: Output Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -22,7 +22,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">nsb-pcm
+   <div id="projectname">phaseflow
    </div>
    <div id="projectbrief">FEM solver for the Navier-Stokes-Boussinesq equations coupled with enthalpy-based phase change</div>
   </td>
@@ -94,8 +94,36 @@ Functions</h2></td></tr>
 <tr class="memitem:afe22cc905014b5d5f20568d71bb9f914"><td class="memTemplParams" colspan="2">template&lt;int dim&gt; </td></tr>
 <tr class="memitem:afe22cc905014b5d5f20568d71bb9f914"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceOutput.html#afe22cc905014b5d5f20568d71bb9f914">write_solution_to_vtk</a> (const std::string filename, DoFHandler&lt; dim &gt; &amp;dof_handler, Vector&lt; double &gt; &amp;solution)</td></tr>
 <tr class="separator:afe22cc905014b5d5f20568d71bb9f914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17468cebdbc4d5ffee867b068d0851bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceOutput.html#a17468cebdbc4d5ffee867b068d0851bf">write_linear_system</a> (SparseMatrix&lt; double &gt; &amp;A, Vector&lt; double &gt; &amp;b)</td></tr>
+<tr class="separator:a17468cebdbc4d5ffee867b068d0851bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a17468cebdbc4d5ffee867b068d0851bf"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Output::write_linear_system </td>
+          <td>(</td>
+          <td class="paramtype">SparseMatrix&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>A</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="afe22cc905014b5d5f20568d71bb9f914"></a>
 <div class="memitem">
 <div class="memproto">
@@ -135,7 +163,7 @@ template&lt;int dim&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Mar 22 2017 22:07:07 for nsb-pcm by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon May 8 2017 14:21:13 for phaseflow by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['coarsen_5ffraction',['coarsen_fraction',['../structPeclet_1_1Parameters_1_1AdaptiveRefinement.html#a88d15b229248ada5a18b9006c5305965',1,'Peclet::Parameters::AdaptiveRefinement']]],
-  ['constraints',['constraints',['../classPeclet_1_1Peclet.html#a1c3a0c010cef4b74b7617a34620127aa',1,'Peclet::Peclet']]],
-  ['cycles_5fat_5finterval',['cycles_at_interval',['../structPeclet_1_1Parameters_1_1AdaptiveRefinement.html#addab122132d185dd4f352a4645ee04fb',1,'Peclet::Parameters::AdaptiveRefinement']]]
+  ['coarsen_5ffraction',['coarsen_fraction',['../structPhaseflow_1_1Parameters_1_1AdaptiveRefinement.html#a7b66464201d5426dd21be8027336f539',1,'Phaseflow::Parameters::AdaptiveRefinement']]],
+  ['constraints',['constraints',['../classPhaseflow_1_1Phaseflow.html#aa3a55cab5c27986b0e03264aa8164c09',1,'Phaseflow::Phaseflow']]],
+  ['cycles_5fat_5finterval',['cycles_at_interval',['../structPhaseflow_1_1Parameters_1_1AdaptiveRefinement.html#a0aa9b6d8b6220d2d38b02dc42fec23cb',1,'Phaseflow::Parameters::AdaptiveRefinement']]]
 ];

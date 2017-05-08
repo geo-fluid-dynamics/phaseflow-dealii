@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['peclet',['Peclet',['../classPeclet_1_1Peclet.html',1,'Peclet']]],
-  ['physicalmodel',['PhysicalModel',['../structPeclet_1_1Parameters_1_1PhysicalModel.html',1,'Peclet::Parameters']]]
+  ['phaseflow',['Phaseflow',['../classPhaseflow_1_1Phaseflow.html',1,'Phaseflow']]],
+  ['physicalmodel',['PhysicalModel',['../structPhaseflow_1_1Parameters_1_1PhysicalModel.html',1,'Phaseflow::Parameters']]]
 ];

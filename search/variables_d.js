@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['rayleigh_5fnumber',['RAYLEIGH_NUMBER',['../namespacePeclet.html#a4a4381af2ba2992eba0ec7a9854f8e15',1,'Peclet']]],
-  ['refine_5ffraction',['refine_fraction',['../structPeclet_1_1Parameters_1_1AdaptiveRefinement.html#a6b335d89def25adb47067b9a91a313d4',1,'Peclet::Parameters::AdaptiveRefinement']]],
-  ['refinement',['refinement',['../structPeclet_1_1Parameters_1_1StructuredParameters.html#ade77f80aa2f3373d88cbb6f5c1d6bc1d',1,'Peclet::Parameters::StructuredParameters']]],
-  ['reynolds_5fnumber',['REYNOLDS_NUMBER',['../namespacePeclet.html#a41bc773f11733f3b0667dfaebf8c35da',1,'Peclet']]]
+  ['rayleigh_5fnumber',['RAYLEIGH_NUMBER',['../pf__global__parameters_8h.html#ad5d2bd70e3cb0bf090348ae4a48e10e2',1,'pf_global_parameters.h']]],
+  ['refine_5ffraction',['refine_fraction',['../structPhaseflow_1_1Parameters_1_1AdaptiveRefinement.html#a5b78a593a722f3ae3ae27a4a44fdec2d',1,'Phaseflow::Parameters::AdaptiveRefinement']]],
+  ['refinement',['refinement',['../structPhaseflow_1_1Parameters_1_1StructuredParameters.html#a67dfbf36b015e0d689ba7ff4e189dd82',1,'Phaseflow::Parameters::StructuredParameters']]],
+  ['reynolds_5fnumber',['REYNOLDS_NUMBER',['../pf__global__parameters_8h.html#a204652e9fa48645814d2ac7cc501ace4',1,'pf_global_parameters.h']]]
 ];

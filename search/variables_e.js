@@ -1,17 +1,15 @@
 var searchData=
 [
-  ['scalar_5fdegree',['SCALAR_DEGREE',['../namespacePeclet.html#a95c661d0a6cb337365c3fd33155c7634',1,'Peclet']]],
-  ['sizes',['sizes',['../structPeclet_1_1Parameters_1_1Geometry.html#a5efb97d7dfaa949bf0432c6fdd90e5e1',1,'Peclet::Parameters::Geometry']]],
-  ['solid_5fconductivity',['SOLID_CONDUCTIVITY',['../namespacePeclet.html#a1d32e1bd5a84def05c7dc58b18645db3',1,'Peclet']]],
-  ['solution',['solution',['../classPeclet_1_1Peclet.html#a95111d9c76a294a9e08de3def7bb31c3',1,'Peclet::Peclet']]],
-  ['solver',['solver',['../structPeclet_1_1Parameters_1_1StructuredParameters.html#a307a86bd2e4a38eb221e3d5127794170',1,'Peclet::Parameters::StructuredParameters']]],
-  ['solver_5fstatus',['solver_status',['../classPeclet_1_1Peclet.html#aeb1d55326014c9937c65b13b0fa9c88d',1,'Peclet::Peclet']]],
-  ['source_5ffunction',['source_function',['../classPeclet_1_1Peclet.html#a6acb4579d8e88674602f25ee263d7a3b',1,'Peclet::Peclet']]],
-  ['sparsity_5fpattern',['sparsity_pattern',['../classPeclet_1_1Peclet.html#aa168f6794009ea42a34b080446065568',1,'Peclet::Peclet']]],
-  ['spherical_5fmanifold_5fcenter',['spherical_manifold_center',['../classPeclet_1_1Peclet.html#a1efc4dc05c8346af1f7c4db1c8270c41',1,'Peclet::Peclet']]],
-  ['step_5fsize',['step_size',['../structPeclet_1_1Parameters_1_1Time.html#ae238d27eb7a58c23e3a51b720b9c7a20',1,'Peclet::Parameters::Time']]],
-  ['stop_5fwhen_5fsteady',['stop_when_steady',['../structPeclet_1_1Parameters_1_1Time.html#ab9cf673ab9cfc31594bcdc7d95e487ba',1,'Peclet::Parameters::Time']]],
-  ['strong_5fmasks',['strong_masks',['../structPeclet_1_1Parameters_1_1BoundaryConditions.html#acc5fd16a4bfbadc0b17243ad1d7c24cf',1,'Peclet::Parameters::BoundaryConditions']]],
-  ['system_5fmatrix',['system_matrix',['../classPeclet_1_1Peclet.html#a9c514b9887f54374cb96cf34a9f36b81',1,'Peclet::Peclet']]],
-  ['system_5frhs',['system_rhs',['../classPeclet_1_1Peclet.html#ace65bbc80d68d2eff2d17d364821c10d',1,'Peclet::Peclet']]]
+  ['scalar_5fdegree',['SCALAR_DEGREE',['../pf__global__parameters_8h.html#a4d61fd54097b061d8c80ba5dbb935475',1,'pf_global_parameters.h']]],
+  ['sizes',['sizes',['../structPhaseflow_1_1Parameters_1_1Geometry.html#ac68fd245eb5904f4acff0da1c5904791',1,'Phaseflow::Parameters::Geometry']]],
+  ['solid_5fconductivity',['SOLID_CONDUCTIVITY',['../pf__global__parameters_8h.html#a265f1daf1f2644200ba3de8861ec398d',1,'pf_global_parameters.h']]],
+  ['solution',['solution',['../classPhaseflow_1_1Phaseflow.html#a6cf91b8a4e61a2108279cee0573d5ca4',1,'Phaseflow::Phaseflow']]],
+  ['source_5ffunction',['source_function',['../classPhaseflow_1_1Phaseflow.html#a68a8388a30faf95508078de708ab0d2f',1,'Phaseflow::Phaseflow']]],
+  ['sparsity_5fpattern',['sparsity_pattern',['../classPhaseflow_1_1Phaseflow.html#aed4184ef289a9e047e82aaca6356b554',1,'Phaseflow::Phaseflow']]],
+  ['steady_5ftolerance',['steady_tolerance',['../structPhaseflow_1_1Parameters_1_1Time.html#a0675f6a32ce48002a3f172747a2feb17',1,'Phaseflow::Parameters::Time']]],
+  ['stop_5fwhen_5fsteady',['stop_when_steady',['../structPhaseflow_1_1Parameters_1_1Time.html#ad52f18bbe2f5cf1a3da73adae32dbca9',1,'Phaseflow::Parameters::Time']]],
+  ['strong_5fboundaries',['strong_boundaries',['../structPhaseflow_1_1Parameters_1_1BoundaryConditions.html#a212c372185829f58fc9aeb79767d756a',1,'Phaseflow::Parameters::BoundaryConditions']]],
+  ['strong_5fmasks',['strong_masks',['../structPhaseflow_1_1Parameters_1_1BoundaryConditions.html#aa62199ada7c94d976f2d7c859fb1949d',1,'Phaseflow::Parameters::BoundaryConditions']]],
+  ['system_5fmatrix',['system_matrix',['../classPhaseflow_1_1Phaseflow.html#a2204e580dc13a6c6aa853e12feeea02a',1,'Phaseflow::Phaseflow']]],
+  ['system_5frhs',['system_rhs',['../classPhaseflow_1_1Phaseflow.html#a323be90826bfc11b89ec785449faf504',1,'Phaseflow::Phaseflow']]]
 ];

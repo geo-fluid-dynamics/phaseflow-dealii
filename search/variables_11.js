@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['write_5fsolution_5ftable',['write_solution_table',['../structPeclet_1_1Parameters_1_1Output.html#aa6e5faaf3e405cb309d664c0c9f45bd8',1,'Peclet::Parameters::Output']]],
-  ['write_5fsolution_5fvtk',['write_solution_vtk',['../structPeclet_1_1Parameters_1_1Output.html#a4e65b7e7b7de4713e5b510ec15fa775e',1,'Peclet::Parameters::Output']]]
+  ['write_5flinear_5fsystem',['WRITE_LINEAR_SYSTEM',['../pf__global__parameters_8h.html#a214a09c8eb96ac82d6693bf011bd6a07',1,'pf_global_parameters.h']]],
+  ['write_5fsolution_5fvtk',['write_solution_vtk',['../structPhaseflow_1_1Parameters_1_1Output.html#a542632dd1fe6f8dc11b3c11e5424c27f',1,'Phaseflow::Parameters::Output']]]
 ];

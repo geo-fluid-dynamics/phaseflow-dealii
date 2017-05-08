@@ -1,8 +1,10 @@
 var searchData=
 [
   ['save_5ffield_5fparts',['save_field_parts',['../namespaceFEFieldTools.html#a798e10fbf84164ab98a59a1528191c95',1,'FEFieldTools']]],
-  ['set_5fall_5fmanifold_5fids',['set_all_manifold_ids',['../namespaceMyGridGenerator.html#a623c9165a573e1c24d07b1b2e3168e31',1,'MyGridGenerator']]],
-  ['setup_5fsystem',['setup_system',['../classPeclet_1_1Peclet.html#afb3c5e0931b2829e589986a286757b48',1,'Peclet::Peclet']]],
-  ['solve_5flinear_5fsystem',['solve_linear_system',['../classPeclet_1_1Peclet.html#ac003d19bcd121dab3757f1eb101e8748',1,'Peclet::Peclet']]],
-  ['step_5ftime',['step_time',['../classPeclet_1_1Peclet.html#aa4b556fead68249ce6a33ce0f2f4fb54',1,'Peclet::Peclet']]]
+  ['set_5ftime_5fstep_5fsize',['set_time_step_size',['../classPhaseflow_1_1Phaseflow.html#a69fee637cd31ec182ac076fd5a5d121f',1,'Phaseflow::Phaseflow']]],
+  ['setup_5fsystem',['setup_system',['../classPhaseflow_1_1Phaseflow.html#a369c528e12b415da52d2cf979fd939bf',1,'Phaseflow::Phaseflow']]],
+  ['solve_5flinear_5fsystem',['solve_linear_system',['../classPhaseflow_1_1Phaseflow.html#a4375b768f8dffc7bd0a5cde073a529ed',1,'Phaseflow::Phaseflow']]],
+  ['solve_5fnonlinear_5fproblem',['solve_nonlinear_problem',['../classPhaseflow_1_1Phaseflow.html#ace49e2a23fc548e536594c0a79343687',1,'Phaseflow::Phaseflow']]],
+  ['step_5fnewton',['step_newton',['../classPhaseflow_1_1Phaseflow.html#aaf7c6f320b009ad2a0a5ede84093dfc1',1,'Phaseflow::Phaseflow']]],
+  ['step_5ftime',['step_time',['../classPhaseflow_1_1Phaseflow.html#ae59140cb289d6b864ef1bf60e956dfd1',1,'Phaseflow::Phaseflow']]]
 ];
