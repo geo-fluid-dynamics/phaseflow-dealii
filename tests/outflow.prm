@@ -1,0 +1,43 @@
+# This tests the fix for issue #31, "Bug with strong_boundaries parameter".
+# This is the first test without "strong_boundaries = 0, 1, 2, 3"
+
+subsection meta
+    set dim = 2
+end
+
+subsection geometry
+    set grid_name = hyper_rectangle
+    set sizes = 0., 0., 1., 0.5
+end
+
+subsection initial_values
+    set Function constants = epsilon=1.e-12
+    set Function expression = if(x < (epsilon), 1., 0.); 0.; 0.; 0.
+end
+
+subsection boundary_conditions
+    set strong_boundaries = 0, 2, 3
+    set strong_masks = velocity, velocity, velocity
+    set Function constants = epsilon=1.e-12
+    set Function expression = if(x < (epsilon), 1., 0.); 0.; 0.; 0.
+end
+
+subsection refinement
+    set initial_global_cycles = 3
+end
+
+subsection nonlinear_solver
+    set max_iterations = 5
+    set tolerance = 1.e-4
+end
+
+subsection time
+    set end = 0.5e-2
+    set initial_step_size = 0.5e-2
+    set min_step_size = 0.5e-2
+    set max_step_size = 0.5e-2
+end
+
+subsection output
+    set write_solution_vtk = true
+end
