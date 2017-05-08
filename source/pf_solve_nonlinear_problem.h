@@ -1,10 +1,10 @@
-#ifndef _peclet_solve_nonlinear_problem_h_
-#define _peclet_solve_nonlinear_problem_h_
+#ifndef _pf_solve_nonlinear_problem_h_
+#define _pf_solve_nonlinear_problem_h_
 
 
 /*! Setup and solve a Newton iteration */
 template<int dim>
-void Peclet<dim>::step_newton()
+void Phaseflow<dim>::step_newton()
 {
     this->old_newton_solution = this->newton_solution;
     
@@ -19,7 +19,7 @@ void Peclet<dim>::step_newton()
 
 /*! Iterate the Newton method to solve the nonlinear problem */
 template<int dim>
-bool Peclet<dim>::solve_nonlinear_problem()
+bool Phaseflow<dim>::solve_nonlinear_problem()
 {
     this->newton_solution = this->solution;
     

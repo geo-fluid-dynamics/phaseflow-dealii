@@ -1,8 +1,8 @@
-#ifndef _peclet_step_time_h_
-#define _peclet_step_time_h_
+#ifndef _pf_step_time_h_
+#define _pf_step_time_h_
 
 template<int dim>
-void Peclet<dim>::set_time_step_size(const double _new_size)
+void Phaseflow<dim>::set_time_step_size(const double _new_size)
 {
     double new_size = _new_size;
     
@@ -37,7 +37,7 @@ assembling and solving a linear system for each substep, until convergence.
 
 */
 template <int dim>
-void Peclet<dim>::step_time()
+void Phaseflow<dim>::step_time()
 {   
     this->old_solution = this->solution;
     

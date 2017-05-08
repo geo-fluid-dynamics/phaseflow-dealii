@@ -1,9 +1,6 @@
- /*
- * @brief nsb-pcm peclet solves the Navier-Stokes-Boussinesq equations coupled with phase-change
+ /* Phaseflow solves the Navier-Stokes-Boussinesq equations coupled with an energy equation in a phase-change material domain
  *
- * @detail
- *
- *  Based on peclet, which was based on deal.II Tutorial 26 by Wolfgang Bangerth, Texas A&M University, 2013
+ *  Originally extended from the convection-diffusion solver peclet, which was based on deal.II Tutorial 26 by Wolfgang Bangerth, Texas A&M University, 2013
  *
  *  Some of the more notable extensions include:
  *  - Step time with Newton iterations; each Newton iteration requires a linear system solve
@@ -17,8 +14,6 @@
  *  - Added test suite using ctest and the standard deal.II approach
  *  - Added a parameteric sphere-cylinder grid
  *  - Added a boundary grid refinement routine
- *
- * @author Alexander Zimmerman <zimmerman@aices.rwth-aachen.de>, RWTH AAchen University, 2016
  */
 #include <deal.II/base/utilities.h>
 #include <deal.II/base/quadrature_lib.h>
@@ -64,20 +59,20 @@
 #include "my_grid_generator.h"
 #include "output.h"
 
-#include "peclet_parameters.h"
+#include "pf_parameters.h"
 
-#include "peclet_global_parameters.h"
+#include "pf_global_parameters.h"
 
-namespace Peclet
+namespace Phaseflow
 {
   using namespace dealii;
     
   template<int dim>
-  class Peclet
+  class Phaseflow
   {
   public:
   
-    Peclet();
+    Phaseflow();
     Parameters::StructuredParameters params;
     void init(std::string file_path);
     void run(const std::string parameter_file = "");
@@ -173,7 +168,7 @@ namespace Peclet
   };
   
   template<int dim>
-  Peclet<dim>::Peclet()
+  Phaseflow<dim>::Phaseflow()
     :
     fe(FE_Q<dim>(SCALAR_DEGREE + 1), dim, // velocity
        FE_Q<dim>(SCALAR_DEGREE), 1, // pressure
@@ -188,18 +183,18 @@ namespace Peclet
     exact_solution_function(dim + 2)
   {}
 
-  #include "peclet_system.h"
+  #include "pf_system.h"
 
-  #include "peclet_solve_nonlinear_problem.h"
+  #include "pf_solve_nonlinear_problem.h"
   
-  #include "peclet_step_time.h"
+  #include "pf_step_time.h"
   
-  #include "peclet_output.h"
+  #include "pf_output.h"
   
-  #include "peclet_verification.h"
+  #include "pf_verification.h"
   
   template<int dim>
-  void Peclet<dim>::run(const std::string parameter_file)
+  void Phaseflow<dim>::run(const std::string parameter_file)
   {
     
     // Clean up the files in the working directory

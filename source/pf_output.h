@@ -1,8 +1,8 @@
-#ifndef peclet_output_h
-#define peclet_output_h
+#ifndef pf_output_h
+#define pf_output_h
 
 template<int dim>
-void Peclet<dim>::write_solution()
+void Phaseflow<dim>::write_solution()
 {
   
     if (this->params.output.write_solution_vtk)

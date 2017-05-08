@@ -1,8 +1,8 @@
-#ifndef _peclet_verification_h_
-#define _peclet_verification_h_
+#ifndef _pf_verification_h_
+#define _pf_verification_h_
 
 template<int dim>
-void Peclet<dim>::append_verification_table()
+void Phaseflow<dim>::append_verification_table()
 {
     assert(this->params.verification.enabled);
 
@@ -36,7 +36,7 @@ void Peclet<dim>::append_verification_table()
 }
 
 template<int dim>
-void Peclet<dim>::write_verification_table()
+void Phaseflow<dim>::write_verification_table()
 {
     const int precision = 14;
 
