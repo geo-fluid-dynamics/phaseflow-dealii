@@ -5,5 +5,5 @@ RUN git clone https://github.com/alexanderzimmerman/phaseflow.git && \
     mkdir build && \
     cd build && \
     cmake .. && \
-    make && \
+    make test && \
     cd ~
