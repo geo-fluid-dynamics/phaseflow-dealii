@@ -1,0 +1,59 @@
+# Listing of Parameters
+# ---------------------
+subsection meta
+    set dim = 2
+end
+
+subsection geometry
+    set grid_name = hyper_rectangle
+    set sizes = 0., 0., 1., 0.5
+end
+
+subsection source_function
+
+    set Function constants =  mu = 1., gamma = 1.e-8, vmax = 2., epsilon = 1.e-8
+    
+    set Function expression = 4.0*pi^2*mu*vmax*sin(2.0*y*pi); -4.0*pi*vmax^2*sin(2.0*y*pi)*cos(2.0*y*pi); -gamma*vmax^2*sin(2.0*y*pi)^2; 0.
+    
+end
+
+subsection initial_values
+    
+    set Function constants = mu = 1., gamma = 1.e-8, vmax = 2., theta_c = 0., theta_h = 1., epsilon = 1.e-8
+    
+    set Function expression = vmax*sin(2.0*y*pi); 0.0; -vmax^2*sin(2.0*y*pi)^2; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
+    
+end
+
+subsection boundary_conditions
+    
+    set strong_boundaries = 0, 1, 2, 3
+    
+    set strong_masks = velocity; temperature,  velocity; temperature,  velocity,  velocity
+    
+    set Function constants = mu = 1., gamma = 1.e-8, vmax = 2., theta_c = 0., theta_h = 0.5, epsilon = 1.e-8
+    
+    set Function expression = vmax*sin(2.0*y*pi); 0.0; -vmax^2*sin(2.0*y*pi)^2; if(x < epsilon, theta_h, if(x > (1. - epsilon), theta_c, 0.))
+
+end
+
+subsection refinement
+    set initial_global_cycles = 4
+end
+
+subsection nonlinear_solver
+    set max_iterations = 10
+    set tolerance = 1.e-9
+end
+
+subsection time
+    set end = 2.
+    set initial_step_size = 0.1
+    set min_step_size = 0.1
+    set max_step_size = 0.1
+    set stop_when_steady = true
+end
+
+subsection output
+    set write_solution_vtk = true
+end
