@@ -6,7 +6,7 @@ Phaseflow will solve the incompressible NSB equations coupled with an enthalpy-b
 
 This is written in C++ and based on the deal.II finite element method library.
 
-Author: Alexander G. Zimmerman <zimmerman@aices.rwth-aachen.de>
+Author: Alexander G. Zimmerman <alex.g.zimmerman@gmail.com>
 
 Doxygen generated HTML documentation: https://alexanderzimmerman.github.io/phaseflow/
 
