@@ -10,7 +10,7 @@ Author: Alexander G. Zimmerman <alex.g.zimmerman@gmail.com>
 
 Doxygen generated HTML documentation: https://alexanderzimmerman.github.io/phaseflow/
 
-[![Build Status](https://travis-ci.org/alexanderzimmerman/phaseflow.svg?branch=master)](https://travis-ci.org/alexanderzimmerman/phaseflow) (<b>Continuous integration status</b>; click the button to go to Travis-CI)
+[![Build Status](https://travis-ci.org/geo-fluid-dynamics/phaseflow-dealii.svg?branch=master)](https://travis-ci.org/geo-fluid-dynamics/phaseflow-dealii) (<b>Continuous integration status</b>; click the button to go to Travis-CI)
 
 # For users:
 ## Run pre-built version on docker image
