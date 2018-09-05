@@ -1,4 +1,4 @@
-# phaseflow
+# phaseflow-dealii
 
 The development of this code has just begun, starting from a copy of the author's convection-diffusion code at https://github.com/alexanderzimmerman/peclet
 
