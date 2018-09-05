@@ -12,7 +12,7 @@ notifications:
   slack: aices-pcm-cfd:ShncJAFCJzx48zt8hrXpRwGw
 
 before_install:
-- docker pull dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease
+- docker pull dealii/dealii:v9.0.0-gcc-mpi-fulldepscandi-debugrelease
 
 script:
-- docker run -P -v `pwd`:/home/dealii/phaseflow:rw dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease /bin/sh -c "cd phaseflow; mkdir build; cd build; cmake ..; make release; ctest -j2"
+- docker run -P -v `pwd`:/home/dealii/phaseflow:rw dealii/dealii:v9.0.0-gcc-mpi-fulldepscandi-debugrelease /bin/sh -c "cd phaseflow; mkdir build; cd build; cmake ..; make release; ctest -j2"
