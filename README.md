@@ -8,7 +8,7 @@ This is written in C++ and based on the deal.II finite element method library.
 
 Author: Alexander G. Zimmerman <alex.g.zimmerman@gmail.com>
 
-Doxygen generated HTML documentation: https://alexanderzimmerman.github.io/phaseflow/
+Doxygen generated HTML documentation: https://geo-fluid-dynamics.github.io/phaseflow-dealii/
 
 [![Build Status](https://travis-ci.org/geo-fluid-dynamics/phaseflow-dealii.svg?branch=master)](https://travis-ci.org/geo-fluid-dynamics/phaseflow-dealii) (<b>Continuous integration status</b>; click the button to go to Travis-CI)
 
@@ -18,19 +18,19 @@ Get the free community edition of Docker here: https://www.docker.com/community-
 
 Pull the image from https://hub.docker.com/r/zimmerman/phaseflow/ and run the container with docker
 
-    docker run -ti zimmerman/phaseflow:latest
+    docker run -ti geo-fluid-dynamics/phaseflow-dealii:latest
     
 Or run the container with access to a shared folder (shared between the host and the container)
 
-    docker run -ti -v $(pwd):/home/dealii/shared zimmerman/phaseflow:latest
+    docker run -ti -v $(pwd):/home/dealii/shared geo-fluid-dynamics/phaseflow-dealii:latest
     
 If you plan to use this container repeatedly, then instead use this command to also give it a name
 
-    docker run -ti -v $(pwd):/home/dealii/shared --name phaseflow zimmerman/phaseflow:latest
+    docker run -ti -v $(pwd):/home/dealii/shared --name phaseflow-dealii geo-fluid-dynamics/phaseflow-dealii:latest
 
 After exiting the container, you can start it again with
 
-    docker start phaseflow
+    docker start phaseflow-dealii
     
 You can confirm that the container is running with
 
@@ -42,25 +42,21 @@ or list all containers (running or not) with
 
 To enter a bash terminal inside of the running container
 
-    docker start phaseflow
+    docker start phaseflow-dealii
     
-    docker exec -ti -u dealii phaseflow /bin/bash -l
+    docker exec -ti -u dealii phaseflow-dealii /bin/bash -l
 
 # For developers:
-## Versions
-
-This is currently being tested with the following builds of deal.II:
-- deal.II v8.5.0 from docker image dealii/dealii:v8.5.0-gcc-mpi-fulldepscandi-debugrelease
 
 ## Build
 
-    git clone git@github.com:alexanderzimmerman/phaseflow.git
+    git clone git@github.com:geo-fluid-dynamics/phaseflow-dealii.git
 
     mkdir build
 
     cd build
 
-    cmake ../phaseflow
+    cmake ../phaseflow-dealii
 
     make test
     
@@ -72,7 +68,7 @@ The Doxygen generated HTML docs are hosted in the standard GitHub fashion on the
 
 The procedure for keeping the HTML docs updated is rough. To initially create the gh-pages branch, we followed the outline in an [issue](https://github.com/m-a-d-n-e-s-s/madness/issues/104) from another repository, which uses the ideas from [here](http://rickfoosusa.blogspot.de/2011/10/howto-use-doxygen-with-github.html) and [here](https://gist.github.com/chrisjacob/825950). Since any of these links may break, in short the procedure was
 
-    cd phaseflow
+    cd phaseflow-dealii
     
     mkdir doxygen_output
     
@@ -80,7 +76,7 @@ The procedure for keeping the HTML docs updated is rough. To initially create th
     
     cd doxygen_output/html
     
-    git clone git@github.com:alexanderzimmerman/phaseflow.git .
+    git clone git@github.com:geo-fluid-dynamics/phaseflow-dealii.git .
     
     git checkout -b gh-pages
     
@@ -108,7 +104,7 @@ The procedure for keeping the HTML docs updated is rough. To initially create th
 
 You can skip many of those steps for initial set up with your local clone. Simply make the target documents directory and clone the gh-pages branch inside of it.
 
-    cd phaseflow
+    cd phaseflow-dealii
 
     mkdir doxygen_output
     
@@ -116,7 +112,7 @@ You can skip many of those steps for initial set up with your local clone. Simpl
     
     cd doxygen_output/html
     
-    git clone git@github.com:alexanderzimmerman/phaseflow.git .
+    git clone git@github.com:geo-fluid-dynamics/phaseflow-dealii.git .
     
     git checkout gh-pages
 
